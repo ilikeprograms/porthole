@@ -1,0 +1,8 @@
+<textarea class="clipboard" #clipboard tabindex="-1"></textarea>
+
+<mat-action-row>
+  <button mat-button (click)="onToggleAllKeywordSelected()" [disabled]="(keywordsCount | async) === 0">{{ (allSelected | async) ? 'Deselect' : 'Select' }} All</button>
+  <button mat-button color="warn" (click)="onRemoveSelectedKeywords()" [disabled]="(keywordsSelectedCount | async) === 0">Delete  {{ (keywordsSelectedCount | async) ? (keywordsSelectedCount | async) + ' ' : '' }}selected <mat-icon>delete</mat-icon></button>
+  <button mat-button color="warn" (click)="onRemoveAllKeywords()" [disabled]="(keywordsCount | async) === 0">Delete all <mat-icon>delete_forever</mat-icon></button>
+  <button mat-button color="primary" (click)="copyToClipboard()" [disabled]="(keywordsCount | async) === 0">Copy to Clipboard <mat-icon>content_copy</mat-icon></button>
+</mat-action-row>

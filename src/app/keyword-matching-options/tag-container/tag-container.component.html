@@ -1,55 +1,11 @@
 <h1>Keywords matching options</h1>
 
-<section class="keyword-entry-container">
-  <mat-card class="keyword-entry-card">
-    <input type="text" placeholder="Add keyword..." [ngModel]="newKeywordText" (keyup)="setAddKeywordText($event.target.value)" (keyup.enter)="addKeyword($event)" />
-    <button mat-raised-button color="primary" matTooltip="Add keyword" matTooltipPosition="left" [disabled]="newKeywordText.length === 0" (click)="onAddKeywordButtonClicked()">Add <mat-icon>add</mat-icon></button>
-  </mat-card>
-
-  <mat-form-field class="match-options-selector" [floatLabel]="always">
-    <mat-select placeholder="Match option" [ngModel]="selectedMatchOption" (change)="onNewKeywordMatchOptionChanged($event)">
-      <mat-option [value]="keywordModifiers.BroadMatch">
-        <app-keyword-icon [modifier]="keywordModifiers.BroadMatch"></app-keyword-icon>
-      </mat-option>
-      <mat-option [value]="keywordModifiers.Negative">
-        <app-keyword-icon [modifier]="keywordModifiers.Negative"></app-keyword-icon>
-      </mat-option>
-      <mat-option [value]="keywordModifiers.BroadMatchModifier">
-        <app-keyword-icon [modifier]="keywordModifiers.BroadMatchModifier"></app-keyword-icon>
-      </mat-option>
-      <mat-option [value]="keywordModifiers.ExactMatch">
-        <app-keyword-icon [modifier]="keywordModifiers.ExactMatch"></app-keyword-icon>
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</section>
+<app-add-keyword></app-add-keyword>
 
 <h2>Keywords</h2>
 
-<mat-card *ngIf="(keywordsCount | async) === 0">No keywords. Use the above text field to add one!</mat-card>
+<app-no-keyword *ngIf="(keywordsCount | async) === 0"></app-no-keyword>
 
-<mat-card class="keyword-card" *ngFor="let keyword of keywords | async">
-    <mat-checkbox [checked]="keyword.selected" (change)="onToggleKeywordSelected(keyword)"></mat-checkbox>
-    <mat-form-field><input type="text" matInput [value]="keyword.text" (change)="onEditKeywordText(keyword, $event.target.value)" /></mat-form-field>
-    <button mat-button color="warn" (click)="onRemoveKeyword(keyword)">
-      Delete <mat-icon>delete</mat-icon>
-    </button>
+<app-keyword-card *ngFor="let keyword of keywords | async" [id]="keyword.id" [text]="keyword.text" [selected]="keyword.selected"></app-keyword-card>
 
-  <section class="keyword-entry-container" *ngIf="(addKeywordMode | async) === false">
-    <mat-card class="keyword-entry-card">
-      <input type="text" placeholder="Edit keyword..." [ngModel]="newKeywordText" (keyup)="setAddKeywordText($event.target.value)" (keyup.enter)="addKeyword($event)" />
-
-      <button mat-raised-button matTooltip="Cancel edit" matTooltipPosition="left" [disabled]="newKeywordText.length === 0" (click)="onAddKeywordButtonClicked()">Cancel <mat-icon>undo</mat-icon></button>
-      <button mat-raised-button color="primary" matTooltip="Apply keyword change" matTooltipPosition="left" [disabled]="newKeywordText.length === 0" (click)="onAddKeywordButtonClicked()">Apply edit <mat-icon>create</mat-icon></button>
-    </mat-card>
-  </section>
-</mat-card>
-
-<textarea class="clipboard" #clipboard tabindex="-1"></textarea>
-
-<mat-action-row>
-  <button mat-button (click)="onToggleAllKeywordSelected()" [disabled]="(keywordsCount | async) === 0">{{ (allSelected | async) ? 'Deselect' : 'Select' }} All</button>
-  <button mat-button color="warn" (click)="onRemoveSelectedKeywords()" [disabled]="(keywordsSelectedCount | async) === 0">Delete  {{ (keywordsSelectedCount | async) ? (keywordsSelectedCount | async) + ' ' : '' }}selected <mat-icon>delete</mat-icon></button>
-  <button mat-button color="warn" (click)="onRemoveAllKeywords()" [disabled]="(keywordsCount | async) === 0">Delete all <mat-icon>delete_forever</mat-icon></button>
-  <button mat-button color="primary" (click)="copyToClipboard()" [disabled]="(keywordsCount | async) === 0">Copy to Clipboard <mat-icon>content_copy</mat-icon></button>
-</mat-action-row>
+<app-keyword-footer-actions></app-keyword-footer-actions>

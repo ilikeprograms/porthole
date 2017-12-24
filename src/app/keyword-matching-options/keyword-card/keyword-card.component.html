@@ -1,0 +1,7 @@
+<mat-card class="keyword-card">
+  <mat-checkbox [checked]="selected" (change)="onToggleKeywordSelected()"></mat-checkbox>
+  <mat-form-field><input type="text" matInput [value]="text" (change)="onEditKeywordText($event.target.value)" /></mat-form-field>
+  <button mat-button color="warn" (click)="onRemoveKeyword()">
+    Delete <mat-icon>delete</mat-icon>
+  </button>
+</mat-card>

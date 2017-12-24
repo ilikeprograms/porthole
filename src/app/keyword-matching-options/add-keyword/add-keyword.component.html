@@ -1,0 +1,23 @@
+<section class="keyword-entry-container">
+  <mat-card class="keyword-entry-card">
+    <input type="text" placeholder="Add keyword..." [ngModel]="newKeywordText" (keyup)="setAddKeywordText($event.target.value)" (keyup.enter)="addKeyword($event)" />
+    <button mat-raised-button color="primary" matTooltip="Add keyword" matTooltipPosition="left" [disabled]="newKeywordText.length === 0" (click)="onAddKeywordButtonClicked()">Add <mat-icon>add</mat-icon></button>
+  </mat-card>
+
+  <mat-form-field class="match-options-selector" [floatLabel]="always">
+    <mat-select placeholder="Match option" [ngModel]="selectedMatchOption" (change)="onNewKeywordMatchOptionChanged($event)">
+      <mat-option [value]="keywordModifiers.BroadMatch">
+        <app-keyword-icon [modifier]="keywordModifiers.BroadMatch"></app-keyword-icon>
+      </mat-option>
+      <mat-option [value]="keywordModifiers.Negative">
+        <app-keyword-icon [modifier]="keywordModifiers.Negative"></app-keyword-icon>
+      </mat-option>
+      <mat-option [value]="keywordModifiers.BroadMatchModifier">
+        <app-keyword-icon [modifier]="keywordModifiers.BroadMatchModifier"></app-keyword-icon>
+      </mat-option>
+      <mat-option [value]="keywordModifiers.ExactMatch">
+        <app-keyword-icon [modifier]="keywordModifiers.ExactMatch"></app-keyword-icon>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</section>

@@ -16,6 +16,7 @@ import {
   ToggleKeywordSelectedAction
 } from './keyword-matching-options.actions';
 import { KeywordModifiers } from '../keyword-modifier-enum';
+import { CreateSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -59,12 +60,12 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new AddKeywordAction(text));
   }
 
-  public editKeywordText(keyword: IKeyword, text: string): void {
-    this.store.dispatch(new EditKeywordTextAction(keyword.id, text));
+  public editKeywordText(id: string, text: string): void {
+    this.store.dispatch(new EditKeywordTextAction(id, text));
   }
 
-  public removeKeyword(keyword: IKeyword): void {
-    this.store.dispatch(new RemoveKeywordAction(keyword.id));
+  public removeKeyword(id: string): void {
+    this.store.dispatch(new RemoveKeywordAction(id));
   }
 
   public removeSelectedKeywords(): void {
@@ -75,8 +76,8 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new RemoveAllKeywordsAction());
   }
 
-  public toggleKeywordSelected(keyword: IKeyword): void {
-    this.store.dispatch(new ToggleKeywordSelectedAction(keyword.id));
+  public toggleKeywordSelected(id: string): void {
+    this.store.dispatch(new ToggleKeywordSelectedAction(id));
   }
 
   public changeNewKeywordOption(matchOption: KeywordModifiers): void {
@@ -85,5 +86,9 @@ export class KeywordMatchingOptionsFacade {
 
   public toggleAllSelected(): void {
     this.store.dispatch(new ToggleKeywordAllSelectedAction());
+  }
+
+  public copyToClipboard(): void {
+    this.store.dispatch(new CreateSnackbarAction('Copied'));
   }
 }
