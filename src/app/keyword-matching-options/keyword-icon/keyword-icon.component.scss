@@ -1,0 +1,16 @@
+:host {
+  display: inline-flex;
+}
+
+.keyword-icon {
+  background-color: #333333;
+  color: white;
+  border: 1px solid #444444;
+
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
