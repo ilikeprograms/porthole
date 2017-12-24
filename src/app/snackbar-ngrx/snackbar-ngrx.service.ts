@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 
 @Injectable()
 export class SnackbarNgrxService {
@@ -7,9 +7,7 @@ export class SnackbarNgrxService {
     private snackBar: MatSnackBar,
   ) {}
 
-  public createSnackbar(text: string) {
-    this.snackBar.open(text, '', {
-      duration: 1500
-    });
+  public createTextSnackbar(text: string, config?: MatSnackBarConfig): void {
+    this.snackBar.open(text, '', config);
   }
 }

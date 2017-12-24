@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { CREATE_SNACKBAR_ACTION, CreateSnackbarAction } from './snackbar-ngrx.actions';
+import {
+  CREATE_TEXT_SNACKBAR_ACTION,
+  CreateTextSnackbarAction
+} from './snackbar-ngrx.actions';
 import { SnackbarNgrxService } from '../snackbar-ngrx.service';
 import 'rxjs/add/operator/do';
 
@@ -15,11 +18,11 @@ export class SnackbarNgrxEffects {
   ) {}
 
   @Effect({ dispatch: false })
-  public createSnackbar(): Observable<Action> {
+  public createTextSnackbar(): Observable<Action> {
     return this.actions$
-      .ofType(CREATE_SNACKBAR_ACTION)
-      .do((action: CreateSnackbarAction) => {
-        this.snackbarNgrxService.createSnackbar(action.text);
+      .ofType(CREATE_TEXT_SNACKBAR_ACTION)
+      .do((action: CreateTextSnackbarAction) => {
+        this.snackbarNgrxService.createTextSnackbar(action.text, action.config);
       });
   }
 }

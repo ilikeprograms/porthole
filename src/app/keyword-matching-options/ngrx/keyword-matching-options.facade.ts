@@ -16,7 +16,7 @@ import {
   ToggleKeywordSelectedAction
 } from './keyword-matching-options.actions';
 import { KeywordModifiers } from '../keyword-modifier-enum';
-import { CreateSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
+import { CreateTextSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -89,6 +89,8 @@ export class KeywordMatchingOptionsFacade {
   }
 
   public copyToClipboard(): void {
-    this.store.dispatch(new CreateSnackbarAction('Copied'));
+    this.store.dispatch(new CreateTextSnackbarAction('Copied', {
+      duration: 1500
+    }));
   }
 }
