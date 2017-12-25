@@ -10,13 +10,13 @@ import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keyword.interface';
 import { selectKeywords, selectMatchOption } from './keyword-matching-options.selectors';
 import {
-  AddKeywordAction, ChangeNewKeywordOptionAction, EditKeywordTextAction, RemoveAllKeywordsAction, RemoveKeywordAction,
+  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, EditKeywordTextAction, RemoveAllKeywordsAction,
+  RemoveKeywordAction,
   RemoveSelectedKeywordsAction,
   ToggleKeywordAllSelectedAction,
   ToggleKeywordSelectedAction
 } from './keyword-matching-options.actions';
 import { KeywordModifiers } from '../keyword-modifier-enum';
-import { CreateTextSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -88,9 +88,7 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new ToggleKeywordAllSelectedAction());
   }
 
-  public copyToClipboard(): void {
-    this.store.dispatch(new CreateTextSnackbarAction('Copied', {
-      duration: 1500
-    }));
+  public copyAllKeywords(): void {
+    this.store.dispatch(new CopyAllKeywordsAction());
   }
 }

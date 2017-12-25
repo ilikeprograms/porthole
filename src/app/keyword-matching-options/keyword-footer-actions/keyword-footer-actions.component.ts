@@ -6,6 +6,9 @@ import { takeUntil } from 'rxjs/operators/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
 import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
+import { MatDialog } from '@angular/material';
+import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'app-keyword-footer-actions',
@@ -36,7 +39,8 @@ export class KeywordFooterActionsComponent implements OnDestroy {
 
   constructor(
     @Inject(DOCUMENT) dom: Document,
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
+    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
+    private dialog: MatDialog
   ) {
     this.documentRef = dom;
 
@@ -59,43 +63,17 @@ export class KeywordFooterActionsComponent implements OnDestroy {
   }
 
   public onRemoveAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeAllKeywords();
+    // Open confirmation dialog, then remove all if yes is clicked
+    const dialogRef = this.dialog.open(DeleteAllConfirmComponent);
+
+    dialogRef.afterClosed().take(1).subscribe(result => {
+      if (result === true) {
+        this.keywordMatchingOptionsFacade.removeAllKeywords();
+      }
+    });
   }
 
-  public copyToClipboard(): void {
-    this.keywordMatchingOptionsFacade.copyToClipboard();
-    // this.clipboardTextArea.nativeElement.value = this.getTextToCopy();
-    // this.clipboardTextArea.nativeElement.focus();
-    // this.clipboardTextArea.nativeElement.select();
-    //
-    // try {
-    //   this.documentRef.execCommand('copy');
-    //
-    //   this.snackBar.open('Copied', '', {
-    //     duration: 1500
-    //   });
-    // } catch (e) {
-    //   this.snackBar.open('Failed', '', {
-    //     duration: 1500
-    //   });
-    // }
-  }
-
-  private getTextToCopy(): string {
-    return '';
-    // const keywords: Array<string> = this.keywords.map((keyword: IKeyword) => {
-    //   switch (keyword.modifier) {
-    //     case KeywordModifiers.BroadMatch:
-    //       return keyword.text;
-    //     case KeywordModifiers.Negative:
-    //       return `-${keyword.text}`;
-    //     case KeywordModifiers.BroadMatchModifier:
-    //       return `"${keyword.text}"`;
-    //     case KeywordModifiers.ExactMatch:
-    //       return `[${keyword.text}]`;
-    //   }
-    // });
-
-    // return keywords.join(', ');
+  public copyAllKeywords(): void {
+    this.keywordMatchingOptionsFacade.copyAllKeywords();
   }
 }

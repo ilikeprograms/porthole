@@ -10,12 +10,16 @@ import { KeywordFooterActionsComponent } from './keyword-footer-actions/keyword-
 import { AddKeywordComponent } from './add-keyword/add-keyword.component';
 import { KeywordCardComponent } from './keyword-card/keyword-card.component';
 import { NoKeywordComponent } from './no-keyword/no-keyword.component';
+import { DeleteAllConfirmComponent } from './delete-all-confirm/delete-all-confirm.component';
+import { EffectsModule } from '@ngrx/effects';
+import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.effects';
 
 @NgModule({
   imports: [
     FormsModule,
     CommonModule,
     MaterialImportsModule,
+    EffectsModule.forFeature([KeywordMatchingOptionsEffects])
   ],
   declarations: [
     TagContainerComponent,
@@ -23,13 +27,17 @@ import { NoKeywordComponent } from './no-keyword/no-keyword.component';
     NoKeywordComponent,
     KeywordCardComponent,
     KeywordIconComponent,
-    KeywordFooterActionsComponent
+    KeywordFooterActionsComponent,
+    DeleteAllConfirmComponent
   ],
   exports: [
     TagContainerComponent,
   ],
   providers: [
     KeywordMatchingOptionsFacade
-  ]
+  ],
+  entryComponents: [
+    DeleteAllConfirmComponent
+  ],
 })
 export class KeywordMatchingOptionsModule {}

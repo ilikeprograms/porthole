@@ -10,6 +10,7 @@ export const REMOVE_ALL_KEYWORDS_ACTION = '[KeywordMatchingOptions] Remove all k
 export const TOGGLE_KEYWORD_SELECTED_ACTION = '[KeywordMatchingOptions] Toggle keyword selected';
 export const CHANGE_NEW_KEYWORD_OPTION_ACTION = '[KeywordMatchingOptions] Change new keyword option';
 export const TOGGLE_KEYWORD_ALL_SELECTED_ACTION = '[KeywordMatchingOptions] Toggle keyword all selected option';
+export const COPY_ALL_KEYWORDS_ACTION = '[KeywordMatchingOptions] Copy all keywords';
 
 export class AddKeywordAction implements Action {
   readonly type = ADD_KEYWORD_ACTION;
@@ -53,6 +54,10 @@ export class ToggleKeywordAllSelectedAction implements Action {
   readonly type = TOGGLE_KEYWORD_ALL_SELECTED_ACTION;
 }
 
+export class CopyAllKeywordsAction implements Action {
+  readonly type = COPY_ALL_KEYWORDS_ACTION;
+}
+
 export type KeywordMatchingOptionsActions = AddKeywordAction |
   EditKeywordTextAction |
   RemoveKeywordAction |
@@ -60,4 +65,5 @@ export type KeywordMatchingOptionsActions = AddKeywordAction |
   RemoveAllKeywordsAction |
   ToggleKeywordSelectedAction |
   ChangeNewKeywordOptionAction |
-  ToggleKeywordAllSelectedAction;
+  ToggleKeywordAllSelectedAction |
+  CopyAllKeywordsAction;

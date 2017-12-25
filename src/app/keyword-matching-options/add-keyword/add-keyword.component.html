@@ -12,6 +12,9 @@
       <mat-option [value]="keywordModifiers.Negative">
         <app-keyword-icon [modifier]="keywordModifiers.Negative"></app-keyword-icon>
       </mat-option>
+      <mat-option [value]="keywordModifiers.PhraseMatch">
+        <app-keyword-icon [modifier]="keywordModifiers.PhraseMatch"></app-keyword-icon>
+      </mat-option>
       <mat-option [value]="keywordModifiers.BroadMatchModifier">
         <app-keyword-icon [modifier]="keywordModifiers.BroadMatchModifier"></app-keyword-icon>
       </mat-option>
@@ -21,3 +24,5 @@
     </mat-select>
   </mat-form-field>
 </section>
+
+<p>Enter a keyword and hit the button or press 'Enter'. Keyword will be added and can be edited later.</p>

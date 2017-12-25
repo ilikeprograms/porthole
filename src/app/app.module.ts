@@ -12,6 +12,7 @@ import { keywordMatchingOptionsReducer } from './keyword-matching-options/ngrx/k
 import { KeywordMatchingOptionsDefaultState } from './keyword-matching-options/ngrx/keyword-matching-options-default.state';
 import { SnackbarNgrxModule } from './snackbar-ngrx/snackbar-ngrx.module';
 import { EffectsModule } from '@ngrx/effects';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { EffectsModule } from '@ngrx/effects';
     BrowserModule,
     BrowserAnimationsModule,
     MaterialImportsModule,
-    KeywordMatchingOptionsModule,
+    CoreModule.forRoot(),
     StoreModule.forRoot({
       keywordMatchingOptions: keywordMatchingOptionsReducer
     }, {
@@ -32,6 +33,7 @@ import { EffectsModule } from '@ngrx/effects';
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),
+    KeywordMatchingOptionsModule,
     EffectsModule.forRoot([]),
     SnackbarNgrxModule
   ],
