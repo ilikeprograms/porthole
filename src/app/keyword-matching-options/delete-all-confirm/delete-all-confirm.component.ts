@@ -15,8 +15,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 })
 export class DeleteAllConfirmComponent {
   constructor(
-    public dialogRef: MatDialogRef<DeleteAllConfirmComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    public dialogRef: MatDialogRef<DeleteAllConfirmComponent>
   ) {}
 
   public onNoClick(): void {

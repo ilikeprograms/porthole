@@ -13,6 +13,7 @@ import { NoKeywordComponent } from './no-keyword/no-keyword.component';
 import { DeleteAllConfirmComponent } from './delete-all-confirm/delete-all-confirm.component';
 import { EffectsModule } from '@ngrx/effects';
 import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.effects';
+import { PasteModalComponent } from './paste-modal/paste-modal.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.e
     KeywordCardComponent,
     KeywordIconComponent,
     KeywordFooterActionsComponent,
-    DeleteAllConfirmComponent
+    DeleteAllConfirmComponent,
+    PasteModalComponent
   ],
   exports: [
     TagContainerComponent,
@@ -37,7 +39,8 @@ import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.e
     KeywordMatchingOptionsFacade
   ],
   entryComponents: [
-    DeleteAllConfirmComponent
+    DeleteAllConfirmComponent,
+    PasteModalComponent
   ],
 })
 export class KeywordMatchingOptionsModule {}

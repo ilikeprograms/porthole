@@ -17,12 +17,8 @@ import { KeywordModifiers } from '../keyword-modifier-enum';
         justify-content: space-between;
       }
 
-      .match-options-selector {
-        width: 15%;
-      }
-
       .keyword-entry-card {
-        width: 80%;
+        width: 100%;
         display: flex;
         padding: 10px 10px 10px 20px;
       }
@@ -31,6 +27,10 @@ import { KeywordModifiers } from '../keyword-modifier-enum';
         border: 0;
         flex-grow: 1;
         font-size: 20px;
+      }
+
+      app-keyword-icon {
+        margin-top: 4px;
       }
     `
   ],
@@ -41,7 +41,6 @@ export class AddKeywordComponent implements OnDestroy {
 
   public newKeywordText: string = '';
   public selectedMatchOption: KeywordModifiers;
-  public keywordModifiers = KeywordModifiers;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
@@ -79,7 +78,7 @@ export class AddKeywordComponent implements OnDestroy {
     this.setAddKeywordText('');
   }
 
-  public onNewKeywordMatchOptionChanged(selectChange: MatSelectChange): void {
-    this.keywordMatchingOptionsFacade.changeNewKeywordOption(selectChange.value);
+  public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
+    this.keywordMatchingOptionsFacade.changeNewKeywordOption(modifier);
   }
 }

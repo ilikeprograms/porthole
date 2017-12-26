@@ -6,9 +6,10 @@ import { takeUntil } from 'rxjs/operators/takeUntil';
 import { Subject } from 'rxjs/Subject';
 
 import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
 import 'rxjs/add/operator/take';
+import { PasteModalComponent } from '../paste-modal/paste-modal.component';
 
 @Component({
   selector: 'app-keyword-footer-actions',
@@ -64,7 +65,7 @@ export class KeywordFooterActionsComponent implements OnDestroy {
 
   public onRemoveAllKeywords(): void {
     // Open confirmation dialog, then remove all if yes is clicked
-    const dialogRef = this.dialog.open(DeleteAllConfirmComponent);
+    const dialogRef: MatDialogRef<DeleteAllConfirmComponent> = this.dialog.open(DeleteAllConfirmComponent);
 
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result === true) {
@@ -75,5 +76,15 @@ export class KeywordFooterActionsComponent implements OnDestroy {
 
   public copyAllKeywords(): void {
     this.keywordMatchingOptionsFacade.copyAllKeywords();
+  }
+
+  public onPasteKeywords(): void {
+    const dialogRef: MatDialogRef<PasteModalComponent> = this.dialog.open(PasteModalComponent);
+
+    dialogRef.afterClosed().take(1).subscribe(result => {
+      if (result) {
+        this.keywordMatchingOptionsFacade.pasteKeywords(result);
+      }
+    });
   }
 }

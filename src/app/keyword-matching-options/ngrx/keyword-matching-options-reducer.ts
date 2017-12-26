@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 
 import { IKeywordMatchingOptionsState } from './keyword-matching-options-state.interface';
 import {
-  ADD_KEYWORD_ACTION, CHANGE_NEW_KEYWORD_OPTION_ACTION, EDIT_KEYWORD_TEXT_ACTION,
+  ADD_KEYWORD_ACTION, CHANGE_NEW_KEYWORD_OPTION_ACTION, EDIT_KEYWORD_MODIFIER_ACTION, EDIT_KEYWORD_TEXT_ACTION,
   KeywordMatchingOptionsActions,
   REMOVE_ALL_KEYWORDS_ACTION,
   REMOVE_KEYWORD_ACTION, REMOVE_SELECTED_KEYWORD_ACTION, TOGGLE_KEYWORD_ALL_SELECTED_ACTION,
@@ -16,12 +16,12 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
     case ADD_KEYWORD_ACTION:
       return {
         ...state,
-        keywords: state.keywords.concat({
+        keywords: [{
           id: uuid(),
-          text: action.id,
-          modifier: state.matchOption,
+          text: action.text,
+          modifier: action.modifier ? action.modifier : state.matchOption, // Allow creating with Specific modifier, or use global one
           selected: false
-        })
+        }, ...state.keywords]
       };
     case EDIT_KEYWORD_TEXT_ACTION:
       return {
@@ -29,6 +29,17 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
         keywords: state.keywords.map((keyword: IKeyword) => {
           if (keyword.id === action.id) {
             keyword.text = action.text;
+          }
+
+          return keyword;
+        })
+      };
+    case EDIT_KEYWORD_MODIFIER_ACTION:
+      return {
+        ...state,
+        keywords: state.keywords.map((keyword: IKeyword) => {
+          if (keyword.id === action.id) {
+            keyword.modifier = action.modifier;
           }
 
           return keyword;

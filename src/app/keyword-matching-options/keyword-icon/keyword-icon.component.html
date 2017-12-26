@@ -1,7 +1,22 @@
-<span class="keyword-icon">
-  <span class="chip-modifier" *ngIf="modifier === keywordModifiers.BroadMatch">B</span>
-  <span class="chip-modifier" *ngIf="modifier === keywordModifiers.Negative">N</span>
-  <span class="chip-modifier" *ngIf="modifier === keywordModifiers.PhraseMatch">PM</span>
-  <span class="chip-modifier" *ngIf="modifier === keywordModifiers.BroadMatchModifier">BM</span>
-  <span class="chip-modifier" *ngIf="modifier === keywordModifiers.ExactMatch">E</span>
-</span>
+<mat-select matTooltip="Click to change" [ngModel]="modifier" (change)="onModifierChanged($event.value)">
+  <mat-option [value]="keywordModifiers.BroadMatch" matTooltip="Broad Match">
+    <span class="keyword-icon">B</span>
+    <!--<app-keyword-icon [modifier]="keywordModifiers.BroadMatch"></app-keyword-icon>-->
+  </mat-option>
+  <mat-option [value]="keywordModifiers.Negative" matTooltip="Negative i.e. '-Negative'">
+    <span class="keyword-icon">N</span>
+    <!--<app-keyword-icon [modifier]="keywordModifiers.Negative"></app-keyword-icon>-->
+  </mat-option>
+  <mat-option [value]="keywordModifiers.PhraseMatch" matTooltip='Phrase Match i.e "Match this phrase"'>
+    <span class="keyword-icon">PM</span>
+    <!--<app-keyword-icon [modifier]="keywordModifiers.PhraseMatch"></app-keyword-icon>-->
+  </mat-option>
+  <mat-option [value]="keywordModifiers.BroadMatchModifier" matTooltip="Broad Match Modifier i.e '+keyword'">
+    <span class="keyword-icon">PM</span>
+    <!--<app-keyword-icon [modifier]="keywordModifiers.BroadMatchModifier"></app-keyword-icon>-->
+  </mat-option>
+  <mat-option [value]="keywordModifiers.ExactMatch" matTooltip="Exact Match i.e [Exact Match]">
+    <span class="keyword-icon">E</span>
+    <!--<app-keyword-icon [modifier]="keywordModifiers.ExactMatch"></app-keyword-icon>-->
+  </mat-option>
+</mat-select>

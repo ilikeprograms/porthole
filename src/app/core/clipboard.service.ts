@@ -11,13 +11,8 @@ export class ClipboardService {
     this.dom = dom;
   }
 
-  public copyToClipboard(text: string) {
-    const textArea: HTMLTextAreaElement = this.dom.createElement('textArea') as HTMLTextAreaElement;
-    textArea.style.height = '0';
-    textArea.style.position = 'absolute';
-    textArea.style.left = '-1000px';
-    textArea.tabIndex = -1;
-    textArea.setAttribute('aria-hidden', 'true');
+  public copyToClipboard(text: string): void {
+    const textArea: HTMLTextAreaElement = this.createHiddenTextArea();
 
     textArea.value = text;
 
@@ -29,5 +24,17 @@ export class ClipboardService {
     this.dom.execCommand('copy');
 
     this.dom.body.removeChild(textArea);
+  }
+
+  private createHiddenTextArea(): HTMLTextAreaElement {
+    const textArea: HTMLTextAreaElement = this.dom.createElement('textArea') as HTMLTextAreaElement;
+
+    textArea.style.height = '0';
+    textArea.style.position = 'absolute';
+    textArea.style.left = '-1000px';
+    textArea.tabIndex = -1;
+    textArea.setAttribute('aria-hidden', 'true');
+
+    return textArea;
   }
 }

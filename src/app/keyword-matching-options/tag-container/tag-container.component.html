@@ -7,7 +7,7 @@
 <app-no-keyword *ngIf="(keywordsCount | async) === 0"></app-no-keyword>
 
 <div [@listAnimation]="keywordsCount | async">
-  <app-keyword-card *ngFor="let keyword of keywords | async" [id]="keyword.id" [text]="keyword.text" [selected]="keyword.selected"></app-keyword-card>
+  <app-keyword-card *ngFor="let keyword of keywords | async" [id]="keyword.id" [text]="keyword.text" [modifier]="keyword.modifier" [selected]="keyword.selected"></app-keyword-card>
 </div>
 
 <app-keyword-footer-actions></app-keyword-footer-actions>

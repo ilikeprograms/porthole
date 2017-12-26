@@ -2,7 +2,7 @@
   display: inline-flex;
 }
 
-.keyword-icon {
+.keyword-icon, mat-select /deep/ .mat-select-value {
   background-color: #333333;
   color: white;
   border: 1px solid #444444;
@@ -13,4 +13,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+mat-select /deep/ .mat-select-value {
+  max-width: initial;
+}
+
+mat-select {
+  width: 50px;
 }

@@ -10,7 +10,9 @@ import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keyword.interface';
 import { selectKeywords, selectMatchOption } from './keyword-matching-options.selectors';
 import {
-  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, EditKeywordTextAction, RemoveAllKeywordsAction,
+  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, EditKeywordModifierAction,
+  EditKeywordTextAction, PasteKeywordsAction,
+  RemoveAllKeywordsAction,
   RemoveKeywordAction,
   RemoveSelectedKeywordsAction,
   ToggleKeywordAllSelectedAction,
@@ -64,6 +66,10 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new EditKeywordTextAction(id, text));
   }
 
+  public editKeywordModifier(id: string, modifier: KeywordModifiers): void {
+    this.store.dispatch(new EditKeywordModifierAction(id, modifier));
+  }
+
   public removeKeyword(id: string): void {
     this.store.dispatch(new RemoveKeywordAction(id));
   }
@@ -90,5 +96,9 @@ export class KeywordMatchingOptionsFacade {
 
   public copyAllKeywords(): void {
     this.store.dispatch(new CopyAllKeywordsAction());
+  }
+
+  public pasteKeywords(text: string): void {
+    this.store.dispatch(new PasteKeywordsAction(text));
   }
 }
