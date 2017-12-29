@@ -1,10 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { MatSelectChange } from '@angular/material';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { takeUntil } from 'rxjs/operators/takeUntil';
-import { Subject } from 'rxjs/Subject';
-
-import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
 import { KeywordModifiers } from '../keyword-modifier-enum';
 
 @Component({
@@ -36,49 +31,40 @@ import { KeywordModifiers } from '../keyword-modifier-enum';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddKeywordComponent implements OnDestroy {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
+export class AddKeywordComponent {
   public newKeywordText: string = '';
+
+  @Input()
   public selectedMatchOption: KeywordModifiers;
 
-  constructor(
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
-  ) {
-    this.keywordMatchingOptionsFacade.matchOption
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((matchOption: KeywordModifiers) => {
-        this.selectedMatchOption = matchOption;
-      });
-  }
+  @Output()
+  public selectedMatchOptionChanged: EventEmitter<KeywordModifiers> = new EventEmitter<KeywordModifiers>();
 
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+  @Output()
+  public addKeyword: EventEmitter<string> = new EventEmitter<string>();
 
   public setAddKeywordText(text: string) {
     this.newKeywordText = text;
   }
 
-  public addKeyword(event: KeyboardEvent): void {
+  public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
+    this.selectedMatchOptionChanged.emit(modifier);
+  }
+
+  public onAddKeyword(event: KeyboardEvent): void {
     const input: HTMLInputElement = event.target as HTMLInputElement;
     const value: string = input.value.trim();
 
     if (value) {
-      this.keywordMatchingOptionsFacade.addKeyword(value);
+      this.addKeyword.emit(value);
 
       this.setAddKeywordText('');
     }
   }
 
   public onAddKeywordButtonClicked(): void {
-    this.keywordMatchingOptionsFacade.addKeyword(this.newKeywordText);
+    this.addKeyword.emit(this.newKeywordText);
 
     this.setAddKeywordText('');
-  }
-
-  public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
-    this.keywordMatchingOptionsFacade.changeNewKeywordOption(modifier);
   }
 }

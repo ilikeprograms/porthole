@@ -14,6 +14,7 @@ import { DeleteAllConfirmComponent } from './delete-all-confirm/delete-all-confi
 import { EffectsModule } from '@ngrx/effects';
 import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.effects';
 import { PasteModalComponent } from './paste-modal/paste-modal.component';
+import { ClientListComponent } from './client-list/client-list.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { PasteModalComponent } from './paste-modal/paste-modal.component';
   ],
   declarations: [
     TagContainerComponent,
+    ClientListComponent,
     AddKeywordComponent,
     NoKeywordComponent,
     KeywordCardComponent,
@@ -33,7 +35,7 @@ import { PasteModalComponent } from './paste-modal/paste-modal.component';
     PasteModalComponent
   ],
   exports: [
-    TagContainerComponent,
+    ClientListComponent
   ],
   providers: [
     KeywordMatchingOptionsFacade

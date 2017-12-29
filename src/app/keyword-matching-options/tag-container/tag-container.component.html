@@ -1,13 +1,37 @@
-<h1>Keywords matching options</h1>
+<mat-toolbar>
+  <mat-toolbar-row>{{ client.name }}</mat-toolbar-row>
+</mat-toolbar>
 
-<app-add-keyword></app-add-keyword>
+<app-add-keyword
+  [selectedMatchOption]="client.matchOption"
+  (selectedMatchOptionChanged)="onNewKeywordMatchOptionChanged($event)"
 
-<h2>Keywords</h2>
+  (addKeyword)="onAddKeyword($event)"
+></app-add-keyword>
 
-<app-no-keyword *ngIf="(keywordsCount | async) === 0"></app-no-keyword>
+<app-no-keyword *ngIf="(keywordsCount$ | async) === 0"></app-no-keyword>
 
-<div [@listAnimation]="keywordsCount | async">
-  <app-keyword-card *ngFor="let keyword of keywords | async" [id]="keyword.id" [text]="keyword.text" [modifier]="keyword.modifier" [selected]="keyword.selected"></app-keyword-card>
+<div [@listAnimation]="keywordsCount$ | async">
+  <app-keyword-card
+    *ngFor="let keyword of keywords$ | async"
+
+    [keyword]="keyword"
+
+    (editKeywordText)="onEditKeywordText($event)"
+    (removeKeyword)="onRemoveKeyword($event)"
+    (toggleKeywordSelected)="onToggleKeywordSelected($event)"
+    (editKeywordModifier)="onModifierChanged($event)"
+    ></app-keyword-card>
 </div>
 
-<app-keyword-footer-actions></app-keyword-footer-actions>
+<app-keyword-footer-actions
+  [keywordsCount]="keywordsCount$ | async"
+  [keywordsSelectedCount]="keywordsSelectedCount$ | async"
+  [keywordsAllSelected]="keywordsAllSelected$ | async"
+
+  (toggleAllSelected)="onToggleAllSelected()"
+  (removeSelectedKeywords)="onRemoveSelectedKeywords()"
+  (removeAllKeywords)="onRemoveAllKeywords()"
+  (copyAllKeywords)="onCopyAllKeywords()"
+  (pasteKeywords)="onPasteKeywords($event)"
+></app-keyword-footer-actions>

@@ -1,66 +1,54 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, ViewChild } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import {
+  ChangeDetectionStrategy, Component, EventEmitter, Input, Output,
+} from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { takeUntil } from 'rxjs/operators/takeUntil';
-import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/take';
 
-import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
-import 'rxjs/add/operator/take';
 import { PasteModalComponent } from '../paste-modal/paste-modal.component';
 
 @Component({
   selector: 'app-keyword-footer-actions',
   templateUrl: './keyword-footer-actions.component.html',
-  styles: [
-    `
-    .clipboard {
-      height: 0;
-      width: 0;
-      position: absolute;
-      left: -1000px;
-      top: 0;
-    }
-    `
-  ],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KeywordFooterActionsComponent implements OnDestroy {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-  private documentRef: Document;
+export class KeywordFooterActionsComponent {
+  @Input()
+  public keywordsCount: number;
 
-  @ViewChild('clipboard')
-  public clipboardTextArea: ElementRef;
+  @Input()
+  public keywordsSelectedCount: number;
 
-  public keywordsCount: Observable<number>;
-  public keywordsSelectedCount: Observable<number>;
-  public allSelected: Observable<boolean>;
+  @Input()
+  public keywordsAllSelected: number;
+
+  @Output()
+  public toggleAllSelected: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public removeSelectedKeywords: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public removeAllKeywords: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public copyAllKeywords: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public pasteKeywords: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
-    @Inject(DOCUMENT) dom: Document,
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
     private dialog: MatDialog
-  ) {
-    this.documentRef = dom;
-
-    this.keywordsCount = this.keywordMatchingOptionsFacade.keywordsCount.pipe(takeUntil(this.unsubscribe$));
-    this.keywordsSelectedCount = this.keywordMatchingOptionsFacade.keywordsSelectedCount.pipe(takeUntil(this.unsubscribe$));
-    this.allSelected = this.keywordMatchingOptionsFacade.allSelected.pipe(takeUntil(this.unsubscribe$));
-  }
-
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+  ) {}
 
   public onToggleAllKeywordSelected(): void {
-    this.keywordMatchingOptionsFacade.toggleAllSelected();
+    this.toggleAllSelected.emit();
   }
 
   public onRemoveSelectedKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeSelectedKeywords();
+    this.removeSelectedKeywords.emit();
   }
 
   public onRemoveAllKeywords(): void {
@@ -69,13 +57,13 @@ export class KeywordFooterActionsComponent implements OnDestroy {
 
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result === true) {
-        this.keywordMatchingOptionsFacade.removeAllKeywords();
+        this.removeAllKeywords.emit();
       }
     });
   }
 
-  public copyAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.copyAllKeywords();
+  public onCopyAllKeywords(): void {
+    this.copyAllKeywords.emit();
   }
 
   public onPasteKeywords(): void {
@@ -83,7 +71,7 @@ export class KeywordFooterActionsComponent implements OnDestroy {
 
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result) {
-        this.keywordMatchingOptionsFacade.pasteKeywords(result);
+        this.pasteKeywords.emit(result.trim());
       }
     });
   }

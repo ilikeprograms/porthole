@@ -1,6 +1,6 @@
 <section class="keyword-entry-container">
   <mat-card class="keyword-entry-card">
-    <input type="text" placeholder="Add keyword..." [ngModel]="newKeywordText" (keyup)="setAddKeywordText($event.target.value)" (keyup.enter)="addKeyword($event)" />
+    <input type="text" placeholder="Add keyword..." [ngModel]="newKeywordText" (keyup)="setAddKeywordText($event.target.value)" (keyup.enter)="onAddKeyword($event)" />
 
     <app-keyword-icon [modifier]="selectedMatchOption" (change)="onNewKeywordMatchOptionChanged($event)"></app-keyword-icon>
 

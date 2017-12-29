@@ -17,7 +17,7 @@ export const PASTE_KEYWORDS_ACTION = '[KeywordMatchingOptions] Paste keywords';
 export class AddKeywordAction implements Action {
   readonly type = ADD_KEYWORD_ACTION;
 
-  constructor(public text: string, public modifier?: KeywordModifiers) {}
+  constructor(public clientId: string, public text: string, public modifier?: KeywordModifiers) {}
 }
 
 export class EditKeywordTextAction implements Action {
@@ -40,10 +40,14 @@ export class RemoveKeywordAction implements Action {
 
 export class RemoveSelectedKeywordsAction implements Action {
   readonly type = REMOVE_SELECTED_KEYWORD_ACTION;
+
+  constructor(public clientId: string) {}
 }
 
 export class RemoveAllKeywordsAction implements Action {
   readonly type = REMOVE_ALL_KEYWORDS_ACTION;
+
+  constructor(public clientId: string) {}
 }
 
 export class ToggleKeywordSelectedAction implements Action {
@@ -55,21 +59,25 @@ export class ToggleKeywordSelectedAction implements Action {
 export class ChangeNewKeywordOptionAction implements Action {
   readonly type = CHANGE_NEW_KEYWORD_OPTION_ACTION;
 
-  constructor(public payload: KeywordModifiers) {}
+  constructor(public clientId: string, public payload: KeywordModifiers) {}
 }
 
 export class ToggleKeywordAllSelectedAction implements Action {
   readonly type = TOGGLE_KEYWORD_ALL_SELECTED_ACTION;
+
+  constructor(public clientId: string) {}
 }
 
 export class CopyAllKeywordsAction implements Action {
   readonly type = COPY_ALL_KEYWORDS_ACTION;
+
+  constructor(public clientId: string) {}
 }
 
 export class PasteKeywordsAction implements Action {
   readonly type = PASTE_KEYWORDS_ACTION;
 
-  constructor(public text: string) {}
+  constructor(public clientId: string, public text: string) {}
 }
 
 export type KeywordMatchingOptionsActions = AddKeywordAction |

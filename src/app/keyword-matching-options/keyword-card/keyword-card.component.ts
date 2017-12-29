@@ -1,8 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
 import { KeywordModifiers } from '../keyword-modifier-enum';
 import { KeywordParser } from '../keyword-parser';
+import { IKeyword } from '../keyword.interface';
+
+interface IEditKeywordOutput {
+  id: string;
+  text: string;
+}
+
+interface IEditKeywordModifierOutput {
+  id: string;
+  modifier: KeywordModifiers;
+}
 
 @Component({
   selector: 'app-keyword-card',
@@ -18,42 +28,37 @@ import { KeywordParser } from '../keyword-parser';
 })
 export class KeywordCardComponent {
   @Input()
-  public id: string;
+  public keyword: IKeyword;
 
-  @Input()
-  public text: string;
+  @Output()
+  public editKeywordText: EventEmitter<IEditKeywordOutput> = new EventEmitter<IEditKeywordOutput>();
 
-  @Input()
-  public modifier: KeywordModifiers;
+  @Output()
+  public removeKeyword: EventEmitter<string> = new EventEmitter<string>();
 
-  @Input()
-  public selected: boolean;
+  @Output()
+  public toggleKeywordSelected: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
-  ) {}
+  @Output()
+  public editKeywordModifier: EventEmitter<IEditKeywordModifierOutput> = new EventEmitter<IEditKeywordModifierOutput>();
 
   public get hintText(): string {
-    return KeywordParser.keywordToText({
-      text: this.text,
-      modifier: this.modifier,
-      selected: this.selected
-    });
+    return KeywordParser.keywordToText(this.keyword);
   }
 
   public onEditKeywordText(text: string): void {
-    this.keywordMatchingOptionsFacade.editKeywordText(this.id, text);
+    this.editKeywordText.emit({ id: this.keyword.id, text: text });
   }
 
   public onRemoveKeyword(): void {
-    this.keywordMatchingOptionsFacade.removeKeyword(this.id);
+    this.removeKeyword.emit(this.keyword.id);
   }
 
   public onToggleKeywordSelected(): void {
-    this.keywordMatchingOptionsFacade.toggleKeywordSelected(this.id);
+    this.toggleKeywordSelected.emit(this.keyword.id);
   }
 
   public onModifierChanged(modifier: KeywordModifiers): void {
-    this.keywordMatchingOptionsFacade.editKeywordModifier(this.id, modifier);
+    this.editKeywordModifier.emit({ id: this.keyword.id, modifier: modifier });
   }
 }

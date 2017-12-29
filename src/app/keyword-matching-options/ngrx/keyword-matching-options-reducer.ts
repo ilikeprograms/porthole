@@ -10,16 +10,20 @@ import {
 } from './keyword-matching-options.actions';
 
 import { IKeyword } from '../keyword.interface';
+import { IClient } from '../client.interface';
 
 export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsState, action: KeywordMatchingOptionsActions) {
   switch (action.type) {
     case ADD_KEYWORD_ACTION:
+      const actionClient: Array<IClient> = state.clients.filter((client: IClient) => client.id === action.clientId);
+
       return {
         ...state,
         keywords: [{
           id: uuid(),
+          clientId: action.clientId,
           text: action.text,
-          modifier: action.modifier ? action.modifier : state.matchOption, // Allow creating with Specific modifier, or use global one
+          modifier: action.modifier > -1 ? action.modifier : actionClient[0].matchOption, // Allow creating with Specific modifier, or use global one
           selected: false
         }, ...state.keywords]
       };
@@ -56,7 +60,7 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
       };
     case REMOVE_SELECTED_KEYWORD_ACTION:
       const nonSelectedKeywords: Array<IKeyword> = state.keywords.filter((keyword: IKeyword) => {
-        return !keyword.selected;
+        return (keyword.clientId !== action.clientId) || !keyword.selected;
       });
 
       return {
@@ -64,9 +68,13 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
         keywords: nonSelectedKeywords
       };
     case REMOVE_ALL_KEYWORDS_ACTION:
+      const nonClientKeywords: Array<IKeyword> = state.keywords.filter((keyword: IKeyword) => {
+        return keyword.clientId !== action.clientId;
+      });
+
       return {
         ...state,
-        keywords: []
+        keywords: nonClientKeywords
       };
     case TOGGLE_KEYWORD_SELECTED_ACTION:
       state.keywords.some((keyword: IKeyword) => {
@@ -84,10 +92,21 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
     case CHANGE_NEW_KEYWORD_OPTION_ACTION:
       return {
         ...state,
-        matchOption: action.payload
+        clients: [
+          ...state.clients.map((client: IClient) => {
+            if (client.id === action.clientId) {
+              client.matchOption = action.payload;
+            }
+
+            return client;
+          })
+        ]
       };
     case TOGGLE_KEYWORD_ALL_SELECTED_ACTION:
-      const anyUnselected = state.keywords.some((keyword: IKeyword) => {
+      const clientKeywords: Array<IKeyword> = state.keywords.filter((keyword: IKeyword) => {
+        return keyword.clientId === action.clientId;
+      });
+      const anyUnselected = clientKeywords.some((keyword: IKeyword) => {
         return !keyword.selected;
       });
 
