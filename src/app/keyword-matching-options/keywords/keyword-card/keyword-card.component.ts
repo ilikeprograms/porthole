@@ -19,6 +19,10 @@ interface IEditKeywordModifierOutput {
   templateUrl: './keyword-card.component.html',
   styles: [
     `
+      :host {
+        display: block;
+      }
+      
       .keyword-card {
         margin-bottom: 10px;
       }

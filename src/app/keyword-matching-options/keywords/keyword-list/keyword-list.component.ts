@@ -17,14 +17,14 @@ import { KeywordModifiers } from '../../keyword-modifier-enum';
   animations: [
     trigger('listAnimation', [
       transition('* => *', [
-        query(':enter', query('app-keyword-card mat-card', style({ opacity: 0, transform: 'translateY(-50px)' }), { optional: true }),  {optional: true }),
+        query(':enter', query('p app-keyword-card mat-card', style({ opacity: 0, transform: 'translateY(-50px)' }), { optional: true }),  {optional: true }),
         query(':enter', stagger('300ms', [
-          query('app-keyword-card mat-card',
+          query('p app-keyword-card mat-card',
             animate('300ms ease-in', style({ opacity: 1, transform: 'none', offset: 1 }))
           )
         ]), {optional: true }),
         query(':leave', stagger('300ms', [
-          query('app-keyword-card mat-card',
+          query('p app-keyword-card mat-card',
             animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(-50px)', offset: 1 }))
           )
         ]), {optional: true }),

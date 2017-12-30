@@ -1,6 +1,7 @@
-<mat-toolbar>
-  <mat-toolbar-row>{{ client.name }}</mat-toolbar-row>
-</mat-toolbar>
+<mat-card>
+  <mat-toolbar>
+    <mat-toolbar-row>{{ client.name }}</mat-toolbar-row>
+  </mat-toolbar>
 
 <app-add-keyword
   [selectedMatchOption]="client.matchOption"
@@ -12,17 +13,17 @@
 <app-no-keyword *ngIf="(keywordsCount$ | async) === 0"></app-no-keyword>
 
 <div [@listAnimation]="keywordsCount$ | async">
-  <app-keyword-card
-    *ngFor="let keyword of keywords$ | async"
+    <p *ngFor="let keyword of keywords$ | async">
+      <app-keyword-card
+        [keyword]="keyword"
+        [selected]="keyword.selected"
 
-    [keyword]="keyword"
-    [selected]="keyword.selected"
-
-    (editKeywordText)="onEditKeywordText($event)"
-    (removeKeyword)="onRemoveKeyword($event)"
-    (toggleKeywordSelected)="onToggleKeywordSelected($event)"
-    (editKeywordModifier)="onModifierChanged($event)"
-    ></app-keyword-card>
+        (editKeywordText)="onEditKeywordText($event)"
+        (removeKeyword)="onRemoveKeyword($event)"
+        (toggleKeywordSelected)="onToggleKeywordSelected($event)"
+        (editKeywordModifier)="onModifierChanged($event)"
+        ></app-keyword-card>
+    </p>
 </div>
 
 <app-keyword-footer-actions
@@ -36,3 +37,4 @@
   (copyAllKeywords)="onCopyAllKeywords()"
   (pasteKeywords)="onPasteKeywords($event)"
 ></app-keyword-footer-actions>
+</mat-card>
