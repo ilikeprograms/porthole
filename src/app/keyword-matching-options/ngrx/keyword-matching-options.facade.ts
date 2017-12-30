@@ -9,10 +9,15 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keyword.interface';
 import {
+  selectCampaigns,
   selectClients, selectKeywords
 } from './keyword-matching-options.selectors';
 import {
-  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, EditKeywordModifierAction,
+  AddCampaign,
+  AddClientAction,
+  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, DeleteCampaignsAction, EditCampaign,
+  EditClientAction,
+  EditKeywordModifierAction,
   EditKeywordTextAction, PasteKeywordsAction,
   RemoveAllKeywordsAction,
   RemoveKeywordAction,
@@ -23,19 +28,42 @@ import {
 import { KeywordModifiers } from '../keyword-modifier-enum';
 import { IClient } from '../client.interface';
 import 'rxjs/add/operator/filter';
+import { ICampaign } from '../campaign.interface';
+import { IClientWithCampaigns } from '../client-with-campaigns.interface';
+import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
   public clients: Observable<Array<IClient>>;
+  public campaigns$: Observable<Array<ICampaign>>;
+  public clientsWithCampaigns$: Observable<Array<IClientWithCampaigns>>;
   public keywords: Observable<Array<IKeyword>>;
   public keywordsCount: Observable<number>;
-  // public matchOption: Observable<KeywordModifiers>;
   public allSelected: Observable<boolean>;
   public keywordsSelectedCount: Observable<number>;
 
   constructor(private store: Store<IAppState>) {
     this.clients = this.store.select(selectClients);
+    this.campaigns$ = this.store.select(selectCampaigns);
     this.keywords = this.store.select(selectKeywords);
+
+    this.clientsWithCampaigns$ = Observable.combineLatest(this.clients, this.campaigns$)
+      .map((values: [Array<IClient>, Array<ICampaign>]) => {
+        console.log(values);
+        return values[0].map((client: IClientWithCampaigns) => {
+          const campaigns: Array<ICampaign> = [
+            ...values[1]
+          ];
+
+          client.campaigns = campaigns.filter((campaign: ICampaign) => {
+            return client.campaignIds.indexOf(campaign.id) > -1;
+          });
+
+          return client;
+        });
+      });
 
     // this.matchOption = this.store.select(selectMatchOption);
 
@@ -150,5 +178,25 @@ export class KeywordMatchingOptionsFacade {
 
   public pasteKeywords(clientId: string, text: string): void {
     this.store.dispatch(new PasteKeywordsAction(clientId, text));
+  }
+
+  public addClient(name: string): void {
+    this.store.dispatch(new AddClientAction(name));
+  }
+
+  public editClient(id: string, name: string): void {
+    this.store.dispatch(new EditClientAction(id, name));
+  }
+
+  public addCampaign(clientId: string, name: string): void {
+    this.store.dispatch(new AddCampaign(clientId, name));
+  }
+
+  public editCampaign(id: string, name: string): void {
+    this.store.dispatch(new EditCampaign(id, name));
+  }
+
+  public deleteCampaign(id: string, shouldDeleteAdgroups: boolean): void {
+    this.store.dispatch(new DeleteCampaignsAction(id, shouldDeleteAdgroups));
   }
 }

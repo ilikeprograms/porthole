@@ -4,23 +4,23 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
-import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
-import { IClient } from '../client.interface';
+import { KeywordMatchingOptionsFacade } from './ngrx/keyword-matching-options.facade';
+import { IClient } from './client.interface';
 
 @Component({
-  selector: 'app-client-list',
+  selector: 'app-keyword-matching-options-tabs',
   template: `
     <h2>Keywords matching options</h2>
 
     <mat-tab-group>
       <mat-tab label="Ad Groups">
         <div class="tab-content">
-          <app-tag-container *ngFor="let client of clients$ | async" [client]="client"></app-tag-container>
+          <app-keyword-list *ngFor="let client of clients$ | async" [client]="client"></app-keyword-list>
         </div>
       </mat-tab>
       <mat-tab label="Clients">
         <div class="tab-content">
-          Clients
+          <app-client-list></app-client-list>
         </div>
       </mat-tab>
     </mat-tab-group>
@@ -31,7 +31,7 @@ import { IClient } from '../client.interface';
     }
   `]
 })
-export class ClientListComponent implements OnDestroy {
+export class KeywordMatchingOptionsTabsComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   public clients$: Observable<Array<IClient>>;

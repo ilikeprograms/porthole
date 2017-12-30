@@ -2,7 +2,12 @@ import { v4 as uuid } from 'uuid';
 
 import { IKeywordMatchingOptionsState } from './keyword-matching-options-state.interface';
 import {
-  ADD_KEYWORD_ACTION, CHANGE_NEW_KEYWORD_OPTION_ACTION, EDIT_KEYWORD_MODIFIER_ACTION, EDIT_KEYWORD_TEXT_ACTION,
+  ADD_CAMPAIGN_ACTION,
+  ADD_CLIENT_ACTION,
+  ADD_KEYWORD_ACTION, CHANGE_NEW_KEYWORD_OPTION_ACTION, DELETE_CAMPAIGN_ACTION, EDIT_CAMPAIGN_ACTION,
+  EDIT_CLIENT_ACTION,
+  EDIT_KEYWORD_MODIFIER_ACTION,
+  EDIT_KEYWORD_TEXT_ACTION,
   KeywordMatchingOptionsActions,
   REMOVE_ALL_KEYWORDS_ACTION,
   REMOVE_KEYWORD_ACTION, REMOVE_SELECTED_KEYWORD_ACTION, TOGGLE_KEYWORD_ALL_SELECTED_ACTION,
@@ -11,6 +16,8 @@ import {
 
 import { IKeyword } from '../keyword.interface';
 import { IClient } from '../client.interface';
+import { KeywordModifiers } from '../keyword-modifier-enum';
+import { ICampaign } from '../campaign.interface';
 
 export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsState, action: KeywordMatchingOptionsActions) {
   switch (action.type) {
@@ -118,6 +125,71 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
           return keyword;
         })
       };
+    case ADD_CLIENT_ACTION:
+      return {
+        ...state,
+        clients: [
+          ...state.clients,
+          {
+            id: uuid(),
+            name: action.name,
+            matchOption: KeywordModifiers.BroadMatch,
+            campaignIds: []
+          }
+        ]
+      };
+    case EDIT_CLIENT_ACTION:
+      return {
+        ...state,
+        clients: state.clients.map((client: IClient) => {
+          if (client.id === action.id) {
+            client.name = action.name;
+          }
+
+          return client;
+        })
+      };
+    case ADD_CAMPAIGN_ACTION:
+      const campaignId = uuid();
+
+      return {
+        ...state,
+        campaigns: [
+          ...state.campaigns,
+          {
+            id: campaignId,
+            name: action.name
+          }
+        ],
+        clients: state.clients.map((client: IClient) => {
+          if (client.id === action.clientId) {
+            client.campaignIds.push(campaignId);
+          }
+
+          return client;
+        })
+      };
+    case EDIT_CAMPAIGN_ACTION:
+      return {
+        ...state,
+        campaigns: state.campaigns.map((campaign: ICampaign) => {
+          if (campaign.id === action.id) {
+            campaign.name = action.name;
+          }
+
+          return campaign;
+        })
+      };
+    case DELETE_CAMPAIGN_ACTION: {
+      const campaigns: Array<ICampaign> = state.campaigns.filter((campaign: ICampaign) => {
+        return campaign.id !== action.id;
+      });
+
+      return {
+        ...state,
+        campaigns: campaigns
+      };
+    }
     default:
       return state;
   }

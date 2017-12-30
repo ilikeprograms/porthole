@@ -5,16 +5,25 @@ import { KeywordModifiers } from '../keyword-modifier-enum';
 
 const client1Id = uuid();
 const client2Id = uuid();
+const campaignId = uuid();
 
 export const KeywordMatchingOptionsDefaultState: IKeywordMatchingOptionsState = {
   clients: [{
     id: client1Id,
     name: 'bob',
-    matchOption: KeywordModifiers.BroadMatch
+    matchOption: KeywordModifiers.BroadMatch,
+    campaignIds: [
+      campaignId
+    ],
   }, {
     id: client2Id,
     name: 'James',
-    matchOption: KeywordModifiers.BroadMatchModifier
+    matchOption: KeywordModifiers.BroadMatchModifier,
+    campaignIds: [],
+  }],
+  campaigns: [{
+    id: campaignId,
+    name: 'bob campaign'
   }],
   keywords: [
     { id: uuid(), clientId: client1Id, modifier: KeywordModifiers.BroadMatch, text: 'Broad Match', selected: false },

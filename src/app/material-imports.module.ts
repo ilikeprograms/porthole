@@ -7,13 +7,15 @@ import {
   MatGridListModule,
   MatButtonModule,
   MatCheckboxModule, MatSnackBarModule, MatButtonToggleModule, MatExpansionModule, MatListModule, MatMenuModule,
-  MatToolbarModule, MatTooltipModule, MatFormFieldModule, MatIconModule, MatCardModule, MatTabsModule, MatSidenavModule
+  MatToolbarModule, MatTooltipModule, MatFormFieldModule, MatIconModule, MatCardModule, MatTabsModule, MatSidenavModule,
+  MatSlideToggleModule
 } from '@angular/material';
 
 
 @NgModule({
   imports: [
     MatSidenavModule,
+    MatSlideToggleModule,
     MatSelectModule,
     MatDialogModule,
     MatTabsModule,
@@ -35,6 +37,7 @@ import {
   ],
   exports: [
     MatSidenavModule,
+    MatSlideToggleModule,
     MatSelectModule,
     MatDialogModule,
     MatTabsModule,

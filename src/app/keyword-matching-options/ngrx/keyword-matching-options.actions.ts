@@ -13,6 +13,11 @@ export const CHANGE_NEW_KEYWORD_OPTION_ACTION = '[KeywordMatchingOptions] Change
 export const TOGGLE_KEYWORD_ALL_SELECTED_ACTION = '[KeywordMatchingOptions] Toggle keyword all selected option';
 export const COPY_ALL_KEYWORDS_ACTION = '[KeywordMatchingOptions] Copy all keywords';
 export const PASTE_KEYWORDS_ACTION = '[KeywordMatchingOptions] Paste keywords';
+export const ADD_CLIENT_ACTION = '[KeywordMatchingOptions] Add client';
+export const EDIT_CLIENT_ACTION = '[KeywordMatchingOptions] Edit client';
+export const ADD_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Add campaign';
+export const EDIT_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Edit campaign';
+export const DELETE_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Delete campaign';
 
 export class AddKeywordAction implements Action {
   readonly type = ADD_KEYWORD_ACTION;
@@ -80,6 +85,36 @@ export class PasteKeywordsAction implements Action {
   constructor(public clientId: string, public text: string) {}
 }
 
+export class AddClientAction implements Action {
+  readonly type = ADD_CLIENT_ACTION;
+
+  constructor(public name: string) {}
+}
+
+export class EditClientAction implements Action {
+  readonly type = EDIT_CLIENT_ACTION;
+
+  constructor(public id: string, public name: string) {}
+}
+
+export class AddCampaign implements Action {
+  readonly type = ADD_CAMPAIGN_ACTION;
+
+  constructor(public clientId: string, public name: string) {}
+}
+
+export class EditCampaign implements Action {
+  readonly type = EDIT_CAMPAIGN_ACTION;
+
+  constructor(public id: string, public name: string) {}
+}
+
+export class DeleteCampaignsAction implements Action {
+  readonly type = DELETE_CAMPAIGN_ACTION;
+
+  constructor(public id: string, public shouldDeleteAdgroups: boolean) {}
+}
+
 export type KeywordMatchingOptionsActions = AddKeywordAction |
   EditKeywordTextAction |
   EditKeywordModifierAction |
@@ -90,4 +125,9 @@ export type KeywordMatchingOptionsActions = AddKeywordAction |
   ChangeNewKeywordOptionAction |
   ToggleKeywordAllSelectedAction |
   CopyAllKeywordsAction |
-  PasteKeywordsAction;
+  PasteKeywordsAction |
+  AddClientAction |
+  EditClientAction |
+  AddCampaign |
+  EditCampaign |
+  DeleteCampaignsAction;

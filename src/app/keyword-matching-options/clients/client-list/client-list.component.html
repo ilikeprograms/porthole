@@ -1,0 +1,13 @@
+<mat-card *ngFor="let client of clientsWithCampaigns$ | async">
+  <mat-card-title>{{ client.name }} <button mat-button (click)="onEditClient(client)">Change name</button></mat-card-title>
+  <mat-card-content>
+    <p *ngFor="let campaign of client.campaigns">{{ campaign.name }}<button mat-button (click)="onEditCampaign(campaign)">Change name</button> <button mat-button color="warn" (click)="onDeleteCampaign(campaign.id)">Delete <mat-icon>delete</mat-icon></button></p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button color="primary" (click)="onAddCampaign(client.id)">Add campaign</button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-action-row>
+  <button mat-button color="primary" (click)="onAddClient()">Add new</button>
+</mat-action-row>

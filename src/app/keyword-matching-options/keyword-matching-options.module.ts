@@ -3,18 +3,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { MaterialImportsModule } from '../material-imports.module';
-import { TagContainerComponent } from './tag-container/tag-container.component';
-import { KeywordIconComponent } from './keyword-icon/keyword-icon.component';
+import { KeywordListComponent } from './keywords/keyword-list/keyword-list.component';
+import { KeywordIconComponent } from './keywords/keyword-icon/keyword-icon.component';
 import { KeywordMatchingOptionsFacade } from './ngrx/keyword-matching-options.facade';
-import { KeywordFooterActionsComponent } from './keyword-footer-actions/keyword-footer-actions.component';
-import { AddKeywordComponent } from './add-keyword/add-keyword.component';
-import { KeywordCardComponent } from './keyword-card/keyword-card.component';
-import { NoKeywordComponent } from './no-keyword/no-keyword.component';
-import { DeleteAllConfirmComponent } from './delete-all-confirm/delete-all-confirm.component';
+import { KeywordFooterActionsComponent } from './keywords/keyword-footer-actions/keyword-footer-actions.component';
+import { AddKeywordComponent } from './keywords/add-keyword/add-keyword.component';
+import { KeywordCardComponent } from './keywords/keyword-card/keyword-card.component';
+import { NoKeywordComponent } from './keywords/no-keyword/no-keyword.component';
+import { DeleteAllConfirmComponent } from './keywords/delete-all-confirm/delete-all-confirm.component';
 import { EffectsModule } from '@ngrx/effects';
 import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.effects';
-import { PasteModalComponent } from './paste-modal/paste-modal.component';
-import { ClientListComponent } from './client-list/client-list.component';
+import { PasteModalComponent } from './keywords/paste-modal/paste-modal.component';
+import { ClientListComponent } from './clients/client-list/client-list.component';
+import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options-tabs';
+import { ClientAddModalComponent } from './clients/client-add-modal/client-add-modal.component';
+import { CampaignDeleteModalComponent } from './clients/campaign-delete-modal/campaign-delete-modal';
+import { CampaignModalComponent } from './clients/campaign-modal/campaign-modal.component';
 
 @NgModule({
   imports: [
@@ -24,7 +28,8 @@ import { ClientListComponent } from './client-list/client-list.component';
     EffectsModule.forFeature([KeywordMatchingOptionsEffects])
   ],
   declarations: [
-    TagContainerComponent,
+    KeywordMatchingOptionsTabsComponent,
+    KeywordListComponent,
     ClientListComponent,
     AddKeywordComponent,
     NoKeywordComponent,
@@ -32,17 +37,23 @@ import { ClientListComponent } from './client-list/client-list.component';
     KeywordIconComponent,
     KeywordFooterActionsComponent,
     DeleteAllConfirmComponent,
-    PasteModalComponent
+    PasteModalComponent,
+    ClientAddModalComponent,
+    CampaignDeleteModalComponent,
+    CampaignModalComponent
   ],
   exports: [
-    ClientListComponent
+    KeywordMatchingOptionsTabsComponent
   ],
   providers: [
     KeywordMatchingOptionsFacade
   ],
   entryComponents: [
     DeleteAllConfirmComponent,
-    PasteModalComponent
+    PasteModalComponent,
+    ClientAddModalComponent,
+    CampaignDeleteModalComponent,
+    CampaignModalComponent
   ],
 })
 export class KeywordMatchingOptionsModule {}

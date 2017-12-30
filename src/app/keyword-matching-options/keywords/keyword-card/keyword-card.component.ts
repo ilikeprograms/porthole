@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { KeywordModifiers } from '../keyword-modifier-enum';
-import { KeywordParser } from '../keyword-parser';
-import { IKeyword } from '../keyword.interface';
+import { KeywordModifiers } from '../../keyword-modifier-enum';
+import { KeywordParser } from '../../keyword-parser';
+import { IKeyword } from '../../keyword.interface';
 
 interface IEditKeywordOutput {
   id: string;

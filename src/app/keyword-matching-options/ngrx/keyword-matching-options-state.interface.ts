@@ -1,8 +1,9 @@
 import { IKeyword } from '../keyword.interface';
-import { KeywordModifiers } from '../keyword-modifier-enum';
 import { IClient } from '../client.interface';
+import { ICampaign } from '../campaign.interface';
 
 export interface IKeywordMatchingOptionsState {
   clients: Array<IClient>;
+  campaigns: Array<ICampaign>;
   keywords: Array<IKeyword>;
 }

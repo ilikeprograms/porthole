@@ -4,15 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators/takeUntil';
 
-import { IKeyword } from '../keyword.interface';
-import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
+import { IKeyword } from '../../keyword.interface';
+import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { animate, keyframes, query, stagger, state, style, transition, trigger } from '@angular/animations';
-import { IClient } from '../client.interface';
-import { KeywordModifiers } from '../keyword-modifier-enum';
+import { IClient } from '../../client.interface';
+import { KeywordModifiers } from '../../keyword-modifier-enum';
 
 @Component({
-  selector: 'app-tag-container',
-  templateUrl: './tag-container.component.html',
+  selector: 'app-keyword-list',
+  templateUrl: './keyword-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('listAnimation', [
@@ -32,7 +32,7 @@ import { KeywordModifiers } from '../keyword-modifier-enum';
     ]),
   ]
 })
-export class TagContainerComponent implements OnDestroy, OnInit {
+export class KeywordListComponent implements OnDestroy, OnInit {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   @Input()
