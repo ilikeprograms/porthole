@@ -14,6 +14,7 @@ import { KeywordMatchingOptionsDefaultState } from './keyword-matching-options/n
 import { SnackbarNgrxModule } from './snackbar-ngrx/snackbar-ngrx.module';
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
+import { AboutModule } from './about/about.module';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { AppRoutingModule } from './app-routing.module';
       maxAge: 25 //  Retains last 25 states
     }),
     KeywordMatchingOptionsModule,
+    AboutModule,
     EffectsModule.forRoot([]),
     SnackbarNgrxModule
   ],
