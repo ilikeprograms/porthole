@@ -30,6 +30,9 @@ export class KeywordCardComponent {
   @Input()
   public keyword: IKeyword;
 
+  @Input()
+  public selected: boolean;
+
   @Output()
   public editKeywordText: EventEmitter<IEditKeywordOutput> = new EventEmitter<IEditKeywordOutput>();
 

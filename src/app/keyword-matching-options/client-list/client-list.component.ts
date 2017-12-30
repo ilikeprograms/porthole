@@ -1,19 +1,35 @@
 import { Component, OnDestroy } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-
-import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
+
+import { KeywordMatchingOptionsFacade } from '../ngrx/keyword-matching-options.facade';
 import { IClient } from '../client.interface';
 
 @Component({
   selector: 'app-client-list',
   template: `
-    <h1>Keywords matching options</h1>
+    <h2>Keywords matching options</h2>
 
-    <app-tag-container *ngFor="let client of clients$ | async" [client]="client"></app-tag-container>
-  `
+    <mat-tab-group>
+      <mat-tab label="Ad Groups">
+        <div class="tab-content">
+          <app-tag-container *ngFor="let client of clients$ | async" [client]="client"></app-tag-container>
+        </div>
+      </mat-tab>
+      <mat-tab label="Clients">
+        <div class="tab-content">
+          Clients
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  `,
+  styles: [`
+    .tab-content {
+      padding: 1rem;
+    }
+  `]
 })
 export class ClientListComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();

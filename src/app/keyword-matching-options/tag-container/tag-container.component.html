@@ -16,6 +16,7 @@
     *ngFor="let keyword of keywords$ | async"
 
     [keyword]="keyword"
+    [selected]="keyword.selected"
 
     (editKeywordText)="onEditKeywordText($event)"
     (removeKeyword)="onRemoveKeyword($event)"

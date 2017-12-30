@@ -1,18 +1,22 @@
 import { NgModule } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule,
+import {
+  MatSelectModule,
   MatDialogModule,
   MatChipsModule,
   MatGridListModule,
   MatButtonModule,
   MatCheckboxModule, MatSnackBarModule, MatButtonToggleModule, MatExpansionModule, MatListModule, MatMenuModule,
-  MatToolbarModule, MatTooltipModule, MatFormFieldModule, MatIconModule, MatCardModule } from '@angular/material';
+  MatToolbarModule, MatTooltipModule, MatFormFieldModule, MatIconModule, MatCardModule, MatTabsModule, MatSidenavModule
+} from '@angular/material';
 
 
 @NgModule({
   imports: [
+    MatSidenavModule,
     MatSelectModule,
     MatDialogModule,
+    MatTabsModule,
     MatInputModule,
     MatFormFieldModule,
     MatChipsModule,
@@ -30,8 +34,10 @@ import { MatSelectModule,
     MatMenuModule
   ],
   exports: [
+    MatSidenavModule,
     MatSelectModule,
     MatDialogModule,
+    MatTabsModule,
     MatInputModule,
     MatFormFieldModule,
     MatChipsModule,

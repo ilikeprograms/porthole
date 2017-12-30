@@ -1,5 +1,5 @@
 <mat-card class="keyword-card">
-  <mat-checkbox [checked]="keyword.selected" (change)="onToggleKeywordSelected()"></mat-checkbox>
+  <mat-checkbox [checked]="selected" (change)="onToggleKeywordSelected()"></mat-checkbox>
   <app-keyword-icon [modifier]="keyword.modifier" (change)="onModifierChanged($event)"></app-keyword-icon>
   <mat-form-field [hintLabel]="hintText">
     <input type="text" matInput placeholder="Keyword" [value]="keyword.text" (change)="onEditKeywordText($event.target.value)" />
