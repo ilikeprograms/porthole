@@ -47,7 +47,7 @@ export class KeywordMatchingOptionsEffects {
       .withLatestFrom(this.keywordMatchingOptionsFacade.keywords)
       .switchMap((value: [CopyAllKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
-          return keyword.clientId === value[0].clientId;
+          return keyword.adgroupId === value[0].adgroupId;
         })
 
         const formattedKeywords: Array<string> = clientKeywords.map((keyword: IKeyword) => {
@@ -73,10 +73,8 @@ export class KeywordMatchingOptionsEffects {
           return KeywordParser.textToKeywordTextAndModifier(keyword);
         });
 
-        console.log(keywords);
-
         const keywordAction = keywords.map((keywordWithModifier: IParseKeywordTextModifier) => {
-          return new AddKeywordAction(action.clientId, keywordWithModifier.text, keywordWithModifier.modifier);
+          return new AddKeywordAction(action.addroupId, keywordWithModifier.text, keywordWithModifier.modifier);
         });
 
         return [

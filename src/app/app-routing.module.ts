@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './about/about.component';
 import {
   KeywordMatchingOptionsTabsComponent
-} from './keyword-matching-options/keyword-matching-options-tabs';
+} from './keyword-matching-options/keyword-matching-options-tabs/keyword-matching-options-tabs';
 
 const appRoutes: Routes = [{
   path: 'keywords',

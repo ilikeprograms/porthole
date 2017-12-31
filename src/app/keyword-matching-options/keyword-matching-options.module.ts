@@ -15,10 +15,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.effects';
 import { PasteModalComponent } from './keywords/paste-modal/paste-modal.component';
 import { ClientListComponent } from './clients/client-list/client-list.component';
-import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options-tabs';
+import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options-tabs/keyword-matching-options-tabs';
 import { ClientAddModalComponent } from './clients/client-add-modal/client-add-modal.component';
 import { CampaignDeleteModalComponent } from './clients/campaign-delete-modal/campaign-delete-modal';
 import { CampaignModalComponent } from './clients/campaign-modal/campaign-modal.component';
+import { KeywordCardListComponent } from './keywords/keyword-card-list/keyword-card-list.component';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { CampaignModalComponent } from './clients/campaign-modal/campaign-modal.
   declarations: [
     KeywordMatchingOptionsTabsComponent,
     KeywordListComponent,
+    KeywordCardListComponent,
     ClientListComponent,
     AddKeywordComponent,
     NoKeywordComponent,

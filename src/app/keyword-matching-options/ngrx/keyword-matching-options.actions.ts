@@ -22,7 +22,7 @@ export const DELETE_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Delete campaign'
 export class AddKeywordAction implements Action {
   readonly type = ADD_KEYWORD_ACTION;
 
-  constructor(public clientId: string, public text: string, public modifier?: KeywordModifiers) {}
+  constructor(public addroupId: string, public text: string, public modifier?: KeywordModifiers) {}
 }
 
 export class EditKeywordTextAction implements Action {
@@ -40,49 +40,49 @@ export class EditKeywordModifierAction implements Action {
 export class RemoveKeywordAction implements Action {
   readonly type = REMOVE_KEYWORD_ACTION;
 
-  constructor(public id: string) {}
+  constructor(public addgroupId: string, public id: string) {}
 }
 
 export class RemoveSelectedKeywordsAction implements Action {
   readonly type = REMOVE_SELECTED_KEYWORD_ACTION;
 
-  constructor(public clientId: string) {}
+  constructor(public addgroupId: string) {}
 }
 
 export class RemoveAllKeywordsAction implements Action {
   readonly type = REMOVE_ALL_KEYWORDS_ACTION;
 
-  constructor(public clientId: string) {}
+  constructor(public addgroupId: string) {}
 }
 
 export class ToggleKeywordSelectedAction implements Action {
   readonly type = TOGGLE_KEYWORD_SELECTED_ACTION;
 
-  constructor(public payload: string) {}
+  constructor(public id: string) {}
 }
 
 export class ChangeNewKeywordOptionAction implements Action {
   readonly type = CHANGE_NEW_KEYWORD_OPTION_ACTION;
 
-  constructor(public clientId: string, public payload: KeywordModifiers) {}
+  constructor(public addgroupId: string, public payload: KeywordModifiers) {}
 }
 
 export class ToggleKeywordAllSelectedAction implements Action {
   readonly type = TOGGLE_KEYWORD_ALL_SELECTED_ACTION;
 
-  constructor(public clientId: string) {}
+  constructor(public addgroupId: string) {}
 }
 
 export class CopyAllKeywordsAction implements Action {
   readonly type = COPY_ALL_KEYWORDS_ACTION;
 
-  constructor(public clientId: string) {}
+  constructor(public adgroupId: string) {}
 }
 
 export class PasteKeywordsAction implements Action {
   readonly type = PASTE_KEYWORDS_ACTION;
 
-  constructor(public clientId: string, public text: string) {}
+  constructor(public addroupId: string, public text: string) {}
 }
 
 export class AddClientAction implements Action {

@@ -6,6 +6,15 @@ import { IClient } from '../client.interface';
 import { ICampaign } from '../campaign.interface';
 
 const selectFeature = createFeatureSelector<IKeywordMatchingOptionsState>('keywordMatchingOptions');
-export const selectClients = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => state.clients);
-export const selectCampaigns = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => state.campaigns);
-export const selectKeywords = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => state.keywords);
+export const selectClients = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => Object.keys(state.clients).map((clientId: string) => {
+  return state.clients[clientId];
+}));
+export const selectCampaigns = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => Object.keys(state.campaigns).map((campaignId: string) => {
+  return state.campaigns[campaignId];
+}));
+export const selectAdgroups = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) =>  Object.keys(state.adgroups).map((adgroupId: string) => {
+  return state.adgroups[adgroupId];
+}));
+export const selectKeywords = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => Object.keys(state.keywords).map((keywordId: string) => {
+  return state.keywords[keywordId];
+}));

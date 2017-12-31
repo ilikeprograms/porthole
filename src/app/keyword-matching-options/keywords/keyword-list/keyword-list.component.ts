@@ -1,14 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { takeUntil } from 'rxjs/operators/takeUntil';
-
-import { IKeyword } from '../../keyword.interface';
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
-import { animate, keyframes, query, stagger, state, style, transition, trigger } from '@angular/animations';
-import { IClient } from '../../client.interface';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { KeywordModifiers } from '../../keyword-modifier-enum';
+import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
 
 @Component({
   selector: 'app-keyword-list',
@@ -32,40 +27,20 @@ import { KeywordModifiers } from '../../keyword-modifier-enum';
     ]),
   ]
 })
-export class KeywordListComponent implements OnDestroy, OnInit {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
+export class KeywordListComponent {
   @Input()
-  public client: IClient;
-
-  public keywordsCount$: Observable<number>;
-  public keywordsSelectedCount$: Observable<number>;
-  public keywordsAllSelected$: Observable<boolean>;
-  public keywords$: Observable<Array<IKeyword>>;
+  public addgroupWithKeywords: IAddGroupWithKeywords;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {}
 
-  public ngOnInit(): void {
-    this.keywords$ = this.keywordMatchingOptionsFacade.keywordsByClientId(this.client.id).pipe(takeUntil(this.unsubscribe$));
-
-    this.keywordsCount$ = this.keywordMatchingOptionsFacade.keywordsByClientIdCount(this.client.id).pipe(takeUntil(this.unsubscribe$));
-    this.keywordsSelectedCount$ = this.keywordMatchingOptionsFacade.keywordsByClientIdSelected(this.client.id).pipe(takeUntil(this.unsubscribe$));
-    this.keywordsAllSelected$ = this.keywordMatchingOptionsFacade.keywordsByClientIdAllSelected(this.client.id).pipe(takeUntil(this.unsubscribe$));
-  }
-
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
-    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.client.id, modifier);
+    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.addgroupWithKeywords.id, modifier);
   }
 
   public onAddKeyword(keywordText: string) {
-    this.keywordMatchingOptionsFacade.addKeyword(this.client.id, keywordText);
+    this.keywordMatchingOptionsFacade.addKeyword(this.addgroupWithKeywords.id, keywordText);
   }
 
   public onEditKeywordText({id, text}: { id: string; text: string; }): void {
@@ -73,7 +48,7 @@ export class KeywordListComponent implements OnDestroy, OnInit {
   }
 
   public onRemoveKeyword(id: string): void {
-    this.keywordMatchingOptionsFacade.removeKeyword(id);
+    this.keywordMatchingOptionsFacade.removeKeyword(this.addgroupWithKeywords.id, id);
   }
 
   public onToggleKeywordSelected(id: string): void {
@@ -81,15 +56,15 @@ export class KeywordListComponent implements OnDestroy, OnInit {
   }
 
   public onToggleAllSelected(): void {
-    this.keywordMatchingOptionsFacade.toggleAllSelected(this.client.id);
+    this.keywordMatchingOptionsFacade.toggleAllSelected(this.addgroupWithKeywords.id);
   }
 
   public onRemoveSelectedKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeSelectedKeywords(this.client.id);
+    this.keywordMatchingOptionsFacade.removeSelectedKeywords(this.addgroupWithKeywords.id);
   }
 
   public onRemoveAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeAllKeywords(this.client.id);
+    this.keywordMatchingOptionsFacade.removeAllKeywords(this.addgroupWithKeywords.id);
   }
 
   public onModifierChanged({ id, modifier}: { id: string; modifier: KeywordModifiers }): void {
@@ -97,10 +72,10 @@ export class KeywordListComponent implements OnDestroy, OnInit {
   }
 
   public onCopyAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.copyAllKeywords(this.client.id);
+    this.keywordMatchingOptionsFacade.copyAllKeywords(this.addgroupWithKeywords.id);
   }
 
   public onPasteKeywords(keywords: string) {
-    this.keywordMatchingOptionsFacade.pasteKeywords(this.client.id, keywords);
+    this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroupWithKeywords.id, keywords);
   }
 }

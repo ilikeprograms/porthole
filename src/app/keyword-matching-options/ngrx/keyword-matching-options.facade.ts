@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keyword.interface';
 import {
+  selectAdgroups,
   selectCampaigns,
   selectClients, selectKeywords
 } from './keyword-matching-options.selectors';
@@ -33,12 +34,16 @@ import { IClientWithCampaigns } from '../client-with-campaigns.interface';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/combineLatest';
+import { IAdgroup } from '../adgroup-interface';
+import { IAddGroupWithKeywords } from '../addgroup-with-keywords.interface';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
   public clients: Observable<Array<IClient>>;
   public campaigns$: Observable<Array<ICampaign>>;
+  public addgroups$: Observable<Array<IAdgroup>>;
   public clientsWithCampaigns$: Observable<Array<IClientWithCampaigns>>;
+  public addgroupsWithKeywords$: Observable<Array<IAddGroupWithKeywords>>;
   public keywords: Observable<Array<IKeyword>>;
   public keywordsCount: Observable<number>;
   public allSelected: Observable<boolean>;
@@ -47,11 +52,11 @@ export class KeywordMatchingOptionsFacade {
   constructor(private store: Store<IAppState>) {
     this.clients = this.store.select(selectClients);
     this.campaigns$ = this.store.select(selectCampaigns);
+    this.addgroups$ = this.store.select(selectAdgroups);
     this.keywords = this.store.select(selectKeywords);
 
     this.clientsWithCampaigns$ = Observable.combineLatest(this.clients, this.campaigns$)
       .map((values: [Array<IClient>, Array<ICampaign>]) => {
-        console.log(values);
         return values[0].map((client: IClientWithCampaigns) => {
           const campaigns: Array<ICampaign> = [
             ...values[1]
@@ -64,6 +69,31 @@ export class KeywordMatchingOptionsFacade {
           return client;
         });
       });
+
+    this.addgroupsWithKeywords$ = Observable.combineLatest(this.addgroups$, this.keywords)
+      .map((values: [Array<IAdgroup>, Array<IKeyword>]) => {
+        console.log(values);
+        return values[0].map((addgroup: IAddGroupWithKeywords) => {
+          const keywords: Array<IKeyword> = [
+            ...values[1]
+          ];
+
+          addgroup.keywords = keywords.filter((keyword: IKeyword) => {
+            return addgroup.keywordIds.indexOf(keyword.id) > -1;
+          });
+
+          const selectedKeywords: Array<IKeyword> = addgroup.keywords.filter((keyword: IKeyword) => {
+            return keyword.selected;
+          });
+
+          addgroup.keywordSelectedCount = selectedKeywords.length;
+          addgroup.keywordAllSelected = keywords.length === 0 ? false : (selectedKeywords.length === keywords.length);
+
+          return addgroup;
+        });
+      });
+
+
 
     // this.matchOption = this.store.select(selectMatchOption);
 
@@ -136,8 +166,8 @@ export class KeywordMatchingOptionsFacade {
     });
   }
 
-  public addKeyword(clientId: string, text: string): void {
-    this.store.dispatch(new AddKeywordAction(clientId, text));
+  public addKeyword(addroupId: string, text: string): void {
+    this.store.dispatch(new AddKeywordAction(addroupId, text));
   }
 
   public editKeywordText(id: string, text: string): void {
@@ -148,36 +178,36 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new EditKeywordModifierAction(id, modifier));
   }
 
-  public removeKeyword(id: string): void {
-    this.store.dispatch(new RemoveKeywordAction(id));
+  public removeKeyword(addgroupId: string, id: string): void {
+    this.store.dispatch(new RemoveKeywordAction(addgroupId, id));
   }
 
-  public removeSelectedKeywords(clientId: string): void {
-    this.store.dispatch(new RemoveSelectedKeywordsAction(clientId));
+  public removeSelectedKeywords(addgroupId: string): void {
+    this.store.dispatch(new RemoveSelectedKeywordsAction(addgroupId));
   }
 
-  public removeAllKeywords(clientId: string): void {
-    this.store.dispatch(new RemoveAllKeywordsAction(clientId));
+  public removeAllKeywords(addgroupId: string): void {
+    this.store.dispatch(new RemoveAllKeywordsAction(addgroupId));
   }
 
   public toggleKeywordSelected(id: string): void {
     this.store.dispatch(new ToggleKeywordSelectedAction(id));
   }
 
-  public changeNewKeywordOption(clientId: string, matchOption: KeywordModifiers): void {
-    this.store.dispatch(new ChangeNewKeywordOptionAction(clientId, matchOption));
+  public changeNewKeywordOption(addroupId: string, matchOption: KeywordModifiers): void {
+    this.store.dispatch(new ChangeNewKeywordOptionAction(addroupId, matchOption));
   }
 
-  public toggleAllSelected(clientId: string): void {
-    this.store.dispatch(new ToggleKeywordAllSelectedAction(clientId));
+  public toggleAllSelected(addgroupId: string): void {
+    this.store.dispatch(new ToggleKeywordAllSelectedAction(addgroupId));
   }
 
-  public copyAllKeywords(clientId: string): void {
-    this.store.dispatch(new CopyAllKeywordsAction(clientId));
+  public copyAllKeywords(addroupId: string): void {
+    this.store.dispatch(new CopyAllKeywordsAction(addroupId));
   }
 
-  public pasteKeywords(clientId: string, text: string): void {
-    this.store.dispatch(new PasteKeywordsAction(clientId, text));
+  public pasteKeywords(addroupId: string, text: string): void {
+    this.store.dispatch(new PasteKeywordsAction(addroupId, text));
   }
 
   public addClient(name: string): void {

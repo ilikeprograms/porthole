@@ -18,172 +18,194 @@ import { IKeyword } from '../keyword.interface';
 import { IClient } from '../client.interface';
 import { KeywordModifiers } from '../keyword-modifier-enum';
 import { ICampaign } from '../campaign.interface';
+import { IAdgroup } from '../adgroup-interface';
 
 export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsState, action: KeywordMatchingOptionsActions) {
   switch (action.type) {
     case ADD_KEYWORD_ACTION:
-      const actionClient: Array<IClient> = state.clients.filter((client: IClient) => client.id === action.clientId);
+      const actionAddgroup: IAdgroup = state.adgroups[action.addroupId];
+      const keywordId = uuid();
+      const newKeyword: IKeyword = {
+        id: keywordId,
+        clientId: '',
+        adgroupId: action.addroupId,
+        text: action.text,
+        modifier: action.modifier > -1 ? action.modifier : actionAddgroup.matchOption, // Allow creating with Specific modifier, or use global one
+        selected: false
+      };
+
+      actionAddgroup.keywordIds.push(newKeyword.id);
 
       return {
         ...state,
-        keywords: [{
-          id: uuid(),
-          clientId: action.clientId,
-          text: action.text,
-          modifier: action.modifier > -1 ? action.modifier : actionClient[0].matchOption, // Allow creating with Specific modifier, or use global one
-          selected: false
-        }, ...state.keywords]
+        adgroups: Object.assign({}, state.adgroups, {[actionAddgroup.id]: {
+          ...actionAddgroup,
+            keywordIds: [
+              ...state.adgroups[actionAddgroup.id].keywordIds,
+              keywordId
+            ]
+        }}),
+        keywords: Object.assign({}, {[keywordId]: newKeyword}, state.keywords)
       };
     case EDIT_KEYWORD_TEXT_ACTION:
       return {
         ...state,
-        keywords: state.keywords.map((keyword: IKeyword) => {
-          if (keyword.id === action.id) {
-            keyword.text = action.text;
-          }
-
-          return keyword;
-        })
+        keywords: Object.assign({}, state.keywords, {[action.id]: {
+          ...state.keywords[action.id],
+          text: action.text
+        }})
       };
     case EDIT_KEYWORD_MODIFIER_ACTION:
       return {
         ...state,
-        keywords: state.keywords.map((keyword: IKeyword) => {
-          if (keyword.id === action.id) {
-            keyword.modifier = action.modifier;
-          }
-
-          return keyword;
-        })
+        keywords: Object.assign({}, state.keywords, {[action.id]: {
+          ...state.keywords[action.id],
+          modifier: action.modifier
+        }})
       };
     case REMOVE_KEYWORD_ACTION:
-      const keywords: Array<IKeyword> = state.keywords.filter((keyword: IKeyword) => {
-        return keyword.id !== action.id;
-      });
+      const keys: { [key: string]: IKeyword } = Object.assign({}, state.keywords);
+
+      delete keys[action.id];
+
+      const addgroupToRemoveKeyword: IAdgroup = state.adgroups[action.addgroupId];
+      const newAdGroup = Object.assign({}, addgroupToRemoveKeyword);
+
+      newAdGroup.keywordIds.splice(newAdGroup.keywordIds.indexOf(action.id), 1);
 
       return {
         ...state,
-        keywords
+        keywords: keys,
+        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: newAdGroup})
       };
     case REMOVE_SELECTED_KEYWORD_ACTION:
-      const nonSelectedKeywords: Array<IKeyword> = state.keywords.filter((keyword: IKeyword) => {
-        return (keyword.clientId !== action.clientId) || !keyword.selected;
+      const keysToRemoveFromBoth: Array<string> = [];
+      const keysToRemoveSelected: { [key: string]: IKeyword } = Object.assign({}, state.keywords);
+
+      const addgroupToRemoveSelectedKeyword: IAdgroup = Object.assign({}, state.adgroups[action.addgroupId]);
+      addgroupToRemoveKeyword.keywordIds.forEach((keywordToRemoveSelectedId: string) => {
+        if (keysToRemoveSelected[keywordToRemoveSelectedId].selected) {
+          keysToRemoveFromBoth.push(keywordToRemoveSelectedId);
+        }
+      });
+
+      keysToRemoveFromBoth.forEach((keywordToRemoveSelectedId: string) => {
+        delete keysToRemoveSelected[keywordToRemoveSelectedId];
+        addgroupToRemoveSelectedKeyword.keywordIds.splice(addgroupToRemoveSelectedKeyword.keywordIds.indexOf(keywordToRemoveSelectedId), 1);
       });
 
       return {
         ...state,
-        keywords: nonSelectedKeywords
+        keywords: keysToRemoveSelected,
+        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: addgroupToRemoveSelectedKeyword})
       };
     case REMOVE_ALL_KEYWORDS_ACTION:
-      const nonClientKeywords: Array<IKeyword> = state.keywords.filter((keyword: IKeyword) => {
-        return keyword.clientId !== action.clientId;
+      const keysToRemoveAllSelected: { [key: string]: IKeyword } = Object.assign({}, state.keywords);
+      const addgroupToRemoveAllSelectedKeyword: IAdgroup = Object.assign({}, state.adgroups[action.addgroupId]);
+
+      addgroupToRemoveAllSelectedKeyword.keywordIds.forEach((keywordToRemoveSelectedId: string) => {
+        delete keysToRemoveAllSelected[keywordToRemoveSelectedId];
       });
+
+      addgroupToRemoveAllSelectedKeyword.keywordIds = [];
 
       return {
         ...state,
-        keywords: nonClientKeywords
+        keywords: keysToRemoveAllSelected,
+        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: addgroupToRemoveAllSelectedKeyword})
       };
     case TOGGLE_KEYWORD_SELECTED_ACTION:
-      state.keywords.some((keyword: IKeyword) => {
-        if (keyword.id === action.payload) {
-          keyword.selected = !keyword.selected;
+      const keywordToToggle = Object.assign({}, state.keywords[action.id]);
 
-          return true;
+      keywordToToggle.selected = !keywordToToggle.selected;
+
+      return {
+        ...state,
+        keywords: Object.assign({}, state.keywords, {[action.id]: keywordToToggle})
+      };
+    case CHANGE_NEW_KEYWORD_OPTION_ACTION:
+      const changeNewKeywordAdgroup: IAdgroup = Object.assign({}, state.adgroups[action.addgroupId]);
+
+      changeNewKeywordAdgroup.matchOption = action.payload;
+
+      return {
+        ...state,
+        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: changeNewKeywordAdgroup})
+      };
+    case TOGGLE_KEYWORD_ALL_SELECTED_ACTION:
+      const keywordsToToggleAll = Object.assign({}, state.keywords);
+      const adgroupToToggleAll: IAdgroup = state.adgroups[action.addgroupId];
+
+      const anySelected: boolean = Object.keys(keywordsToToggleAll).some((keywordToToggleId: string) => {
+        if (keywordsToToggleAll[keywordToToggleId].adgroupId !== action.addgroupId) {
+          return false;
+        }
+
+        return keywordsToToggleAll[keywordToToggleId].selected;
+      });
+
+      Object.keys(keywordsToToggleAll).forEach((keywordToToggleId: string) => {
+        if (keywordsToToggleAll[keywordToToggleId].adgroupId === action.addgroupId) {
+          keywordsToToggleAll[keywordToToggleId].selected = !anySelected;
         }
       });
 
       return {
         ...state,
-        keywords: [...state.keywords]
-      };
-    case CHANGE_NEW_KEYWORD_OPTION_ACTION:
-      return {
-        ...state,
-        clients: [
-          ...state.clients.map((client: IClient) => {
-            if (client.id === action.clientId) {
-              client.matchOption = action.payload;
-            }
-
-            return client;
-          })
-        ]
-      };
-    case TOGGLE_KEYWORD_ALL_SELECTED_ACTION:
-      const clientKeywords: Array<IKeyword> = state.keywords.filter((keyword: IKeyword) => {
-        return keyword.clientId === action.clientId;
-      });
-      const anyUnselected = clientKeywords.some((keyword: IKeyword) => {
-        return !keyword.selected;
-      });
-
-      return {
-        ...state,
-        keywords: state.keywords.map((keyword: IKeyword) => {
-          keyword.selected = anyUnselected;
-
-          return keyword;
-        })
+        keywords: keywordsToToggleAll
       };
     case ADD_CLIENT_ACTION:
+      const addClientId = uuid();
+
       return {
         ...state,
-        clients: [
-          ...state.clients,
-          {
-            id: uuid(),
+        clients: Object.assign({}, state.clients, {
+          [addClientId]: {
+            id: addClientId,
             name: action.name,
             matchOption: KeywordModifiers.BroadMatch,
             campaignIds: []
           }
-        ]
+        })
       };
     case EDIT_CLIENT_ACTION:
+      const editClient: IClient = Object.assign({}, state.clients[action.id], {
+        name: action.name
+      });
+
       return {
         ...state,
-        clients: state.clients.map((client: IClient) => {
-          if (client.id === action.id) {
-            client.name = action.name;
-          }
-
-          return client;
-        })
+        clients: Object.assign({}, state.clients, {[action.id]: editClient})
       };
     case ADD_CAMPAIGN_ACTION:
       const campaignId = uuid();
+      const editClientCampaign: IClient = Object.assign({}, state.clients[action.clientId], {
+        campaignIds: state.clients[action.clientId].campaignIds.concat(campaignId)
+      });
 
       return {
         ...state,
-        campaigns: [
-          ...state.campaigns,
-          {
+        campaigns: Object.assign({}, state.campaigns, {
+          [campaignId]: {
             id: campaignId,
             name: action.name
           }
-        ],
-        clients: state.clients.map((client: IClient) => {
-          if (client.id === action.clientId) {
-            client.campaignIds.push(campaignId);
-          }
-
-          return client;
-        })
+        }),
+        clients: Object.assign({}, state.clients, {[action.clientId]: editClientCampaign})
       };
     case EDIT_CAMPAIGN_ACTION:
+      const editCampaign: ICampaign = Object.assign({}, state.campaigns[action.id], {
+        name: action.name
+      });
+
       return {
         ...state,
-        campaigns: state.campaigns.map((campaign: ICampaign) => {
-          if (campaign.id === action.id) {
-            campaign.name = action.name;
-          }
-
-          return campaign;
-        })
+        campaigns: Object.assign({}, state.campaigns, {[action.id]: editCampaign})
       };
     case DELETE_CAMPAIGN_ACTION: {
-      const campaigns: Array<ICampaign> = state.campaigns.filter((campaign: ICampaign) => {
-        return campaign.id !== action.id;
-      });
+      const campaigns = Object.assign({}, state.campaigns);
+
+      delete campaigns[action.id];
 
       return {
         ...state,

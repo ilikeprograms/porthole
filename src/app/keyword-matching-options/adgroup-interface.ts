@@ -1,7 +1,8 @@
 import { KeywordModifiers } from './keyword-modifier-enum';
 
-export interface IClient {
+export interface IAdgroup {
   id: string;
   name: string;
-  campaignIds: Array<string>;
+  matchOption: KeywordModifiers;
+  keywordIds: Array<string>;
 }
