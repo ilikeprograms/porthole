@@ -1,6 +1,15 @@
 <mat-card>
   <mat-toolbar>
-    <mat-toolbar-row>{{ addgroupWithKeywords.name }}</mat-toolbar-row>
+    <mat-toolbar-row class="toolbar">
+      <span>{{ addgroupWithKeywords.name }}<br />
+      {{ addgroupWithKeywords.campaign ? addgroupWithKeywords.campaign.name : 'No campaign'}}
+      </span>
+      <div class="toolbar-actions">
+        <button mat-button color="primary" (click)="editAdgroup()">Edit</button>
+        <span aria-hidden="true" class="toolbar-actions-spacer"></span>
+        <button mat-button color="warn" (click)="onDeleteAdgroup()">Delete <mat-icon>delete</mat-icon></button>
+      </div>
+    </mat-toolbar-row>
   </mat-toolbar>
 
 <app-add-keyword

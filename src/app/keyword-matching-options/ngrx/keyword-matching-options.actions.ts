@@ -18,6 +18,8 @@ export const EDIT_CLIENT_ACTION = '[KeywordMatchingOptions] Edit client';
 export const ADD_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Add campaign';
 export const EDIT_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Edit campaign';
 export const DELETE_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Delete campaign';
+export const ADD_ADGROUP_ACTION = '[KeywordMatchingOptions] Add ad group';
+export const DELETE_ADGROUP_ACTION = '[KeywordMatchingOptions] Delete ad group';
 
 export class AddKeywordAction implements Action {
   readonly type = ADD_KEYWORD_ACTION;
@@ -115,6 +117,18 @@ export class DeleteCampaignsAction implements Action {
   constructor(public id: string, public shouldDeleteAdgroups: boolean) {}
 }
 
+export class AddAdgroupAction implements Action {
+  readonly type = ADD_ADGROUP_ACTION;
+
+  constructor(public name: string, public campaignId?: string) {}
+}
+
+export class DeleteAdgroupAction implements Action {
+  readonly type = DELETE_ADGROUP_ACTION;
+
+  constructor(public id: string) {}
+}
+
 export type KeywordMatchingOptionsActions = AddKeywordAction |
   EditKeywordTextAction |
   EditKeywordModifierAction |
@@ -130,4 +144,6 @@ export type KeywordMatchingOptionsActions = AddKeywordAction |
   EditClientAction |
   AddCampaign |
   EditCampaign |
-  DeleteCampaignsAction;
+  DeleteCampaignsAction |
+  AddAdgroupAction |
+  DeleteAdgroupAction;

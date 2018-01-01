@@ -4,6 +4,11 @@ import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-option
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { KeywordModifiers } from '../../keyword-modifier-enum';
 import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
+import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
+import { ICampaign } from '../../campaign.interface';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { AdgroupModalComponent } from '../adgroup-modal/adgroup-modal.component';
+import { DeleteAdgroupConfirmComponent } from '../delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
 
 @Component({
   selector: 'app-keyword-list',
@@ -25,14 +30,25 @@ import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
         ]), {optional: true }),
       ])
     ]),
-  ]
+  ],
+  styles: [`
+    .toolbar-actions {
+      display: flex;
+      flex: 1 1 auto;
+    }
+
+    .toolbar-actions-spacer {
+      flex: 1 1 auto;
+    }
+  `]
 })
 export class KeywordListComponent {
   @Input()
   public addgroupWithKeywords: IAddGroupWithKeywords;
 
   constructor(
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
+    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
+    private dialog: MatDialog
   ) {}
 
   public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
@@ -77,5 +93,38 @@ export class KeywordListComponent {
 
   public onPasteKeywords(keywords: string) {
     this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroupWithKeywords.id, keywords);
+  }
+
+  public editAdgroup(): void {
+    let campaignsForAddModal: Array<ICampaign>;
+
+    this.keywordMatchingOptionsFacade.campaigns$.take(1).subscribe((campaigns: Array<ICampaign>) => {
+      campaignsForAddModal = campaigns;
+    });
+
+    // Open confirmation dialog, then remove all if yes is clicked
+    const dialogRef: MatDialogRef<AdgroupModalComponent> = this.dialog.open(AdgroupModalComponent, {
+      data: {
+        adgroup: this.addgroupWithKeywords,
+        campaigns: campaignsForAddModal
+      }
+    });
+
+    dialogRef.afterClosed().take(1).subscribe(result => {
+      if (result) {
+        this.keywordMatchingOptionsFacade.addAdgroup(result.name, result.campaignId);
+      }
+    });
+  }
+
+  public onDeleteAdgroup(): void {
+    // Open confirmation dialog, then remove all if yes is clicked
+    const dialogRef: MatDialogRef<DeleteAdgroupConfirmComponent> = this.dialog.open(DeleteAdgroupConfirmComponent);
+
+    dialogRef.afterClosed().take(1).subscribe(result => {
+      if (result === true) {
+        this.keywordMatchingOptionsFacade.deleteAdgroup(this.addgroupWithKeywords.id);
+      }
+    });
   }
 }

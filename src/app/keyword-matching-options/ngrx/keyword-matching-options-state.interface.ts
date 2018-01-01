@@ -6,6 +6,10 @@ import { IAdgroup } from '../adgroup-interface';
 export interface IKeywordMatchingOptionsState {
   clients: { [key: string]: IClient };
   campaigns: { [key: string]: ICampaign };
-  adgroups: { [key: string]: IAdgroup };
+  adgroups: {
+    campaignId?: string;
+    ids: Array<string>;
+    entities: {[key: string]: IAdgroup};
+  };
   keywords: { [key: string]: IKeyword };
 }

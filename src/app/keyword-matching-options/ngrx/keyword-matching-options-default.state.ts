@@ -37,23 +37,26 @@ export const KeywordMatchingOptionsDefaultState: IKeywordMatchingOptionsState = 
     }
   },
   adgroups: {
-    [addgroup1]: {
-      id: addgroup1,
-      name: 'Add group 1',
-      matchOption: KeywordModifiers.BroadMatch,
-      keywordIds: [
-        keyword1,
-        keyword2
-      ]
-    },
-    [addgroup2]: {
-      id: addgroup2,
-      name: 'Add group 2',
-      matchOption: KeywordModifiers.BroadMatchModifier,
-      keywordIds: [
-        keyword3,
-        keyword4
-      ]
+    ids: [addgroup1, addgroup2],
+    entities: {
+      [addgroup1]: {
+        id: addgroup1,
+        name: 'Add group 1',
+        matchOption: KeywordModifiers.BroadMatch,
+        keywordIds: [
+          keyword1,
+          keyword2
+        ]
+      },
+      [addgroup2]: {
+        id: addgroup2,
+        name: 'Add group 2',
+        matchOption: KeywordModifiers.BroadMatchModifier,
+        keywordIds: [
+          keyword3,
+          keyword4
+        ]
+      }
     }
   },
   keywords: {

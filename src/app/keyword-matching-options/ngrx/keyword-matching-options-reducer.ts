@@ -2,9 +2,11 @@ import { v4 as uuid } from 'uuid';
 
 import { IKeywordMatchingOptionsState } from './keyword-matching-options-state.interface';
 import {
+  ADD_ADGROUP_ACTION,
   ADD_CAMPAIGN_ACTION,
   ADD_CLIENT_ACTION,
-  ADD_KEYWORD_ACTION, CHANGE_NEW_KEYWORD_OPTION_ACTION, DELETE_CAMPAIGN_ACTION, EDIT_CAMPAIGN_ACTION,
+  ADD_KEYWORD_ACTION, CHANGE_NEW_KEYWORD_OPTION_ACTION, DELETE_ADGROUP_ACTION, DELETE_CAMPAIGN_ACTION,
+  EDIT_CAMPAIGN_ACTION,
   EDIT_CLIENT_ACTION,
   EDIT_KEYWORD_MODIFIER_ACTION,
   EDIT_KEYWORD_TEXT_ACTION,
@@ -23,7 +25,7 @@ import { IAdgroup } from '../adgroup-interface';
 export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsState, action: KeywordMatchingOptionsActions) {
   switch (action.type) {
     case ADD_KEYWORD_ACTION:
-      const actionAddgroup: IAdgroup = state.adgroups[action.addroupId];
+      const actionAddgroup: IAdgroup = state.adgroups.entities[action.addroupId];
       const keywordId = uuid();
       const newKeyword: IKeyword = {
         id: keywordId,
@@ -34,17 +36,20 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
         selected: false
       };
 
-      actionAddgroup.keywordIds.push(newKeyword.id);
-
       return {
         ...state,
-        adgroups: Object.assign({}, state.adgroups, {[actionAddgroup.id]: {
-          ...actionAddgroup,
-            keywordIds: [
-              ...state.adgroups[actionAddgroup.id].keywordIds,
-              keywordId
-            ]
-        }}),
+        adgroups: Object.assign({}, state.adgroups, {
+          entities: {
+            ...state.adgroups.entities,
+            [actionAddgroup.id]: {
+            ...actionAddgroup,
+              keywordIds: [
+                ...state.adgroups.entities[actionAddgroup.id].keywordIds,
+                keywordId
+              ]
+            }
+          }
+        }),
         keywords: Object.assign({}, {[keywordId]: newKeyword}, state.keywords)
       };
     case EDIT_KEYWORD_TEXT_ACTION:
@@ -68,7 +73,7 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
 
       delete keys[action.id];
 
-      const addgroupToRemoveKeyword: IAdgroup = state.adgroups[action.addgroupId];
+      const addgroupToRemoveKeyword: IAdgroup = state.adgroups.entities[action.addgroupId];
       const newAdGroup = Object.assign({}, addgroupToRemoveKeyword);
 
       newAdGroup.keywordIds.splice(newAdGroup.keywordIds.indexOf(action.id), 1);
@@ -76,13 +81,18 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
       return {
         ...state,
         keywords: keys,
-        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: newAdGroup})
+        adgroups: Object.assign({}, state.adgroups, {
+          entities: {
+            ...state.adgroups.entities,
+            [action.addgroupId]: newAdGroup
+          }
+        })
       };
     case REMOVE_SELECTED_KEYWORD_ACTION:
       const keysToRemoveFromBoth: Array<string> = [];
       const keysToRemoveSelected: { [key: string]: IKeyword } = Object.assign({}, state.keywords);
 
-      const addgroupToRemoveSelectedKeyword: IAdgroup = Object.assign({}, state.adgroups[action.addgroupId]);
+      const addgroupToRemoveSelectedKeyword: IAdgroup = Object.assign({}, state.adgroups.entities[action.addgroupId]);
       addgroupToRemoveKeyword.keywordIds.forEach((keywordToRemoveSelectedId: string) => {
         if (keysToRemoveSelected[keywordToRemoveSelectedId].selected) {
           keysToRemoveFromBoth.push(keywordToRemoveSelectedId);
@@ -97,11 +107,16 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
       return {
         ...state,
         keywords: keysToRemoveSelected,
-        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: addgroupToRemoveSelectedKeyword})
+        adgroups: Object.assign({}, state.adgroups, {
+          entities: {
+            ...state.adgroups.entities,
+            [action.addgroupId]: addgroupToRemoveSelectedKeyword
+          }
+        })
       };
     case REMOVE_ALL_KEYWORDS_ACTION:
       const keysToRemoveAllSelected: { [key: string]: IKeyword } = Object.assign({}, state.keywords);
-      const addgroupToRemoveAllSelectedKeyword: IAdgroup = Object.assign({}, state.adgroups[action.addgroupId]);
+      const addgroupToRemoveAllSelectedKeyword: IAdgroup = Object.assign({}, state.adgroups.entities[action.addgroupId]);
 
       addgroupToRemoveAllSelectedKeyword.keywordIds.forEach((keywordToRemoveSelectedId: string) => {
         delete keysToRemoveAllSelected[keywordToRemoveSelectedId];
@@ -112,7 +127,12 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
       return {
         ...state,
         keywords: keysToRemoveAllSelected,
-        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: addgroupToRemoveAllSelectedKeyword})
+        adgroups: Object.assign({}, state.adgroups, {
+          entities: {
+            ...state.adgroups.entities,
+            [action.addgroupId]: addgroupToRemoveAllSelectedKeyword
+          }
+        })
       };
     case TOGGLE_KEYWORD_SELECTED_ACTION:
       const keywordToToggle = Object.assign({}, state.keywords[action.id]);
@@ -124,17 +144,21 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
         keywords: Object.assign({}, state.keywords, {[action.id]: keywordToToggle})
       };
     case CHANGE_NEW_KEYWORD_OPTION_ACTION:
-      const changeNewKeywordAdgroup: IAdgroup = Object.assign({}, state.adgroups[action.addgroupId]);
+      const changeNewKeywordAdgroup: IAdgroup = Object.assign({}, state.adgroups.entities[action.addgroupId]);
 
       changeNewKeywordAdgroup.matchOption = action.payload;
 
       return {
         ...state,
-        adgroups: Object.assign({}, state.adgroups, {[action.addgroupId]: changeNewKeywordAdgroup})
+        adgroups: Object.assign({}, state.adgroups, {
+          entities: {
+            ...state.adgroups.entities,
+            [action.addgroupId]: changeNewKeywordAdgroup
+          }
+        })
       };
     case TOGGLE_KEYWORD_ALL_SELECTED_ACTION:
       const keywordsToToggleAll = Object.assign({}, state.keywords);
-      const adgroupToToggleAll: IAdgroup = state.adgroups[action.addgroupId];
 
       const anySelected: boolean = Object.keys(keywordsToToggleAll).some((keywordToToggleId: string) => {
         if (keywordsToToggleAll[keywordToToggleId].adgroupId !== action.addgroupId) {
@@ -202,7 +226,7 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
         ...state,
         campaigns: Object.assign({}, state.campaigns, {[action.id]: editCampaign})
       };
-    case DELETE_CAMPAIGN_ACTION: {
+    case DELETE_CAMPAIGN_ACTION:
       const campaigns = Object.assign({}, state.campaigns);
 
       delete campaigns[action.id];
@@ -211,7 +235,47 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
         ...state,
         campaigns: campaigns
       };
-    }
+    case ADD_ADGROUP_ACTION:
+      const newAdgroupId: string = uuid();
+
+      return {
+        ...state,
+        adgroups: Object.assign({}, state.adgroups, {
+          ids: state.adgroups.ids.concat(newAdgroupId),
+          entities: {
+            ...state.adgroups.entities,
+            [newAdgroupId]: {
+              id: newAdgroupId,
+              campaignId: action.campaignId,
+              name: action.name,
+              matchOption: KeywordModifiers.BroadMatch,
+              keywordIds: []
+            }
+          }
+        })
+      };
+    case DELETE_ADGROUP_ACTION:
+      const adgroupEntities = Object.assign({}, state.adgroups.entities);
+      const keywords = Object.assign({}, state.keywords);
+
+      state.adgroups.entities[action.id].keywordIds.forEach((adgroupKeywordId: string) => {
+        delete keywords[adgroupKeywordId];
+      });
+
+      const ids: Array<string> = [...state.adgroups.ids];
+
+      ids.splice(ids.indexOf(action.id), 1);
+
+      delete adgroupEntities[action.id];
+
+      return {
+        ...state,
+        keywords: keywords,
+        adgroups: {
+          ids: ids,
+          entities: adgroupEntities
+        }
+      };
     default:
       return state;
   }

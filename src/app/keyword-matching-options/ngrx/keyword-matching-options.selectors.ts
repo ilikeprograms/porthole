@@ -12,8 +12,8 @@ export const selectClients = createSelector(selectFeature, (state: IKeywordMatch
 export const selectCampaigns = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => Object.keys(state.campaigns).map((campaignId: string) => {
   return state.campaigns[campaignId];
 }));
-export const selectAdgroups = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) =>  Object.keys(state.adgroups).map((adgroupId: string) => {
-  return state.adgroups[adgroupId];
+export const selectAdgroups = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => state.adgroups.ids.map((adgroupId: string) => {
+  return state.adgroups.entities[adgroupId];
 }));
 export const selectKeywords = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => Object.keys(state.keywords).map((keywordId: string) => {
   return state.keywords[keywordId];

@@ -14,9 +14,11 @@ import {
   selectClients, selectKeywords
 } from './keyword-matching-options.selectors';
 import {
+  AddAdgroupAction,
   AddCampaign,
   AddClientAction,
-  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, DeleteCampaignsAction, EditCampaign,
+  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, DeleteAdgroupAction, DeleteCampaignsAction,
+  EditCampaign,
   EditClientAction,
   EditKeywordModifierAction,
   EditKeywordTextAction, PasteKeywordsAction,
@@ -70,13 +72,18 @@ export class KeywordMatchingOptionsFacade {
         });
       });
 
-    this.addgroupsWithKeywords$ = Observable.combineLatest(this.addgroups$, this.keywords)
-      .map((values: [Array<IAdgroup>, Array<IKeyword>]) => {
-        console.log(values);
+    this.addgroupsWithKeywords$ = Observable.combineLatest(this.addgroups$, this.keywords, this.campaigns$)
+      .map((values: [Array<IAdgroup>, Array<IKeyword>, Array<ICampaign>]) => {
         return values[0].map((addgroup: IAddGroupWithKeywords) => {
           const keywords: Array<IKeyword> = [
             ...values[1]
           ];
+
+          if (addgroup.campaignId) {
+            addgroup.campaign = values[2].filter((campaign: ICampaign) => {
+              return campaign.id === addgroup.campaignId;
+            })[0];
+          }
 
           addgroup.keywords = keywords.filter((keyword: IKeyword) => {
             return addgroup.keywordIds.indexOf(keyword.id) > -1;
@@ -93,77 +100,11 @@ export class KeywordMatchingOptionsFacade {
         });
       });
 
-
-
-    // this.matchOption = this.store.select(selectMatchOption);
-
     this.keywordsCount = Observable.of(0);
-
-    // this.keywordsCount = this.store.select(selectKeywords).flatMap((keywords: Array<IKeyword>) => {
-    //   return Observable.of(keywords.length);
-    // });
 
     this.allSelected = Observable.of(false);
 
-    // this.allSelected = this.keywords.flatMap((keywords: Array<IKeyword>) => {
-    //   if (keywords.length === 0) {
-    //     return Observable.of(false);
-    //   }
-    //
-    //   const anyUnselectedKeywords: boolean = keywords.some((keyword: IKeyword) => {
-    //     return !keyword.selected;
-    //   });
-    //
-    //   return Observable.of(!anyUnselectedKeywords);
-    // });
-
     this.keywordsSelectedCount = Observable.of(0);
-
-    // this.keywordsSelectedCount = this.keywords.flatMap((keywords: Array<IKeyword>) => {
-    //   return Observable.of(
-    //     keywords.filter((keyword: IKeyword) => {
-    //       return keyword.selected;
-    //     }).length
-    //   );
-    // });
-  }
-
-  public keywordsByClientId(clientId: string): Observable<Array<IKeyword>> {
-    return this.keywords.map((keywords: Array<IKeyword>) => {
-      return keywords.filter((keyword: IKeyword) => {
-        return keyword.clientId === clientId;
-      });
-    });
-  }
-
-  public keywordsByClientIdCount(clientId: string) {
-    return this.keywordsByClientId(clientId).flatMap((keywords: Array<IKeyword>) => {
-      return Observable.of(keywords.length);
-    });
-  }
-
-  public keywordsByClientIdSelected(clientId: string) {
-    return this.keywordsByClientId(clientId).flatMap((keywords: Array<IKeyword>) => {
-        return Observable.of(
-          keywords.filter((keyword: IKeyword) => {
-            return keyword.selected;
-          }).length
-        );
-      });
-  }
-
-  public keywordsByClientIdAllSelected(clientId: string) {
-    return this.keywordsByClientId(clientId).flatMap((keywords: Array<IKeyword>) => {
-      if (keywords.length === 0) {
-        return Observable.of(false);
-      }
-
-      const anyUnselectedKeywords: boolean = keywords.some((keyword: IKeyword) => {
-        return !keyword.selected;
-      });
-
-      return Observable.of(!anyUnselectedKeywords);
-    });
   }
 
   public addKeyword(addroupId: string, text: string): void {
@@ -228,5 +169,13 @@ export class KeywordMatchingOptionsFacade {
 
   public deleteCampaign(id: string, shouldDeleteAdgroups: boolean): void {
     this.store.dispatch(new DeleteCampaignsAction(id, shouldDeleteAdgroups));
+  }
+
+  public addAdgroup(name: string, campaignId: string): void {
+    this.store.dispatch(new AddAdgroupAction(name, campaignId));
+  }
+
+  public deleteAdgroup(id: string) {
+    this.store.dispatch(new DeleteAdgroupAction(id));
   }
 }
