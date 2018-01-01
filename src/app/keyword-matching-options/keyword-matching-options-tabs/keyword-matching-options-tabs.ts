@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-keyword-matching-options-tabs',
   template: `
-    <h2>Keywords matching options</h2>
+    <h2>Keywords manager</h2>
 
     <mat-tab-group>
       <mat-tab label="Ad Groups">

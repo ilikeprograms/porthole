@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="min-width: 700px; height: 800px;">
 <head>
   <meta charset="utf-8">
   <title>Waldo</title>
@@ -9,6 +9,13 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    /** Override MD modal scrollblock so the app works in Extensions **/
+    html.cdk-global-scrollblock {
+      position: initial;
+    }
+  </style>
 </head>
 <body>
   <app-root></app-root>

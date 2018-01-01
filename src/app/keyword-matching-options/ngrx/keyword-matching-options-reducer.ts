@@ -6,6 +6,8 @@ import {
   ADD_CAMPAIGN_ACTION,
   ADD_CLIENT_ACTION,
   ADD_KEYWORD_ACTION, CHANGE_NEW_KEYWORD_OPTION_ACTION, DELETE_ADGROUP_ACTION, DELETE_CAMPAIGN_ACTION,
+  DELETE_CLIENT_ACTION,
+  EDIT_ADGROUP_ACTION,
   EDIT_CAMPAIGN_ACTION,
   EDIT_CLIENT_ACTION,
   EDIT_KEYWORD_MODIFIER_ACTION,
@@ -201,6 +203,29 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
         ...state,
         clients: Object.assign({}, state.clients, {[action.id]: editClient})
       };
+    case DELETE_CLIENT_ACTION:
+      const clients = Object.assign({}, state.clients);
+      const clientToDelete = clients[action.id];
+      const campaignsToRemove = Object.assign({}, state.campaigns);
+      const addGroupsToRemoveCampaign = Object.assign({}, state.adgroups);
+
+      clientToDelete.campaignIds.forEach((campaignIdToRemove) => {
+        delete campaignsToRemove[campaignIdToRemove];
+      });
+
+      addGroupsToRemoveCampaign.ids.map((adgroupId: string) => {
+        if (clientToDelete.campaignIds.indexOf(addGroupsToRemoveCampaign.entities[adgroupId].campaignId) > -1) {
+          addGroupsToRemoveCampaign.entities[adgroupId].campaignId = null;
+        }
+      });
+
+      delete clients[action.id];
+
+      return {
+        ...state,
+        clients: clients,
+        campaigns: campaignsToRemove
+      };
     case ADD_CAMPAIGN_ACTION:
       const campaignId = uuid();
       const editClientCampaign: IClient = Object.assign({}, state.clients[action.clientId], {
@@ -228,12 +253,33 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
       };
     case DELETE_CAMPAIGN_ACTION:
       const campaigns = Object.assign({}, state.campaigns);
+      const addgroupsToRemoveCampaign = Object.assign({}, state.adgroups);
+      const keywordsToRemoveFromAdgroup = Object.assign({}, state.keywords);
+
+      if (action.shouldDeleteAdgroups) {
+        let keywordIds: Array<string> = [];
+
+        addgroupsToRemoveCampaign.ids.forEach((adgroupId: string) => {
+          if (addgroupsToRemoveCampaign.entities[adgroupId].campaignId === action.id) {
+            keywordIds = keywordIds.concat(addgroupsToRemoveCampaign.entities[adgroupId].keywordIds);
+
+            delete addgroupsToRemoveCampaign.entities[adgroupId];
+            delete addgroupsToRemoveCampaign.ids[addgroupsToRemoveCampaign.ids.indexOf(adgroupId)];
+          }
+        });
+
+        keywordIds.forEach((keywordIdToRemoveFromAdgroup: string) => {
+          delete keywordsToRemoveFromAdgroup[keywordIdToRemoveFromAdgroup];
+        });
+      }
 
       delete campaigns[action.id];
 
       return {
         ...state,
-        campaigns: campaigns
+        campaigns: campaigns,
+        adgroups: addgroupsToRemoveCampaign,
+        keywords: keywordsToRemoveFromAdgroup
       };
     case ADD_ADGROUP_ACTION:
       const newAdgroupId: string = uuid();
@@ -250,6 +296,20 @@ export function keywordMatchingOptionsReducer(state: IKeywordMatchingOptionsStat
               name: action.name,
               matchOption: KeywordModifiers.BroadMatch,
               keywordIds: []
+            }
+          }
+        })
+      };
+    case EDIT_ADGROUP_ACTION:
+      return {
+        ...state,
+        adgroups: Object.assign({}, state.adgroups, {
+          entities: {
+            ...state.adgroups.entities,
+            [action.id]: {
+              ...state.adgroups.entities[action.id],
+              name: action.name,
+              campaignId: action.campaignId
             }
           }
         })

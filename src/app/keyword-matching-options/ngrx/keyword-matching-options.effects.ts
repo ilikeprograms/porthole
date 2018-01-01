@@ -29,6 +29,13 @@ export class KeywordMatchingOptionsEffects {
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {}
 
+  // @Effect()
+  //   public removeClientActionEffect() {
+  //
+  //   return this.actions$
+  //     .ofType(REMOVE_C
+  // }
+
   @Effect()
   public removeAllKeywordsActionEffect() {
     return this.actions$

@@ -18,6 +18,8 @@ import {
   AddCampaign,
   AddClientAction,
   AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, DeleteAdgroupAction, DeleteCampaignsAction,
+  DeleteClientAction,
+  EditAdgroupAction,
   EditCampaign,
   EditClientAction,
   EditKeywordModifierAction,
@@ -83,6 +85,8 @@ export class KeywordMatchingOptionsFacade {
             addgroup.campaign = values[2].filter((campaign: ICampaign) => {
               return campaign.id === addgroup.campaignId;
             })[0];
+          } else {
+            addgroup.campaign = undefined;
           }
 
           addgroup.keywords = keywords.filter((keyword: IKeyword) => {
@@ -159,6 +163,10 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new EditClientAction(id, name));
   }
 
+  public deleteClient(id: string) {
+    this.store.dispatch(new DeleteClientAction(id));
+  }
+
   public addCampaign(clientId: string, name: string): void {
     this.store.dispatch(new AddCampaign(clientId, name));
   }
@@ -173,6 +181,10 @@ export class KeywordMatchingOptionsFacade {
 
   public addAdgroup(name: string, campaignId: string): void {
     this.store.dispatch(new AddAdgroupAction(name, campaignId));
+  }
+
+  public editAdgroup(id: string, name: string, campaignId: string): void {
+    this.store.dispatch(new EditAdgroupAction(id, name, campaignId));
   }
 
   public deleteAdgroup(id: string) {

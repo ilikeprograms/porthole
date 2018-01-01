@@ -1,28 +1,28 @@
 <mat-card>
   <mat-toolbar>
     <mat-toolbar-row class="toolbar">
-      <span>{{ addgroupWithKeywords.name }}<br />
-      {{ addgroupWithKeywords.campaign ? addgroupWithKeywords.campaign.name : 'No campaign'}}
+      <span>{{ adgroup.name }}<br />
+      {{ adgroup.campaign ? adgroup.campaign.name : 'No campaign'}}
       </span>
       <div class="toolbar-actions">
-        <button mat-button color="primary" (click)="editAdgroup()">Edit</button>
+        <button mat-button color="primary" (click)="editAdgroup()" matTooltip="Edit AdGroup info">Edit</button>
         <span aria-hidden="true" class="toolbar-actions-spacer"></span>
-        <button mat-button color="warn" (click)="onDeleteAdgroup()">Delete <mat-icon>delete</mat-icon></button>
+        <button mat-button color="warn" (click)="onDeleteAdgroup()" matTooltip="Delete AdGroup and Keywords">Delete <mat-icon>delete</mat-icon></button>
       </div>
     </mat-toolbar-row>
   </mat-toolbar>
 
 <app-add-keyword
-  [selectedMatchOption]="addgroupWithKeywords.matchOption"
+  [selectedMatchOption]="adgroup.matchOption"
   (selectedMatchOptionChanged)="onNewKeywordMatchOptionChanged($event)"
 
   (addKeyword)="onAddKeyword($event)"
 ></app-add-keyword>
 
-<app-no-keyword *ngIf="(addgroupWithKeywords.keywords.length) === 0"></app-no-keyword>
+<app-no-keyword *ngIf="(adgroup.keywords.length) === 0"></app-no-keyword>
 
-<div [@listAnimation]="addgroupWithKeywords.keywords.length">
-    <p *ngFor="let keyword of addgroupWithKeywords.keywords">
+<div [@listAnimation]="adgroup.keywords.length">
+    <p *ngFor="let keyword of adgroup.keywords">
       <app-keyword-card
         [keyword]="keyword"
         [selected]="keyword.selected"
@@ -36,9 +36,9 @@
 </div>
 
 <app-keyword-footer-actions
-  [keywordsCount]="addgroupWithKeywords.keywords.length"
-  [keywordsSelectedCount]="addgroupWithKeywords.keywordSelectedCount"
-  [keywordsAllSelected]="addgroupWithKeywords.keywordAllSelected"
+  [keywordsCount]="adgroup.keywords.length"
+  [keywordsSelectedCount]="adgroup.keywordSelectedCount"
+  [keywordsAllSelected]="adgroup.keywordAllSelected"
 
   (toggleAllSelected)="onToggleAllSelected()"
   (removeSelectedKeywords)="onRemoveSelectedKeywords()"

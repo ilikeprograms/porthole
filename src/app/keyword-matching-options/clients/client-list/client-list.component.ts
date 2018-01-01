@@ -12,11 +12,16 @@ import { CampaignDeleteModalComponent } from '../campaign-delete-modal/campaign-
 import { IClient } from '../../client.interface';
 import { CampaignModalComponent } from '../campaign-modal/campaign-modal.component';
 import { ICampaign } from '../../campaign.interface';
+import { DeleteClientConfirmComponent } from '../delete-client-confirm-modal/delete-client-confirm-modal';
 
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
   styles: [`
+    .toolbar-spacer {
+      flex: 1 1 auto;
+    }
+
     .tab-content {
       padding: 1rem;
     }
@@ -72,6 +77,17 @@ export class ClientListComponent implements OnDestroy {
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result && result.trim() && client.name !== result.trim()) {
         this.keywordMatchingOptionsFacade.editClient(client.id, result.trim());
+      }
+    });
+  }
+
+  public onDeleteClient(id: string): void {
+    // Open confirmation dialog, then remove all if yes is clicked
+    const dialogRef: MatDialogRef<DeleteClientConfirmComponent> = this.dialog.open(DeleteClientConfirmComponent);
+
+    dialogRef.afterClosed().take(1).subscribe(result => {
+      if (result) {
+        this.keywordMatchingOptionsFacade.deleteClient(id);
       }
     });
   }

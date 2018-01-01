@@ -4,12 +4,13 @@ import { MatDialogRef } from '@angular/material';
 @Component({
   selector: 'app-campaign-delete-modal',
   template: `
-    <h2 mat-dialog-title>Confirm delete</h2>
+    <h2 mat-dialog-title>Confirm delete campaign</h2>
     <mat-dialog-content>
       <p>Are you sure you want to remove this campaign?</p>
-      <p>Use the below toggle to also remove all add groups associated with this campaign</p>
+      <p>Use the below toggle to also remove all Add Groups and Keywords associated with this campaign.</p>
+
       <mat-slide-toggle #slideToggle>
-        Remove add groups?
+        Remove Ad Groups and Keywords?
       </mat-slide-toggle>
     </mat-dialog-content>
     <mat-dialog-actions>

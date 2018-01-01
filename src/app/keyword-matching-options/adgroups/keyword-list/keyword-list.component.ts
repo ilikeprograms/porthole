@@ -1,14 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { KeywordModifiers } from '../../keyword-modifier-enum';
 import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
-import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
 import { ICampaign } from '../../campaign.interface';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AdgroupModalComponent } from '../adgroup-modal/adgroup-modal.component';
 import { DeleteAdgroupConfirmComponent } from '../delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
   selector: 'app-keyword-list',
@@ -17,14 +19,14 @@ import { DeleteAdgroupConfirmComponent } from '../delete-adgroup-confirm-modal/d
   animations: [
     trigger('listAnimation', [
       transition('* => *', [
-        query(':enter', query('p app-keyword-card mat-card', style({ opacity: 0, transform: 'translateY(-50px)' }), { optional: true }),  {optional: true }),
+        query(':enter', query('p app-keyword-card .animation-wrapper', style({ opacity: 0, transform: 'translateY(-50px)' }), { optional: true }),  {optional: true }),
         query(':enter', stagger('300ms', [
-          query('p app-keyword-card mat-card',
+          query('p app-keyword-card .animation-wrapper',
             animate('300ms ease-in', style({ opacity: 1, transform: 'none', offset: 1 }))
           )
         ]), {optional: true }),
         query(':leave', stagger('300ms', [
-          query('p app-keyword-card mat-card',
+          query('p app-keyword-card .animation-wrapper',
             animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(-50px)', offset: 1 }))
           )
         ]), {optional: true }),
@@ -42,21 +44,39 @@ import { DeleteAdgroupConfirmComponent } from '../delete-adgroup-confirm-modal/d
     }
   `]
 })
-export class KeywordListComponent {
+export class KeywordListComponent implements OnInit, OnDestroy {
+  public adgroup: IAddGroupWithKeywords;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   @Input()
-  public addgroupWithKeywords: IAddGroupWithKeywords;
+  public addgroupWithKeywords: Observable<IAddGroupWithKeywords>;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private changeRef: ChangeDetectorRef
   ) {}
 
+  public ngOnInit(): void {
+    this.addgroupWithKeywords.takeUntil(this.unsubscribe$).subscribe((adgroup: IAddGroupWithKeywords) => {
+      this.adgroup = adgroup;
+
+      this.changeRef.markForCheck();
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
-    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.addgroupWithKeywords.id, modifier);
+    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.adgroup.id, modifier);
   }
 
   public onAddKeyword(keywordText: string) {
-    this.keywordMatchingOptionsFacade.addKeyword(this.addgroupWithKeywords.id, keywordText);
+    this.keywordMatchingOptionsFacade.addKeyword(this.adgroup.id, keywordText);
   }
 
   public onEditKeywordText({id, text}: { id: string; text: string; }): void {
@@ -64,7 +84,7 @@ export class KeywordListComponent {
   }
 
   public onRemoveKeyword(id: string): void {
-    this.keywordMatchingOptionsFacade.removeKeyword(this.addgroupWithKeywords.id, id);
+    this.keywordMatchingOptionsFacade.removeKeyword(this.adgroup.id, id);
   }
 
   public onToggleKeywordSelected(id: string): void {
@@ -72,15 +92,15 @@ export class KeywordListComponent {
   }
 
   public onToggleAllSelected(): void {
-    this.keywordMatchingOptionsFacade.toggleAllSelected(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.toggleAllSelected(this.adgroup.id);
   }
 
   public onRemoveSelectedKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeSelectedKeywords(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.removeSelectedKeywords(this.adgroup.id);
   }
 
   public onRemoveAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeAllKeywords(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.removeAllKeywords(this.adgroup.id);
   }
 
   public onModifierChanged({ id, modifier}: { id: string; modifier: KeywordModifiers }): void {
@@ -88,11 +108,11 @@ export class KeywordListComponent {
   }
 
   public onCopyAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.copyAllKeywords(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.copyAllKeywords(this.adgroup.id);
   }
 
   public onPasteKeywords(keywords: string) {
-    this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroupWithKeywords.id, keywords);
+    this.keywordMatchingOptionsFacade.pasteKeywords(this.adgroup.id, keywords);
   }
 
   public editAdgroup(): void {
@@ -105,14 +125,14 @@ export class KeywordListComponent {
     // Open confirmation dialog, then remove all if yes is clicked
     const dialogRef: MatDialogRef<AdgroupModalComponent> = this.dialog.open(AdgroupModalComponent, {
       data: {
-        adgroup: this.addgroupWithKeywords,
+        adgroup: this.adgroup,
         campaigns: campaignsForAddModal
       }
     });
 
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result) {
-        this.keywordMatchingOptionsFacade.addAdgroup(result.name, result.campaignId);
+        this.keywordMatchingOptionsFacade.editAdgroup(this.adgroup.id, result.name, result.campaignId);
       }
     });
   }
@@ -123,7 +143,7 @@ export class KeywordListComponent {
 
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result === true) {
-        this.keywordMatchingOptionsFacade.deleteAdgroup(this.addgroupWithKeywords.id);
+        this.keywordMatchingOptionsFacade.deleteAdgroup(this.adgroup.id);
       }
     });
   }

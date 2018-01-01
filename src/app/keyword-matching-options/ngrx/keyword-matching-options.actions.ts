@@ -15,10 +15,12 @@ export const COPY_ALL_KEYWORDS_ACTION = '[KeywordMatchingOptions] Copy all keywo
 export const PASTE_KEYWORDS_ACTION = '[KeywordMatchingOptions] Paste keywords';
 export const ADD_CLIENT_ACTION = '[KeywordMatchingOptions] Add client';
 export const EDIT_CLIENT_ACTION = '[KeywordMatchingOptions] Edit client';
+export const DELETE_CLIENT_ACTION = '[KeywordMatchingOptions] Delete client';
 export const ADD_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Add campaign';
 export const EDIT_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Edit campaign';
 export const DELETE_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Delete campaign';
 export const ADD_ADGROUP_ACTION = '[KeywordMatchingOptions] Add ad group';
+export const EDIT_ADGROUP_ACTION = '[KeywordMatchingOptions] Edit ad group';
 export const DELETE_ADGROUP_ACTION = '[KeywordMatchingOptions] Delete ad group';
 
 export class AddKeywordAction implements Action {
@@ -99,6 +101,12 @@ export class EditClientAction implements Action {
   constructor(public id: string, public name: string) {}
 }
 
+export class DeleteClientAction implements Action {
+  readonly type = DELETE_CLIENT_ACTION;
+
+  constructor(public id: string) {}
+}
+
 export class AddCampaign implements Action {
   readonly type = ADD_CAMPAIGN_ACTION;
 
@@ -123,6 +131,12 @@ export class AddAdgroupAction implements Action {
   constructor(public name: string, public campaignId?: string) {}
 }
 
+export class EditAdgroupAction implements Action {
+  readonly type = EDIT_ADGROUP_ACTION;
+
+  constructor(public id: string, public name: string, public campaignId: string) {}
+}
+
 export class DeleteAdgroupAction implements Action {
   readonly type = DELETE_ADGROUP_ACTION;
 
@@ -142,8 +156,10 @@ export type KeywordMatchingOptionsActions = AddKeywordAction |
   PasteKeywordsAction |
   AddClientAction |
   EditClientAction |
+  DeleteClientAction |
   AddCampaign |
   EditCampaign |
   DeleteCampaignsAction |
   AddAdgroupAction |
+  EditAdgroupAction |
   DeleteAdgroupAction;

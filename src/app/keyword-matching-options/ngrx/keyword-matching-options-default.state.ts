@@ -25,9 +25,7 @@ export const KeywordMatchingOptionsDefaultState: IKeywordMatchingOptionsState = 
     [client2Id]: {
       id: client2Id,
       name: 'James',
-      campaignIds: [
-        campaignId
-      ],
+      campaignIds: [],
     }
   },
   campaigns: {

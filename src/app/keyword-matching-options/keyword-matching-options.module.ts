@@ -23,6 +23,7 @@ import { CampaignModalComponent } from './clients/campaign-modal/campaign-modal.
 import { KeywordCardListComponent } from './adgroups/keyword-card-list/keyword-card-list.component';
 import { AdgroupModalComponent } from './adgroups/adgroup-modal/adgroup-modal.component';
 import { DeleteAdgroupConfirmComponent } from './adgroups/delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
+import { DeleteClientConfirmComponent } from './clients/delete-client-confirm-modal/delete-client-confirm-modal';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { DeleteAdgroupConfirmComponent } from './adgroups/delete-adgroup-confirm
     CampaignDeleteModalComponent,
     CampaignModalComponent,
     AdgroupModalComponent,
-    DeleteAdgroupConfirmComponent
+    DeleteAdgroupConfirmComponent,
+    DeleteClientConfirmComponent
   ],
   exports: [
     KeywordMatchingOptionsTabsComponent
@@ -62,7 +64,8 @@ import { DeleteAdgroupConfirmComponent } from './adgroups/delete-adgroup-confirm
     CampaignDeleteModalComponent,
     CampaignModalComponent,
     AdgroupModalComponent,
-    DeleteAdgroupConfirmComponent
+    DeleteAdgroupConfirmComponent,
+    DeleteClientConfirmComponent
   ],
 })
 export class KeywordMatchingOptionsModule {}

@@ -37,7 +37,6 @@ import { AboutModule } from './about/about.module';
       maxAge: 25 //  Retains last 25 states
     }),
     KeywordMatchingOptionsModule,
-    AboutModule,
     EffectsModule.forRoot([]),
     SnackbarNgrxModule
   ],

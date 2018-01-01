@@ -1,7 +1,28 @@
-<mat-card *ngFor="let client of clientsWithCampaigns$ | async">
-  <mat-card-title>{{ client.name }} <button mat-button (click)="onEditClient(client)">Change name</button></mat-card-title>
+<mat-card>
   <mat-card-content>
-    <p *ngFor="let campaign of client.campaigns">{{ campaign.name }}<button mat-button (click)="onEditCampaign(campaign)">Change name</button> <button mat-button color="warn" (click)="onDeleteCampaign(campaign.id)">Delete <mat-icon>delete</mat-icon></button></p>
+    <p>Clients can be added to associate with campaigns.<br/>
+      Campaigns can then be added to associate with Ad Groups.</p>
+
+    <p *ngIf="(clientsWithCampaigns$ | async).length === 0">No Clients, use the button below to add a new one and add Campaigns.</p>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngFor="let client of clientsWithCampaigns$ | async">
+  <mat-card-title>
+    <mat-toolbar>
+      {{ client.name }}
+      <button mat-button color="primary" (click)="onEditClient(client)">Rename</button>
+      <span class="toolbar-spacer"></span>
+      <button mat-button color="warn" (click)="onDeleteClient(client.id)" matTooltip="All Campaigns will also be deleted (but Ad Groups wont)">Delete <mat-icon>delete</mat-icon></button>
+    </mat-toolbar>
+  </mat-card-title>
+  <mat-card-content>
+    <p *ngIf="client.campaigns.length === 0">No campaigns, use the button below to add one. Then you can associate Ad Groups with it</p>
+    <p *ngFor="let campaign of client.campaigns">
+      {{ campaign.name }}
+      <button mat-button (click)="onEditCampaign(campaign)">Rename</button>
+      <button mat-button color="warn" (click)="onDeleteCampaign(campaign.id)" matTooltip="Deleting campaign also gives option to Delete all Keywords">Delete <mat-icon>delete</mat-icon></button>
+    </p>
   </mat-card-content>
   <mat-card-actions>
     <button mat-button color="primary" (click)="onAddCampaign(client.id)">Add campaign</button>
