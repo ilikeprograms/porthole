@@ -3,25 +3,21 @@
 
   "name": "Waldo",
   "description": "Adwords and related stuff",
-  "version": "0.0.2",
+  "version": "0.0.3",
 
   "offline_enabled": true,
 
   "author": "Thomas Coleman <tomc2k3@googlemail.com>",
 
   "permissions": [
-    "tabs",
-    "https://*/*"
+    "storage",
+    "identity",
+    "https://*/*",
+    "https://www.googleapis.com/"
   ],
 
-  "icons": {
-//    "16": "assets/icon16.png",
-//    "48": "assets/icon48.png",
-//    "128": "assets/icon128.png"
-  },
-
   "browser_action": {
-    "default_title": "Waldo",      // optional; shown in tooltip
+    "default_title": "Waldo",
     "default_popup": "index.html"
   },
 
