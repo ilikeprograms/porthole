@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { v4 as uuid } from 'uuid';
+
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
@@ -10,18 +12,12 @@ import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keyword.interface';
 import {
   selectAdgroups,
-  selectCampaigns,
-  selectClients, selectKeywords
+  selectKeywords
 } from './keyword-matching-options.selectors';
 import {
   AddAdgroupAction,
-  AddCampaign,
-  AddClientAction,
-  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, DeleteAdgroupAction, DeleteCampaignsAction,
-  DeleteClientAction,
+  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, DeleteAdgroupAction,
   EditAdgroupAction,
-  EditCampaign,
-  EditClientAction,
   EditKeywordModifierAction,
   EditKeywordTextAction, PasteKeywordsAction,
   RemoveAllKeywordsAction,
@@ -40,6 +36,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/combineLatest';
 import { IAdgroup } from '../adgroup-interface';
 import { IAddGroupWithKeywords } from '../addgroup-with-keywords.interface';
+import { selectAllClients } from '../clients/ngrx/clients.selectors';
+import { selectAllCampaigns } from '../campaigns/ngrx/campaigns.selectors';
+import { AddCampaign, DeleteCampaignsAction, EditCampaign } from '../campaigns/ngrx/campaigns.actions';
+import { AddClientAction, DeleteClientAction, EditClientAction } from '../clients/ngrx/clients-actions';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -54,8 +54,8 @@ export class KeywordMatchingOptionsFacade {
   public keywordsSelectedCount: Observable<number>;
 
   constructor(private store: Store<IAppState>) {
-    this.clients = this.store.select(selectClients);
-    this.campaigns$ = this.store.select(selectCampaigns);
+    this.clients = this.store.select(selectAllClients);
+    this.campaigns$ = this.store.select(selectAllCampaigns);
     this.addgroups$ = this.store.select(selectAdgroups);
     this.keywords = this.store.select(selectKeywords);
 
@@ -67,7 +67,7 @@ export class KeywordMatchingOptionsFacade {
           ];
 
           client.campaigns = campaigns.filter((campaign: ICampaign) => {
-            return client.campaignIds.indexOf(campaign.id) > -1;
+            return campaign.clientId === client.id;
           });
 
           return client;
@@ -156,27 +156,60 @@ export class KeywordMatchingOptionsFacade {
   }
 
   public addClient(name: string): void {
-    this.store.dispatch(new AddClientAction(name));
+    const client: IClient = {
+      id: uuid(),
+      name: name,
+      campaignIds: []
+    };
+
+    this.store.dispatch(new AddClientAction({
+      client
+    }));
   }
 
   public editClient(id: string, name: string): void {
-    this.store.dispatch(new EditClientAction(id, name));
+    this.store.dispatch(new EditClientAction({
+      client: {
+        id: id,
+        changes: {
+          name
+        }
+      }
+    }));
   }
 
   public deleteClient(id: string) {
-    this.store.dispatch(new DeleteClientAction(id));
+    this.store.dispatch(new DeleteClientAction({
+      id
+    }));
   }
 
   public addCampaign(clientId: string, name: string): void {
-    this.store.dispatch(new AddCampaign(clientId, name));
+    this.store.dispatch(new AddCampaign({
+      campaign: {
+        id: uuid(),
+        name,
+        clientId
+      }
+    }));
   }
 
   public editCampaign(id: string, name: string): void {
-    this.store.dispatch(new EditCampaign(id, name));
+    this.store.dispatch(new EditCampaign({
+      campaign: {
+        id,
+        changes: {
+          name
+        }
+      }
+    }));
   }
 
   public deleteCampaign(id: string, shouldDeleteAdgroups: boolean): void {
-    this.store.dispatch(new DeleteCampaignsAction(id, shouldDeleteAdgroups));
+    this.store.dispatch(new DeleteCampaignsAction({
+      id,
+      shouldDeleteAdgroups
+    }));
   }
 
   public addAdgroup(name: string, campaignId: string): void {

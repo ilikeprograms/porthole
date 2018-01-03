@@ -29,13 +29,6 @@ export class KeywordMatchingOptionsEffects {
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {}
 
-  // @Effect()
-  //   public removeClientActionEffect() {
-  //
-  //   return this.actions$
-  //     .ofType(REMOVE_C
-  // }
-
   @Effect()
   public removeAllKeywordsActionEffect() {
     return this.actions$
@@ -55,7 +48,7 @@ export class KeywordMatchingOptionsEffects {
       .switchMap((value: [CopyAllKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
           return keyword.adgroupId === value[0].adgroupId;
-        })
+        });
 
         const formattedKeywords: Array<string> = clientKeywords.map((keyword: IKeyword) => {
           return KeywordParser.keywordToText(keyword);

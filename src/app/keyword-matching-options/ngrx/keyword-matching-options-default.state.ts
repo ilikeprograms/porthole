@@ -4,44 +4,37 @@ import { IKeywordMatchingOptionsState } from './keyword-matching-options-state.i
 import { KeywordModifiers } from '../keyword-modifier-enum';
 
 export const KeywordMatchingOptionsDefaultState: IKeywordMatchingOptionsState = {
-  clients: {},
-  campaigns: {},
+  clients: {
+    ids: [],
+    entities: {}
+  },
+  campaigns: {
+    ids: [],
+    entities: {}
+  },
   adgroups: {
     ids: [],
     entities: {}
   },
   keywords: {}
 };
-// const client1Id = uuid();
-// const client2Id = uuid();
-// const addgroup1 = uuid();
-// const addgroup2 = uuid();
-// const campaignId = uuid();
-// const keyword1 = uuid();
-// const keyword2 = uuid();
-// const keyword3 = uuid();
-// const keyword4 = uuid();
-//
+const client1Id = uuid();
+const client2Id = uuid();
+const addgroup1 = uuid();
+const addgroup2 = uuid();
+const keyword1 = uuid();
+const keyword2 = uuid();
+const keyword3 = uuid();
+const keyword4 = uuid();
+
 // export const KeywordMatchingOptionsDefaultState: IKeywordMatchingOptionsState = {
 //   clients: {
-//     [client1Id]: {
-//       id: client1Id,
-//       name: 'bob',
-//       campaignIds: [
-//         campaignId
-//       ],
-//     },
-//     [client2Id]: {
-//       id: client2Id,
-//       name: 'James',
-//       campaignIds: [],
-//     }
+//     ids: [],
+//     entities: {}
 //   },
 //   campaigns: {
-//     [campaignId]: {
-//       id: campaignId,
-//       name: 'bob campaign',
-//     }
+//     ids: [],
+//     entities: {}
 //   },
 //   adgroups: {
 //     ids: [addgroup1, addgroup2],

@@ -8,9 +8,9 @@ import 'rxjs/add/operator/takeUntil';
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { ClientAddModalComponent } from '../client-add-modal/client-add-modal.component';
 import { IClientWithCampaigns } from '../../client-with-campaigns.interface';
-import { CampaignDeleteModalComponent } from '../campaign-delete-modal/campaign-delete-modal';
+import { CampaignDeleteModalComponent } from '../../campaigns/campaign-delete-modal/campaign-delete-modal';
 import { IClient } from '../../client.interface';
-import { CampaignModalComponent } from '../campaign-modal/campaign-modal.component';
+import { CampaignModalComponent } from '../../campaigns/campaign-modal/campaign-modal.component';
 import { ICampaign } from '../../campaign.interface';
 import { DeleteClientConfirmComponent } from '../delete-client-confirm-modal/delete-client-confirm-modal';
 

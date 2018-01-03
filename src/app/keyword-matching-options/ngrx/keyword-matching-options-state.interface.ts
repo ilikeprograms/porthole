@@ -2,10 +2,11 @@ import { IKeyword } from '../keyword.interface';
 import { IClient } from '../client.interface';
 import { ICampaign } from '../campaign.interface';
 import { IAdgroup } from '../adgroup-interface';
+import { EntityState } from '@ngrx/entity';
 
 export interface IKeywordMatchingOptionsState {
-  clients: { [key: string]: IClient };
-  campaigns: { [key: string]: ICampaign };
+  clients: EntityState<IClient>;
+  campaigns: EntityState<ICampaign>;
   adgroups: {
     campaignId?: string;
     ids: Array<string>;

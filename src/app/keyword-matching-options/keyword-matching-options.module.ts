@@ -18,19 +18,39 @@ import { PasteModalComponent } from './adgroups/paste-modal/paste-modal.componen
 import { ClientListComponent } from './clients/client-list/client-list.component';
 import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options-tabs/keyword-matching-options-tabs';
 import { ClientAddModalComponent } from './clients/client-add-modal/client-add-modal.component';
-import { CampaignDeleteModalComponent } from './clients/campaign-delete-modal/campaign-delete-modal';
-import { CampaignModalComponent } from './clients/campaign-modal/campaign-modal.component';
+import { CampaignDeleteModalComponent } from './campaigns/campaign-delete-modal/campaign-delete-modal';
+import { CampaignModalComponent } from './campaigns/campaign-modal/campaign-modal.component';
 import { KeywordCardListComponent } from './adgroups/keyword-card-list/keyword-card-list.component';
 import { AdgroupModalComponent } from './adgroups/adgroup-modal/adgroup-modal.component';
 import { DeleteAdgroupConfirmComponent } from './adgroups/delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
 import { DeleteClientConfirmComponent } from './clients/delete-client-confirm-modal/delete-client-confirm-modal';
+import { ActionReducerMap, StoreModule } from '@ngrx/store';
+import { keywordMatchingOptionsReducer } from './ngrx/keyword-matching-options-reducer';
+import { KeywordMatchingOptionsDefaultState } from './ngrx/keyword-matching-options-default.state';
+import { clientsReducer } from './clients/ngrx/clients.reducer';
+import { ClientsDefaultState } from './clients/ngrx/clients-default.state';
+import { campaignsReducer } from './campaigns/ngrx/campaigns.reducer';
+import { CampaignsDefaultState } from './campaigns/ngrx/campaigns-default.state';
+
+export const reducers: ActionReducerMap<any> = {
+  // keywordMatchingOptions: keywordMatchingOptionsReducer,
+  clients: clientsReducer,
+  campaigns: campaignsReducer
+};
 
 @NgModule({
   imports: [
     FormsModule,
     CommonModule,
     MaterialImportsModule,
-    EffectsModule.forFeature([KeywordMatchingOptionsEffects])
+    StoreModule.forFeature('keywordMatchingOptions', reducers, {
+      initialState: {
+        // keywordMatchingOptions: KeywordMatchingOptionsDefaultState,
+        clients: ClientsDefaultState,
+        campaigns: CampaignsDefaultState
+      }
+    }),
+    // EffectsModule.forFeature([KeywordMatchingOptionsEffects])
   ],
   declarations: [
     KeywordMatchingOptionsTabsComponent,
