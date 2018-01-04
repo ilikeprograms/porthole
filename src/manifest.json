@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "Waldo",
+  "name": "porthole",
   "description": "Adwords and related stuff",
   "version": "0.0.3",
 
@@ -17,7 +17,7 @@
   ],
 
   "browser_action": {
-    "default_title": "Waldo",
+    "default_title": "Porthole",
     "default_popup": "index.html"
   },
 
