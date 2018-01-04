@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IClient } from '../../client.interface';
+import { IClient } from '../client.interface';
 import { Update } from '@ngrx/entity/src/models';
 
 export const ADD_CLIENT_ACTION = '[KeywordMatchingOptions] Add client';

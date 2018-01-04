@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ICampaign } from '../../campaign.interface';
+import { ICampaign } from '../campaign.interface';
 import { Update } from '@ngrx/entity/src/models';
 
 export const ADD_CAMPAIGN_ACTION = '[KeywordMatchingOptions] Add campaign';

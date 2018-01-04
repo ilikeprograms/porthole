@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
     <h2 mat-dialog-title>{{ data ? 'Change name' : 'Add new campaign' }}</h2>
     <mat-dialog-content>
       <mat-form-field>
-        <input #campaignName placeholder="name" type="text" matInput [value]="data?.campaign.name" />
+        <input #campaignName placeholder="name" type="text" matInput [value]="data?.campaign.name" (keyup.enter)="closeWithData(campaignName.value)" />
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
@@ -25,5 +25,9 @@ export class CampaignModalComponent {
 
   public onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  public closeWithData(campaignName: string): void {
+    this.dialogRef.close(campaignName);
   }
 }

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { v4 as uuid } from 'uuid';
+
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -10,14 +12,17 @@ import 'rxjs/add/operator/map';
 
 import { ClipboardService } from '../../core/clipboard.service';
 import {
-  AddKeywordAction, COPY_ALL_KEYWORDS_ACTION, CopyAllKeywordsAction, PASTE_KEYWORDS_ACTION,
-  PasteKeywordsAction, REMOVE_ALL_KEYWORDS_ACTION, RemoveAllKeywordsAction,
+  COPY_ALL_KEYWORDS_ACTION, CopyAllKeywordsAction, PASTE_KEYWORDS_ACTION,
+  PasteKeywordsAction,
 } from './keyword-matching-options.actions';
 import { CreateTextSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
 import { KeywordMatchingOptionsFacade } from './keyword-matching-options.facade';
-import { IKeyword } from '../keyword.interface';
-import { KeywordModifiers } from '../keyword-modifier-enum';
+import { IKeyword } from '../keywords/keyword.interface';
 import { IParseKeywordTextModifier, KeywordParser } from '../keyword-parser';
+import {
+  AddKeywordAction, REMOVE_ALL_KEYWORDS_ACTION,
+  RemoveAllKeywordsAction
+} from '../keywords/ngrx/keywords.actions';
 
 const newLineCharacter: string = String.fromCharCode(13, 10);
 
@@ -47,7 +52,7 @@ export class KeywordMatchingOptionsEffects {
       .withLatestFrom(this.keywordMatchingOptionsFacade.keywords)
       .switchMap((value: [CopyAllKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
-          return keyword.adgroupId === value[0].adgroupId;
+          return keyword.adgroupId === value[0].payload.adgroupId;
         });
 
         const formattedKeywords: Array<string> = clientKeywords.map((keyword: IKeyword) => {
@@ -67,14 +72,22 @@ export class KeywordMatchingOptionsEffects {
     return this.actions$
       .ofType(PASTE_KEYWORDS_ACTION)
       .mergeMap((action: PasteKeywordsAction) => {
-        let keywords: Array<string|IParseKeywordTextModifier> = action.text.split(/\n/m);
+        let keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
 
         keywords = keywords.map((keyword: string) => {
           return KeywordParser.textToKeywordTextAndModifier(keyword);
         });
 
         const keywordAction = keywords.map((keywordWithModifier: IParseKeywordTextModifier) => {
-          return new AddKeywordAction(action.addroupId, keywordWithModifier.text, keywordWithModifier.modifier);
+          return new AddKeywordAction({
+            keyword: {
+              id: uuid(),
+              adgroupId: action.payload.adgroupId,
+              text: keywordWithModifier.text,
+              modifier: keywordWithModifier.modifier,
+              selected: false
+            }
+          });
         });
 
         return [

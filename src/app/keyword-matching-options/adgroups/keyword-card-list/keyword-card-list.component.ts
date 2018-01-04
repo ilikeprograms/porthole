@@ -9,7 +9,7 @@ import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-option
 import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
 import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
 import { AdgroupModalComponent } from '../adgroup-modal/adgroup-modal.component';
-import { ICampaign } from '../../campaign.interface';
+import { ICampaign } from '../../campaigns/campaign.interface';
 
 @Component({
   selector: 'app-keyword-card-list',

@@ -17,9 +17,8 @@ export function campaignsReducer(state: ICampaignState = CampaignsDefaultState, 
       return campaignsAdapter.removeOne(action.payload.id, state);
     case DELETE_CLIENT_ACTION:
       const campaignIds = [];
-      const ids: Array<string> = state.ids as any;
 
-      ids.forEach((campaignId: string) => {
+      [...state.ids].forEach((campaignId: string) => {
         if (state.entities[campaignId].clientId === action.payload.id) {
           campaignIds.push(campaignId);
         }

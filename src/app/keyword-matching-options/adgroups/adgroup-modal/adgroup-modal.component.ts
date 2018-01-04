@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
       <p *ngIf="!data.adgroup">Once an Ad Group is created you can add Keywords to it and manage/change them.</p>
 
       <mat-form-field>
-        <input #adgroupName placeholder="Name" type="text" matInput [value]="data.adgroup?.name" />
+        <input #adgroupName placeholder="Name" type="text" matInput [value]="data.adgroup?.name" (keyup.enter)="closeWithData({name: adgroupName.value, campaignId: adgroupCampaign.value})" />
       </mat-form-field>
 
       <mat-form-field>
@@ -44,5 +44,9 @@ export class AdgroupModalComponent {
 
   public onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  public closeWithData(values: {name: string, campaignId: string}): void {
+    this.dialogRef.close(values);
   }
 }

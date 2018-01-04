@@ -31,11 +31,17 @@ import { clientsReducer } from './clients/ngrx/clients.reducer';
 import { ClientsDefaultState } from './clients/ngrx/clients-default.state';
 import { campaignsReducer } from './campaigns/ngrx/campaigns.reducer';
 import { CampaignsDefaultState } from './campaigns/ngrx/campaigns-default.state';
+import { adgroupReducer } from './adgroups/ngrx/adgroup.reducer';
+import { AdgroupDefaultState } from './adgroups/ngrx/adgroup-default.state';
+import { keywordsReducer } from './keywords/ngrx/keywords.reducer';
+import { KeywordsDefaultState } from './keywords/ngrx/keywords-default.state';
 
 export const reducers: ActionReducerMap<any> = {
   // keywordMatchingOptions: keywordMatchingOptionsReducer,
   clients: clientsReducer,
-  campaigns: campaignsReducer
+  campaigns: campaignsReducer,
+  adgroups: adgroupReducer,
+  keywords: keywordsReducer
 };
 
 @NgModule({
@@ -47,10 +53,12 @@ export const reducers: ActionReducerMap<any> = {
       initialState: {
         // keywordMatchingOptions: KeywordMatchingOptionsDefaultState,
         clients: ClientsDefaultState,
-        campaigns: CampaignsDefaultState
+        campaigns: CampaignsDefaultState,
+        adgroups: AdgroupDefaultState,
+        keywords: KeywordsDefaultState
       }
     }),
-    // EffectsModule.forFeature([KeywordMatchingOptionsEffects])
+    EffectsModule.forFeature([KeywordMatchingOptionsEffects])
   ],
   declarations: [
     KeywordMatchingOptionsTabsComponent,

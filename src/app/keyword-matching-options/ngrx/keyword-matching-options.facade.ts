@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import { v4 as uuid } from 'uuid';
 
@@ -6,40 +7,35 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/mergeMap';
-import { Store } from '@ngrx/store';
-
-import { IAppState } from '../../ngrx/app-state.interface';
-import { IKeyword } from '../keyword.interface';
-import {
-  selectAdgroups,
-  selectKeywords
-} from './keyword-matching-options.selectors';
-import {
-  AddAdgroupAction,
-  AddKeywordAction, ChangeNewKeywordOptionAction, CopyAllKeywordsAction, DeleteAdgroupAction,
-  EditAdgroupAction,
-  EditKeywordModifierAction,
-  EditKeywordTextAction, PasteKeywordsAction,
-  RemoveAllKeywordsAction,
-  RemoveKeywordAction,
-  RemoveSelectedKeywordsAction,
-  ToggleKeywordAllSelectedAction,
-  ToggleKeywordSelectedAction
-} from './keyword-matching-options.actions';
-import { KeywordModifiers } from '../keyword-modifier-enum';
-import { IClient } from '../client.interface';
 import 'rxjs/add/operator/filter';
-import { ICampaign } from '../campaign.interface';
-import { IClientWithCampaigns } from '../client-with-campaigns.interface';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/combineLatest';
-import { IAdgroup } from '../adgroup-interface';
+
+import { IAppState } from '../../ngrx/app-state.interface';
+import { IKeyword } from '../keywords/keyword.interface';
+import { CopyAllKeywordsAction, PasteKeywordsAction } from './keyword-matching-options.actions';
+import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
+import { IClient } from '../clients/client.interface';
+import { ICampaign } from '../campaigns/campaign.interface';
+import { IClientWithCampaigns } from '../clients/client-with-campaigns.interface';
+import { IAdgroup } from '../adgroups/adgroup-interface';
 import { IAddGroupWithKeywords } from '../addgroup-with-keywords.interface';
 import { selectAllClients } from '../clients/ngrx/clients.selectors';
 import { selectAllCampaigns } from '../campaigns/ngrx/campaigns.selectors';
 import { AddCampaign, DeleteCampaignsAction, EditCampaign } from '../campaigns/ngrx/campaigns.actions';
 import { AddClientAction, DeleteClientAction, EditClientAction } from '../clients/ngrx/clients-actions';
+import {
+  AddAdgroupAction, ChangeNewKeywordOptionAction, DeleteAdgroupAction,
+  EditAdgroupAction
+} from '../adgroups/ngrx/adgroup.actions';
+import { selectAdgroupById, selectAllAdgroups } from '../adgroups/ngrx/adgroups.selectors';
+import {
+  AddKeywordAction, EditKeywordModifierAction, EditKeywordTextAction,
+  RemoveAllKeywordsAction,
+  RemoveKeywordAction, RemoveSelectedKeywordsAction, ToggleKeywordAllSelectedAction, ToggleKeywordSelectedAction
+} from '../keywords/ngrx/keywords.actions';
+import { selectAllKeywords } from '../keywords/ngrx/keywords.selectors';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -56,8 +52,8 @@ export class KeywordMatchingOptionsFacade {
   constructor(private store: Store<IAppState>) {
     this.clients = this.store.select(selectAllClients);
     this.campaigns$ = this.store.select(selectAllCampaigns);
-    this.addgroups$ = this.store.select(selectAdgroups);
-    this.keywords = this.store.select(selectKeywords);
+    this.addgroups$ = this.store.select(selectAllAdgroups);
+    this.keywords = this.store.select(selectAllKeywords);
 
     this.clientsWithCampaigns$ = Observable.combineLatest(this.clients, this.campaigns$)
       .map((values: [Array<IClient>, Array<ICampaign>]) => {
@@ -90,7 +86,7 @@ export class KeywordMatchingOptionsFacade {
           }
 
           addgroup.keywords = keywords.filter((keyword: IKeyword) => {
-            return addgroup.keywordIds.indexOf(keyword.id) > -1;
+            return keyword.adgroupId === addgroup.id;
           });
 
           const selectedKeywords: Array<IKeyword> = addgroup.keywords.filter((keyword: IKeyword) => {
@@ -111,48 +107,99 @@ export class KeywordMatchingOptionsFacade {
     this.keywordsSelectedCount = Observable.of(0);
   }
 
-  public addKeyword(addroupId: string, text: string): void {
-    this.store.dispatch(new AddKeywordAction(addroupId, text));
+  public addKeyword(adgroupId: string, text: string): void {
+    let adgroup: IAdgroup;
+
+    this.store.select(selectAdgroupById(adgroupId)).take(1)
+      .subscribe((adgroupById: IAdgroup) => {
+        adgroup = adgroupById;
+      });
+
+    this.store.dispatch(new AddKeywordAction({
+      keyword: {
+        id: uuid(),
+        adgroupId,
+        text,
+        selected: false,
+        modifier: adgroup.matchOption
+      }
+    }));
   }
 
   public editKeywordText(id: string, text: string): void {
-    this.store.dispatch(new EditKeywordTextAction(id, text));
+    this.store.dispatch(new EditKeywordTextAction({
+      keyword: {
+        id,
+        changes: {
+          text
+        }
+      }
+    }));
   }
 
   public editKeywordModifier(id: string, modifier: KeywordModifiers): void {
-    this.store.dispatch(new EditKeywordModifierAction(id, modifier));
+    this.store.dispatch(new EditKeywordModifierAction({
+      keyword: {
+        id,
+        changes: {
+          modifier
+        }
+      },
+    }));
   }
 
-  public removeKeyword(addgroupId: string, id: string): void {
-    this.store.dispatch(new RemoveKeywordAction(addgroupId, id));
+  public removeKeyword(id: string): void {
+    this.store.dispatch(new RemoveKeywordAction({
+      id
+    }));
   }
 
-  public removeSelectedKeywords(addgroupId: string): void {
-    this.store.dispatch(new RemoveSelectedKeywordsAction(addgroupId));
+  public removeSelectedKeywords(adgroupId: string): void {
+    this.store.dispatch(new RemoveSelectedKeywordsAction({
+      adgroupId
+    }));
   }
 
-  public removeAllKeywords(addgroupId: string): void {
-    this.store.dispatch(new RemoveAllKeywordsAction(addgroupId));
+  public removeAllKeywords(adgroupId: string): void {
+    this.store.dispatch(new RemoveAllKeywordsAction({
+      adgroupId
+    }));
   }
 
   public toggleKeywordSelected(id: string): void {
-    this.store.dispatch(new ToggleKeywordSelectedAction(id));
+    this.store.dispatch(new ToggleKeywordSelectedAction({
+      id
+    }));
   }
 
-  public changeNewKeywordOption(addroupId: string, matchOption: KeywordModifiers): void {
-    this.store.dispatch(new ChangeNewKeywordOptionAction(addroupId, matchOption));
+  public changeNewKeywordOption(id: string, matchOption: KeywordModifiers): void {
+    this.store.dispatch(new ChangeNewKeywordOptionAction({
+      adgroup: {
+       id,
+       changes: {
+         matchOption
+       }
+      }
+    }));
   }
 
-  public toggleAllSelected(addgroupId: string): void {
-    this.store.dispatch(new ToggleKeywordAllSelectedAction(addgroupId));
+  public toggleAllSelected(adgroupId: string): void {
+    this.store.dispatch(new ToggleKeywordAllSelectedAction({
+      adgroupId
+    }));
   }
 
-  public copyAllKeywords(addroupId: string): void {
-    this.store.dispatch(new CopyAllKeywordsAction(addroupId));
+  public copyAllKeywords(adgroupId: string): void {
+    this.store.dispatch(new CopyAllKeywordsAction({
+      adgroupId
+    }));
   }
 
-  public pasteKeywords(addroupId: string, text: string): void {
-    this.store.dispatch(new PasteKeywordsAction(addroupId, text));
+  public pasteKeywords(adgroupId: string, text: string): void {
+    this.store.dispatch(new PasteKeywordsAction({
+      adgroupId,
+      text
+    }));
   }
 
   public addClient(name: string): void {
@@ -213,14 +260,31 @@ export class KeywordMatchingOptionsFacade {
   }
 
   public addAdgroup(name: string, campaignId: string): void {
-    this.store.dispatch(new AddAdgroupAction(name, campaignId));
+    this.store.dispatch(new AddAdgroupAction({
+      adgroup: {
+        id: uuid(),
+        name,
+        campaignId,
+        matchOption: KeywordModifiers.BroadMatch
+      }
+    }));
   }
 
   public editAdgroup(id: string, name: string, campaignId: string): void {
-    this.store.dispatch(new EditAdgroupAction(id, name, campaignId));
+    this.store.dispatch(new EditAdgroupAction({
+      adgroup: {
+        id,
+        changes: {
+          name,
+          campaignId
+        }
+      }
+    }));
   }
 
   public deleteAdgroup(id: string) {
-    this.store.dispatch(new DeleteAdgroupAction(id));
+    this.store.dispatch(new DeleteAdgroupAction({
+      id
+    }));
   }
 }

@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
     <h2 mat-dialog-title>{{ data ? 'Change name' : 'Add new client' }}</h2>
     <mat-dialog-content>
       <mat-form-field>
-        <input #clientName placeholder="name" type="text" matInput [value]="data?.client.name" />
+        <input #clientName placeholder="name" type="text" matInput [value]="data?.client.name" (keyup.enter)="closeWithData(clientName.value)" />
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
@@ -25,5 +25,9 @@ export class ClientAddModalComponent {
 
   public onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  public closeWithData(clientName: string): void {
+    this.dialogRef.close(clientName);
   }
 }

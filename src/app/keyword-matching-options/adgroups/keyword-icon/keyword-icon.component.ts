@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { KeywordModifiers } from '../../keyword-modifier-enum';
+import { KeywordModifiers } from '../../keywords/keyword-modifier-enum';
 
 @Component({
   selector: 'app-keyword-icon',

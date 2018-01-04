@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
-import { KeywordModifiers } from '../../keyword-modifier-enum';
+import { KeywordModifiers } from '../../keywords/keyword-modifier-enum';
 import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
-import { ICampaign } from '../../campaign.interface';
+import { ICampaign } from '../../campaigns/campaign.interface';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AdgroupModalComponent } from '../adgroup-modal/adgroup-modal.component';
 import { DeleteAdgroupConfirmComponent } from '../delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
@@ -84,7 +84,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   }
 
   public onRemoveKeyword(id: string): void {
-    this.keywordMatchingOptionsFacade.removeKeyword(this.adgroup.id, id);
+    this.keywordMatchingOptionsFacade.removeKeyword(id);
   }
 
   public onToggleKeywordSelected(id: string): void {

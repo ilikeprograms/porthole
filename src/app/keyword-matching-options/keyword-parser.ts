@@ -1,5 +1,5 @@
-import { IKeyword } from './keyword.interface';
-import { KeywordModifiers } from './keyword-modifier-enum';
+import { IKeyword } from './keywords/keyword.interface';
+import { KeywordModifiers } from './keywords/keyword-modifier-enum';
 
 export interface IParseKeywordTextModifier {
   text: string;
@@ -27,8 +27,6 @@ export class KeywordParser {
         modifier: KeywordModifiers.PhraseMatch
       };
     }
-
-    console.log(keyword.match(/^(\+\w+\s*)+$/g));
 
     if (keyword.match(/^(\+\w+\s*)+$/g) !== null) { // Broad match modifier
       return {

@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
     <mat-tab-group>
       <mat-tab label="Ad Groups">
         <div class="tab-content">
-          <!--<app-keyword-card-list></app-keyword-card-list>-->
+          <app-keyword-card-list></app-keyword-card-list>
         </div>
       </mat-tab>
       <mat-tab label="Clients">

@@ -1,16 +1,13 @@
-import { IKeyword } from '../keyword.interface';
-import { IClient } from '../client.interface';
-import { ICampaign } from '../campaign.interface';
-import { IAdgroup } from '../adgroup-interface';
 import { EntityState } from '@ngrx/entity';
+
+import { IKeyword } from '../keywords/keyword.interface';
+import { IClient } from '../clients/client.interface';
+import { ICampaign } from '../campaigns/campaign.interface';
+import { IAdgroup } from '../adgroups/adgroup-interface';
 
 export interface IKeywordMatchingOptionsState {
   clients: EntityState<IClient>;
   campaigns: EntityState<ICampaign>;
-  adgroups: {
-    campaignId?: string;
-    ids: Array<string>;
-    entities: {[key: string]: IAdgroup};
-  };
-  keywords: { [key: string]: IKeyword };
+  adgroups: EntityState<IAdgroup>;
+  keywords: EntityState<IKeyword>;
 }

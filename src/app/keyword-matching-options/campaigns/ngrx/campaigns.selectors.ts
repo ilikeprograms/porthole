@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createSelector } from '@ngrx/store';
 
 import { campaignsAdapter } from './campaigns.adapter';
 import { IKeywordMatchingOptionsState } from '../../ngrx/keyword-matching-options-state.interface';

@@ -16,7 +16,7 @@ import { MatDialogRef } from '@angular/material';
     <mat-dialog-actions>
       <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
       <!-- Can optionally provide a result for the closing dialog. -->
-      <button mat-button color="primary" [mat-dialog-close]="slideToggle.checked">Confirm</button>
+      <button type="submit" tabindex="1" mat-button color="primary" [mat-dialog-close]="slideToggle.checked">Confirm</button>
     </mat-dialog-actions>
   `,
 })
@@ -27,5 +27,9 @@ export class CampaignDeleteModalComponent {
 
   public onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  public closeWithData(shouldRemove: string): void {
+    this.dialogRef.close(shouldRemove);
   }
 }

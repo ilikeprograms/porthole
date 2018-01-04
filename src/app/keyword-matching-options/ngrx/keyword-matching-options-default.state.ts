@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 import { IKeywordMatchingOptionsState } from './keyword-matching-options-state.interface';
-import { KeywordModifiers } from '../keyword-modifier-enum';
+import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
 
 export const KeywordMatchingOptionsDefaultState: IKeywordMatchingOptionsState = {
   clients: {
@@ -16,7 +16,10 @@ export const KeywordMatchingOptionsDefaultState: IKeywordMatchingOptionsState = 
     ids: [],
     entities: {}
   },
-  keywords: {}
+  keywords: {
+    ids: [],
+    entities: {}
+  }
 };
 const client1Id = uuid();
 const client2Id = uuid();
