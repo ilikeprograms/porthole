@@ -14,7 +14,3 @@ export class PasteKeywordsAction implements Action {
 
   constructor(public payload: { adgroupId: string, text: string }) {}
 }
-
-export type KeywordMatchingOptionsActions =
-  CopyAllKeywordsAction |
-  PasteKeywordsAction;

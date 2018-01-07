@@ -25,8 +25,6 @@ import { AdgroupModalComponent } from './adgroups/adgroup-modal/adgroup-modal.co
 import { DeleteAdgroupConfirmComponent } from './adgroups/delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
 import { DeleteClientConfirmComponent } from './clients/delete-client-confirm-modal/delete-client-confirm-modal';
 import { ActionReducerMap, StoreModule } from '@ngrx/store';
-import { keywordMatchingOptionsReducer } from './ngrx/keyword-matching-options-reducer';
-import { KeywordMatchingOptionsDefaultState } from './ngrx/keyword-matching-options-default.state';
 import { clientsReducer } from './clients/ngrx/clients.reducer';
 import { ClientsDefaultState } from './clients/ngrx/clients-default.state';
 import { campaignsReducer } from './campaigns/ngrx/campaigns.reducer';
@@ -37,7 +35,6 @@ import { keywordsReducer } from './keywords/ngrx/keywords.reducer';
 import { KeywordsDefaultState } from './keywords/ngrx/keywords-default.state';
 
 export const reducers: ActionReducerMap<any> = {
-  // keywordMatchingOptions: keywordMatchingOptionsReducer,
   clients: clientsReducer,
   campaigns: campaignsReducer,
   adgroups: adgroupReducer,
@@ -51,7 +48,6 @@ export const reducers: ActionReducerMap<any> = {
     MaterialImportsModule,
     StoreModule.forFeature('keywordMatchingOptions', reducers, {
       initialState: {
-        // keywordMatchingOptions: KeywordMatchingOptionsDefaultState,
         clients: ClientsDefaultState,
         campaigns: CampaignsDefaultState,
         adgroups: AdgroupDefaultState,
