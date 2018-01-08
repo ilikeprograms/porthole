@@ -5,7 +5,7 @@ import {
 import 'rxjs/add/operator/take';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
+import { DeleteAllConfirmComponent } from '../../adgroups/delete-all-confirm/delete-all-confirm.component';
 import { PasteModalComponent } from '../paste-modal/paste-modal.component';
 
 @Component({

@@ -1,5 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { ClipboardService } from './clipboard.service';
+import { ChromeStorageService } from './chrome-storage.service';
 
 @NgModule({
 
@@ -19,7 +20,8 @@ export class CoreModule {
     return {
       ngModule: CoreModule,
       providers: [
-        ClipboardService
+        ClipboardService,
+        ChromeStorageService
       ]
     };
   }

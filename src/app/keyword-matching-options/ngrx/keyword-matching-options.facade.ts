@@ -35,7 +35,11 @@ import {
   RemoveAllKeywordsAction,
   RemoveKeywordAction, RemoveSelectedKeywordsAction, ToggleKeywordAllSelectedAction, ToggleKeywordSelectedAction
 } from '../keywords/ngrx/keywords.actions';
-import { selectAllKeywords } from '../keywords/ngrx/keywords.selectors';
+import {
+  keywordsAllSelectedByAdGroupId,
+  selectAllKeywords, selectedKeywordsByAdGroupId,
+  selectedKeywordsCountByAdGroupId
+} from '../keywords/ngrx/keywords.selectors';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -85,16 +89,16 @@ export class KeywordMatchingOptionsFacade {
             addgroup.campaign = undefined;
           }
 
-          addgroup.keywords = keywords.filter((keyword: IKeyword) => {
-            return keyword.adgroupId === addgroup.id;
-          });
+          // addgroup.keywords = keywords.filter((keyword: IKeyword) => {
+          //   return keyword.adgroupId === addgroup.id;
+          // });
+          //
+          // const selectedKeywords: Array<IKeyword> = addgroup.keywords.filter((keyword: IKeyword) => {
+          //   return keyword.selected;
+          // });
 
-          const selectedKeywords: Array<IKeyword> = addgroup.keywords.filter((keyword: IKeyword) => {
-            return keyword.selected;
-          });
-
-          addgroup.keywordSelectedCount = selectedKeywords.length;
-          addgroup.keywordAllSelected = keywords.length === 0 ? false : (selectedKeywords.length === keywords.length);
+          // addgroup.keywordSelectedCount = selectedKeywords.length;
+          // addgroup.keywordAllSelected = keywords.length === 0 ? false : (selectedKeywords.length === keywords.length);
 
           return addgroup;
         });
@@ -105,6 +109,18 @@ export class KeywordMatchingOptionsFacade {
     this.allSelected = Observable.of(false);
 
     this.keywordsSelectedCount = Observable.of(0);
+  }
+
+  public getKeywordsForAdgroup(adGroupId: string) {
+    return this.store.select(selectedKeywordsByAdGroupId(adGroupId));
+  }
+
+  public getSelectedKeywordsCountForAdgroup(adGroupId: string) {
+    return this.store.select(selectedKeywordsCountByAdGroupId(adGroupId));
+  }
+
+  public getKeywordsAllSelectedForAdgroup(adGroupId: string) {
+    return this.store.select(keywordsAllSelectedByAdGroupId(adGroupId));
   }
 
   public addKeyword(adgroupId: string, text: string): void {

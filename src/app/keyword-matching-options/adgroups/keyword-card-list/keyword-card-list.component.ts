@@ -7,7 +7,6 @@ import 'rxjs/add/operator/take';
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
-import { DeleteAllConfirmComponent } from '../delete-all-confirm/delete-all-confirm.component';
 import { AdgroupModalComponent } from '../adgroup-modal/adgroup-modal.component';
 import { ICampaign } from '../../campaigns/campaign.interface';
 
@@ -20,31 +19,23 @@ import { ICampaign } from '../../campaigns/campaign.interface';
         <p>When copy is clicked all keywords are formatted with modifiers and copied to clipboard in an AdWords friendly format.<br />
           Keywords can be copied straight from AdWords and modifiers will be maintained. So just simply copy and paste from AdWords, once happy, press copy and paste back in.
         </p>
-        <p *ngIf="addgroupsWithKeywords.length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>
+        <p *ngIf="(addgroupsWithKeywords| async).length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>
       </mat-card-content>
     </mat-card>
-    <app-keyword-list *ngFor="let addgroup of addgroupsWithKeywords" [addgroupWithKeywords]="addgroup"></app-keyword-list>
+    <app-keyword-list *ngFor="let adgroup of addgroupsWithKeywords | async" [addgroupWithKeywords]="adgroup"></app-keyword-list>
     <button mat-button color="primary" (click)="onAddAdgroup()">Add AdGroup</button>
   `
 })
 export class KeywordCardListComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  public addgroupsWithKeywords: Array<Observable<IAddGroupWithKeywords>>;
+  public addgroupsWithKeywords: Observable<Array<IAddGroupWithKeywords>>;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
     private dialog: MatDialog
   ) {
-    this.keywordMatchingOptionsFacade.addgroupsWithKeywords$.takeUntil(this.unsubscribe$)
-      .map((adgroups: Array<IAddGroupWithKeywords>) => {
-        return adgroups.map((adgroup: IAddGroupWithKeywords) => {
-          return Observable.of(adgroup);
-        });
-      })
-      .subscribe((adgroups: Array<Observable<IAddGroupWithKeywords>>) => {
-        this.addgroupsWithKeywords = adgroups;
-      });
+    this.addgroupsWithKeywords = this.keywordMatchingOptionsFacade.addgroupsWithKeywords$.takeUntil(this.unsubscribe$);
   }
 
   public ngOnDestroy() {

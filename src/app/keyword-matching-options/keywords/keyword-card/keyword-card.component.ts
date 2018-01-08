@@ -28,7 +28,18 @@ interface IEditKeywordModifierOutput {
       }
     `
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // animations: [
+  //   trigger('keywordAnimation', [
+  //     transition(':enter', [
+  //       style({ opacity: 0, transform: 'translateY(-50px)' }),
+  //       animate('300ms ease-in', style({ opacity: 1, transform: 'none', offset: 1 }))
+  //     ]),
+  //     transition(':leave', [
+  //       animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(-50px)', offset: 1 }))
+  //     ])
+  //   ])
+  // ]
 })
 export class KeywordCardComponent {
   @Input()
