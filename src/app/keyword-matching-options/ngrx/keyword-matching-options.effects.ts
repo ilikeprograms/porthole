@@ -25,6 +25,9 @@ import {
 } from '../keywords/ngrx/keywords.actions';
 import 'rxjs/add/observable/empty';
 import { ChromeStorageService } from '../../core/chrome-storage.service';
+import { DELETE_CAMPAIGN_ACTION, DeleteCampaignsAction } from '../campaigns/ngrx/campaigns.actions';
+import { IAdgroup } from '../adgroups/adgroup-interface';
+import { DeleteAdgroupAction } from '../adgroups/ngrx/adgroup.actions';
 
 const newLineCharacter: string = String.fromCharCode(13, 10);
 
@@ -47,6 +50,28 @@ export class KeywordMatchingOptionsEffects {
         this.chromeStorageService.initialised = true;
 
         return Observable.empty();
+      });
+  }
+
+  @Effect()
+  public deleteCampaign() {
+    return this.actions$
+      .ofType(DELETE_CAMPAIGN_ACTION)
+      .withLatestFrom(this.keywordMatchingOptionsFacade.addgroups$)
+      .mergeMap((value: [DeleteCampaignsAction, Array<IAdgroup>]): Array<DeleteAdgroupAction | undefined> => {
+          if (value[0].payload.shouldDeleteAdgroups) {
+            const adgroupsToDelete: Array<IAdgroup> = value[1].filter((adgroup: IAdgroup) => {
+              return adgroup.campaignId === value[0].payload.id;
+            });
+
+            return adgroupsToDelete.map((adgroup: IAdgroup) => {
+              return new DeleteAdgroupAction({
+                id: adgroup.id
+              });
+            });
+          }
+
+          return [];
       });
   }
 
