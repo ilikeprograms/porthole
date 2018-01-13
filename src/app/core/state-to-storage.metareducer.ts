@@ -1,22 +1,15 @@
 import { ActionReducer } from '@ngrx/store';
+
 import { ChromeStorageService } from './chrome-storage.service';
 
-export function stateToStorageMetareducer(chromeStorageService: ChromeStorageService, reducer: ActionReducer<any>): ActionReducer<any> {
+export function stateToStorageMetareducer(chromeStorageService: ChromeStorageService, storageKey: string, reducer: ActionReducer<any>): ActionReducer<any> {
   return function(state, action) {
     const nextState = reducer(state, action);
 
-    chromeStorageService.sync.set({'appstate': nextState});
-
-    chromeStorageService.sync.get('appstate', (data) => {
-      console.log(data);
-    });
+    if (chromeStorageService.initialised) {
+      chromeStorageService.sync.set({[storageKey]: nextState});
+    }
 
     return nextState;
-    //
-    //
-    // console.log(chrome.storage.get('appstate'));
-    // chrome.storage.sync('appstate', nextState);
-    //
-    // return nextState;
   };
 }

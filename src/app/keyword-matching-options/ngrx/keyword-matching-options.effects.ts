@@ -12,7 +12,7 @@ import 'rxjs/add/operator/map';
 
 import { ClipboardService } from '../../core/clipboard.service';
 import {
-  COPY_ALL_KEYWORDS_ACTION, CopyAllKeywordsAction, PASTE_KEYWORDS_ACTION,
+  COPY_ALL_KEYWORDS_ACTION, CopyAllKeywordsAction, IMPORT_FROM_CHROME_STORAGE, PASTE_KEYWORDS_ACTION,
   PasteKeywordsAction,
 } from './keyword-matching-options.actions';
 import { CreateTextSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
@@ -23,6 +23,8 @@ import {
   AddKeywordAction, REMOVE_ALL_KEYWORDS_ACTION,
   RemoveAllKeywordsAction
 } from '../keywords/ngrx/keywords.actions';
+import 'rxjs/add/observable/empty';
+import { ChromeStorageService } from '../../core/chrome-storage.service';
 
 const newLineCharacter: string = String.fromCharCode(13, 10);
 
@@ -31,8 +33,22 @@ export class KeywordMatchingOptionsEffects {
   constructor(
     private actions$: Actions<Action>,
     private clipboardService: ClipboardService,
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
+    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
+    private chromeStorageService: ChromeStorageService
   ) {}
+
+  @Effect({
+    dispatch: false
+  })
+  public loadFromChromeStorage() {
+    return this.actions$
+      .ofType(IMPORT_FROM_CHROME_STORAGE)
+      .map((action) => {
+        this.chromeStorageService.initialised = true;
+
+        return Observable.empty();
+      });
+  }
 
   @Effect()
   public removeAllKeywordsActionEffect() {

@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { InjectionToken, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ActionReducer, META_REDUCERS, MetaReducer, StoreModule } from '@ngrx/store';
+import { META_REDUCERS, MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
@@ -14,11 +14,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { EffectsModule } from '@ngrx/effects';
 import { stateToStorageMetareducer } from './core/state-to-storage.metareducer';
 import { ChromeStorageService } from './core/chrome-storage.service';
+import { environment } from '../environments/environment';
 
 export const CHROME_STORAGE_SERVICE = new InjectionToken('CHROME_STORAGE_SERVICE');
+export const STORAGE_KEY = new InjectionToken('STORAGE_KEY');
 
-export function getChromeStorageService(chromeStorageService: ChromeStorageService) {
-  return stateToStorageMetareducer.bind(this, chromeStorageService);
+export function getChromeStorageService(chromeStorageService: ChromeStorageService, storageKey: string) {
+  return stateToStorageMetareducer.bind(this, chromeStorageService, storageKey);
 }
 
 export function getMetaReducers(stateToStorageMetareducer): MetaReducer<any>[] {
@@ -45,15 +47,19 @@ export function getMetaReducers(stateToStorageMetareducer): MetaReducer<any>[] {
   ],
   providers: [
     {
+      provide: STORAGE_KEY,
+      useValue: environment.storageKey
+    },
+    {
       provide: CHROME_STORAGE_SERVICE,
-      deps: [ChromeStorageService],
+      deps: [ChromeStorageService, STORAGE_KEY],
       useFactory: getChromeStorageService
     },
     {
       provide: META_REDUCERS,
       deps: [CHROME_STORAGE_SERVICE],
       useFactory: getMetaReducers
-    }
+    },
   ],
   bootstrap: [AppComponent]
 })

@@ -14,7 +14,10 @@ import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keywords/keyword.interface';
-import { CopyAllKeywordsAction, PasteKeywordsAction } from './keyword-matching-options.actions';
+import {
+  CopyAllKeywordsAction, ImportFromChromeStorage,
+  PasteKeywordsAction
+} from './keyword-matching-options.actions';
 import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
 import { IClient } from '../clients/client.interface';
 import { ICampaign } from '../campaigns/campaign.interface';
@@ -109,6 +112,10 @@ export class KeywordMatchingOptionsFacade {
     this.allSelected = Observable.of(false);
 
     this.keywordsSelectedCount = Observable.of(0);
+  }
+
+  public importFromChromeStorage(data): void {
+    this.store.dispatch(new ImportFromChromeStorage(data));
   }
 
   public getKeywordsForAdgroup(adGroupId: string) {

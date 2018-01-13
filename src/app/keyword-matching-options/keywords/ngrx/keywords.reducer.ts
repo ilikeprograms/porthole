@@ -9,9 +9,15 @@ import {
 } from './keywords.actions';
 import { keywordsAdapter } from './keywords.adapter';
 import { DELETE_ADGROUP_ACTION, DeleteAdgroupAction } from '../../adgroups/ngrx/adgroup.actions';
+import { IMPORT_FROM_CHROME_STORAGE, ImportFromChromeStorage } from '../../ngrx/keyword-matching-options.actions';
 
-export function keywordsReducer(state: IKeywordState = KeywordsDefaultState, action: KeywordsActions | DeleteAdgroupAction) {
+export function keywordsReducer(state: IKeywordState = KeywordsDefaultState, action: KeywordsActions | DeleteAdgroupAction| ImportFromChromeStorage) {
   switch (action.type) {
+    case IMPORT_FROM_CHROME_STORAGE:
+      return Object.assign({}, state, {
+        ids: action.payload.keywordMatchingOptions.keywords.ids,
+        entities: action.payload.keywordMatchingOptions.keywords.entities,
+      });
     case ADD_KEYWORD_ACTION:
       return keywordsAdapter.addOne(action.payload.keyword, state);
     case EDIT_KEYWORD_TEXT_ACTION:

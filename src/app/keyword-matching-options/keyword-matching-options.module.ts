@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { EffectsModule } from '@ngrx/effects';
+import { ActionReducerMap, StoreModule } from '@ngrx/store';
 
 import { MaterialImportsModule } from '../material-imports.module';
 import { KeywordListComponent } from './keywords/keyword-list/keyword-list.component';
@@ -24,7 +25,6 @@ import { KeywordCardListComponent } from './adgroups/keyword-card-list/keyword-c
 import { AdgroupModalComponent } from './adgroups/adgroup-modal/adgroup-modal.component';
 import { DeleteAdgroupConfirmComponent } from './adgroups/delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
 import { DeleteClientConfirmComponent } from './clients/delete-client-confirm-modal/delete-client-confirm-modal';
-import { ActionReducerMap, META_REDUCERS, MetaReducer, StoreModule } from '@ngrx/store';
 import { clientsReducer } from './clients/ngrx/clients.reducer';
 import { ClientsDefaultState } from './clients/ngrx/clients-default.state';
 import { campaignsReducer } from './campaigns/ngrx/campaigns.reducer';
@@ -53,6 +53,7 @@ export function getInitialState() {
     keywords: KeywordsDefaultState
   };
 }
+
 
 @NgModule({
   imports: [

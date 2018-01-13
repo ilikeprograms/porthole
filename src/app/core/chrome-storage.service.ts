@@ -26,6 +26,7 @@ const mockSync: IMockSync = {
 @Injectable()
 export class ChromeStorageService {
   public sync: SyncStorageArea | IMockSync;
+  public initialised: boolean = false;
 
   constructor() {
     this.sync = environment.production ? chrome.storage.sync : mockSync;
