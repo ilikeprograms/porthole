@@ -1,8 +1,8 @@
 <mat-card>
   <mat-toolbar>
     <mat-toolbar-row class="toolbar">
-      <span>{{ addgroupWithKeywords.name }}<br />
-      {{ addgroupWithKeywords.campaign ? addgroupWithKeywords.campaign.name : 'No campaign'}}
+      <span>{{ (addgroup$ | async ).name }}<br />
+      {{ ( campaign$ | async ) ? (campaign$ | async ).name : 'No campaign'}}
       </span>
       <div class="toolbar-actions">
         <button mat-button color="primary" (click)="editAdgroup()" matTooltip="Edit AdGroup info">Edit</button>
@@ -13,7 +13,7 @@
   </mat-toolbar>
 
 <app-add-keyword
-  [selectedMatchOption]="addgroupWithKeywords.matchOption"
+  [selectedMatchOption]="(addgroup$ | async ).matchOption"
   (selectedMatchOptionChanged)="onNewKeywordMatchOptionChanged($event)"
 
   (addKeyword)="onAddKeyword($event)"

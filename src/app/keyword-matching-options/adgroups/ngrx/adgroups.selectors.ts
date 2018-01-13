@@ -6,7 +6,8 @@ import { IKeywordMatchingOptionsState } from '../../ngrx/keyword-matching-option
 import { IAdgroupState } from './adgroups-state.interface';
 
 const {
-  selectAll
+  selectAll,
+  selectIds
 } = adgroupAdapter.getSelectors();
 
 const selectFeature = (state: IAppState) => {
@@ -15,6 +16,7 @@ const selectFeature = (state: IAppState) => {
 
 export const selectAdroupsState = createSelector(selectFeature, (state: IKeywordMatchingOptionsState) => state.adgroups);
 export const selectAllAdgroups = createSelector(selectAdroupsState, selectAll);
+export const selectAllAdgroupIds = createSelector(selectAdroupsState, selectIds);
 export const selectAdgroupById = (id: string) => {
   return createSelector(selectAdroupsState, (state: IAdgroupState) => {
     return state.entities[id];

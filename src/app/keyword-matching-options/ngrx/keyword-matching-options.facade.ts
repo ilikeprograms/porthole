@@ -32,7 +32,7 @@ import {
   AddAdgroupAction, ChangeNewKeywordOptionAction, DeleteAdgroupAction,
   EditAdgroupAction
 } from '../adgroups/ngrx/adgroup.actions';
-import { selectAdgroupById, selectAllAdgroups } from '../adgroups/ngrx/adgroups.selectors';
+import { selectAdgroupById, selectAllAdgroupIds, selectAllAdgroups } from '../adgroups/ngrx/adgroups.selectors';
 import {
   AddKeywordAction, EditKeywordModifierAction, EditKeywordTextAction,
   RemoveAllKeywordsAction,
@@ -49,6 +49,7 @@ export class KeywordMatchingOptionsFacade {
   public clients: Observable<Array<IClient>>;
   public campaigns$: Observable<Array<ICampaign>>;
   public addgroups$: Observable<Array<IAdgroup>>;
+  public addgroupIds$: Observable<Array<string>>;
   public clientsWithCampaigns$: Observable<Array<IClientWithCampaigns>>;
   public addgroupsWithKeywords$: Observable<Array<IAddGroupWithKeywords>>;
   public keywords: Observable<Array<IKeyword>>;
@@ -60,6 +61,7 @@ export class KeywordMatchingOptionsFacade {
     this.clients = this.store.select(selectAllClients);
     this.campaigns$ = this.store.select(selectAllCampaigns);
     this.addgroups$ = this.store.select(selectAllAdgroups);
+    this.addgroupIds$ = this.store.select(selectAllAdgroupIds) as any;
     this.keywords = this.store.select(selectAllKeywords);
 
     this.clientsWithCampaigns$ = Observable.combineLatest(this.clients, this.campaigns$)
@@ -116,6 +118,10 @@ export class KeywordMatchingOptionsFacade {
 
   public importFromChromeStorage(data): void {
     this.store.dispatch(new ImportFromChromeStorage(data));
+  }
+
+  public getAdgroupById(adGroupId: string) {
+    return this.store.select(selectAdgroupById(adGroupId));
   }
 
   public getKeywordsForAdgroup(adGroupId: string) {

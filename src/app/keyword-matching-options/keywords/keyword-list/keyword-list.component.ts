@@ -1,17 +1,19 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
-import { animate, keyframes, query, stagger, style, transition, trigger } from '@angular/animations';
-import { KeywordModifiers } from '../keyword-modifier-enum';
-import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
-import { ICampaign } from '../../campaigns/campaign.interface';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { AdgroupModalComponent } from '../../adgroups/adgroup-modal/adgroup-modal.component';
-import { DeleteAdgroupConfirmComponent } from '../../adgroups/delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/combineLatest';
+
+import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
+import { KeywordModifiers } from '../keyword-modifier-enum';
+import { ICampaign } from '../../campaigns/campaign.interface';
+import { AdgroupModalComponent } from '../../adgroups/adgroup-modal/adgroup-modal.component';
+import { DeleteAdgroupConfirmComponent } from '../../adgroups/delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
 import { IKeyword } from '../keyword.interface';
+import { IAdgroup } from '../../adgroups/adgroup-interface';
 
 @Component({
   selector: 'app-keyword-list',
@@ -51,17 +53,29 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   public keywordsAllSelected$: Observable<boolean>;
 
   @Input()
-  public addgroupWithKeywords: IAddGroupWithKeywords;
+  public addgroupId: string;
+
+  public addgroup$: Observable<IAdgroup>;
+  public campaign$: Observable<ICampaign>;
 
   public ngOnInit(): void {
-    console.log('initied again');
-    this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroupWithKeywords.id)
+    this.addgroup$ = this.keywordMatchingOptionsFacade.getAdgroupById(this.addgroupId)
       .takeUntil(this.unsubscribe$);
 
-    this.keywordsSelectedCount$ = this.keywordMatchingOptionsFacade.getSelectedKeywordsCountForAdgroup(this.addgroupWithKeywords.id)
+    this.campaign$ = Observable.combineLatest(this.keywordMatchingOptionsFacade.campaigns$, this.addgroup$)
+      .map((values: [Array<ICampaign>, IAdgroup]) => {
+        return values[0].filter((campaign: ICampaign) => {
+          return campaign.id === values[1].campaignId;
+        })[0];
+      }).takeUntil(this.unsubscribe$);
+
+    this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroupId)
       .takeUntil(this.unsubscribe$);
 
-    this.keywordsAllSelected$ = this.keywordMatchingOptionsFacade.getKeywordsAllSelectedForAdgroup(this.addgroupWithKeywords.id)
+    this.keywordsSelectedCount$ = this.keywordMatchingOptionsFacade.getSelectedKeywordsCountForAdgroup(this.addgroupId)
+      .takeUntil(this.unsubscribe$);
+
+    this.keywordsAllSelected$ = this.keywordMatchingOptionsFacade.getKeywordsAllSelectedForAdgroup(this.addgroupId)
       .takeUntil(this.unsubscribe$);
   }
 
@@ -76,11 +90,11 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   ) {}
 
   public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
-    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.addgroupWithKeywords.id, modifier);
+    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.addgroupId, modifier);
   }
 
   public onAddKeyword(keywordText: string) {
-    this.keywordMatchingOptionsFacade.addKeyword(this.addgroupWithKeywords.id, keywordText);
+    this.keywordMatchingOptionsFacade.addKeyword(this.addgroupId, keywordText);
   }
 
   public onEditKeywordText({id, text}: { id: string; text: string; }): void {
@@ -96,15 +110,15 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   }
 
   public onToggleAllSelected(): void {
-    this.keywordMatchingOptionsFacade.toggleAllSelected(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.toggleAllSelected(this.addgroupId);
   }
 
   public onRemoveSelectedKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeSelectedKeywords(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.removeSelectedKeywords(this.addgroupId);
   }
 
   public onRemoveAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeAllKeywords(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.removeAllKeywords(this.addgroupId);
   }
 
   public onModifierChanged({ id, modifier}: { id: string; modifier: KeywordModifiers }): void {
@@ -112,31 +126,36 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   }
 
   public onCopyAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.copyAllKeywords(this.addgroupWithKeywords.id);
+    this.keywordMatchingOptionsFacade.copyAllKeywords(this.addgroupId);
   }
 
   public onPasteKeywords(keywords: string) {
-    this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroupWithKeywords.id, keywords);
+    this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroupId, keywords);
   }
 
   public editAdgroup(): void {
     let campaignsForAddModal: Array<ICampaign>;
+    let adgroupForAddModal: IAdgroup;
 
     this.keywordMatchingOptionsFacade.campaigns$.take(1).subscribe((campaigns: Array<ICampaign>) => {
       campaignsForAddModal = campaigns;
     });
 
+    this.addgroup$.take(1).subscribe((adgroup: IAdgroup) => {
+      adgroupForAddModal = adgroup;
+    });
+
     // Open confirmation dialog, then remove all if yes is clicked
     const dialogRef: MatDialogRef<AdgroupModalComponent> = this.dialog.open(AdgroupModalComponent, {
       data: {
-        adgroup: this.addgroupWithKeywords,
+        adgroup: adgroupForAddModal,
         campaigns: campaignsForAddModal
       }
     });
 
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result) {
-        this.keywordMatchingOptionsFacade.editAdgroup(this.addgroupWithKeywords.id, result.name, result.campaignId);
+        this.keywordMatchingOptionsFacade.editAdgroup(this.addgroupId, result.name, result.campaignId);
       }
     });
   }
@@ -147,7 +166,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result === true) {
-        this.keywordMatchingOptionsFacade.deleteAdgroup(this.addgroupWithKeywords.id);
+        this.keywordMatchingOptionsFacade.deleteAdgroup(this.addgroupId);
       }
     });
   }

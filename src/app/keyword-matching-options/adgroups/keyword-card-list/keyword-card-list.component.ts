@@ -19,23 +19,23 @@ import { ICampaign } from '../../campaigns/campaign.interface';
         <p>When copy is clicked all keywords are formatted with modifiers and copied to clipboard in an AdWords friendly format.<br />
           Keywords can be copied straight from AdWords and modifiers will be maintained. So just simply copy and paste from AdWords, once happy, press copy and paste back in.
         </p>
-        <p *ngIf="(addgroupsWithKeywords| async).length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>
+        <p *ngIf="(addgroupIds$| async).length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>
       </mat-card-content>
     </mat-card>
-    <app-keyword-list *ngFor="let adgroup of addgroupsWithKeywords | async" [addgroupWithKeywords]="adgroup"></app-keyword-list>
+    <app-keyword-list *ngFor="let adgroupId of addgroupIds$ | async" [addgroupId]="adgroupId"></app-keyword-list>
     <button mat-button color="primary" (click)="onAddAdgroup()">Add AdGroup</button>
   `
 })
 export class KeywordCardListComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  public addgroupsWithKeywords: Observable<Array<IAddGroupWithKeywords>>;
+  public addgroupIds$: Observable<Array<string>>;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
     private dialog: MatDialog
   ) {
-    this.addgroupsWithKeywords = this.keywordMatchingOptionsFacade.addgroupsWithKeywords$.takeUntil(this.unsubscribe$);
+    this.addgroupIds$ = this.keywordMatchingOptionsFacade.addgroupIds$.takeUntil(this.unsubscribe$);
   }
 
   public ngOnDestroy() {
