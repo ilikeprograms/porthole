@@ -64,9 +64,13 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
     this.campaign$ = Observable.combineLatest(this.keywordMatchingOptionsFacade.campaigns$, this.addgroup$)
       .map((values: [Array<ICampaign>, IAdgroup]) => {
-        return values[0].filter((campaign: ICampaign) => {
-          return campaign.id === values[1].campaignId;
-        })[0];
+        if (values[1]) {
+          return values[0].filter((campaign: ICampaign) => {
+            return campaign.id === values[1].campaignId;
+          })[0];
+        } else {
+          return;
+        }
       }).takeUntil(this.unsubscribe$);
 
     this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroupId)

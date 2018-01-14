@@ -8,12 +8,13 @@ import {
   MatButtonModule,
   MatCheckboxModule, MatSnackBarModule, MatButtonToggleModule, MatExpansionModule, MatListModule, MatMenuModule,
   MatToolbarModule, MatTooltipModule, MatFormFieldModule, MatIconModule, MatCardModule, MatTabsModule, MatSidenavModule,
-  MatSlideToggleModule
+  MatSlideToggleModule, MatProgressSpinnerModule
 } from '@angular/material';
 
 
 @NgModule({
   imports: [
+    MatProgressSpinnerModule,
     MatSidenavModule,
     MatSlideToggleModule,
     MatSelectModule,
@@ -36,6 +37,7 @@ import {
     MatMenuModule
   ],
   exports: [
+    MatProgressSpinnerModule,
     MatSidenavModule,
     MatSlideToggleModule,
     MatSelectModule,

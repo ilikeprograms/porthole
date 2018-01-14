@@ -15,6 +15,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { stateToStorageMetareducer } from './core/state-to-storage.metareducer';
 import { ChromeStorageService } from './core/chrome-storage.service';
 import { environment } from '../environments/environment';
+import { LicenceModule } from './licence/licence.module';
 
 export const CHROME_STORAGE_SERVICE = new InjectionToken('CHROME_STORAGE_SERVICE');
 export const STORAGE_KEY = new InjectionToken('STORAGE_KEY');
@@ -37,6 +38,7 @@ export function getMetaReducers(stateToStorageMetareducer): MetaReducer<any>[] {
     MaterialImportsModule,
     CoreModule.forRoot(),
     AppRoutingModule,
+    LicenceModule.forRoot(),
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     KeywordMatchingOptionsModule,

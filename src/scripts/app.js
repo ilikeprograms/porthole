@@ -1,5 +1,5 @@
 var CWS_LICENSE_API_URL = 'https://www.googleapis.com/chromewebstore/v1.1/userlicenses/';
-var TRIAL_PERIOD_DAYS = 2;
+var TRIAL_PERIOD_DAYS = ;
 var statusDiv;
 
 function init() {
