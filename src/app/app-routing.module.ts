@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options/keyword-matching-options-tabs/keyword-matching-options-tabs';
-import { CheckingLicenceComponent } from './licence/checking-licence.component';
+import { CheckingLicenceComponent } from './licence/checking-licence/checking-licence.component';
 
 const appRoutes: Routes = [{
   path: 'licence',

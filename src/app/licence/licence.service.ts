@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -13,7 +13,10 @@ const LICENCE_API_URL_BASE: string = 'https://www.googleapis.com/chromewebstore/
 
 @Injectable()
 export class LicenceService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private zone: NgZone
+  ) {}
 
   public userLicence$: ReplaySubject<ILicence> = new ReplaySubject(1);
   public userLicenceError$: Subject<void> = new Subject();
@@ -24,8 +27,8 @@ export class LicenceService {
     if (environment.production !== true) {
       this.userLicence$.next({
         result: true,
-        accessLevel: LicenceAccessLevelEnum.full,
-        createdTime: ''
+        accessLevel: LicenceAccessLevelEnum.freetrial,
+        createdTime: '1'
       });
 
       return;
@@ -34,23 +37,25 @@ export class LicenceService {
     // xhrWithAuth('GET', CWS_LICENSE_API_URL + chrome.runtime.id, true, onLicenseFetched);
 
 
-    chrome.identity.getAuthToken({ interactive: true }, (token) => {
-      if (chrome.runtime.lastError) {
-        this.userLicenceError$.next();
+    this.zone.run(() => {
+      chrome.identity.getAuthToken({ interactive: true }, (token) => {
+        if (chrome.runtime.lastError) {
+          this.userLicenceError$.next();
 
-        console.log('error', chrome.runtime.lastError);
+          console.log('error', chrome.runtime.lastError);
 
-        // RETURN ERROR MESSAGE FROM GET LICENCE
-        // callback(chrome.runtime.lastError);
+          // RETURN ERROR MESSAGE FROM GET LICENCE
+          // callback(chrome.runtime.lastError);
 
-        return;
-      }
+          return;
+        }
 
-      console.log('chrome.identity.getAuthToken returned a token', token);
+        console.log('chrome.identity.getAuthToken returned a token', token);
 
-      this.access_token = token;
+        this.access_token = token;
 
-      this.loadLicence();
+        this.loadLicence();
+      });
     });
   }
 
@@ -69,7 +74,9 @@ export class LicenceService {
       this.userLicence$.next(response);
     }, () => {
       console.log('failed to get licence');
-      chrome.identity.removeCachedAuthToken({ token: this.access_token });
+      this.zone.run(() => {
+        chrome.identity.removeCachedAuthToken({ token: this.access_token });
+      });
     });
   }
 }

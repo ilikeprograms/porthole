@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
-import { CheckingLicenceComponent } from './checking-licence.component';
+import { CheckingLicenceComponent } from './checking-licence/checking-licence.component';
 import { LicenceService } from './licence.service';
 import { CoreModule } from '../core/core.module';
 import { HttpClientModule } from '@angular/common/http';

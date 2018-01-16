@@ -1,0 +1,19 @@
+<mat-card class="mat-typography">
+  <mat-card-content>
+    <h1>Checking your licence</h1>
+
+    <mat-progress-spinner
+      *ngIf="loading$ | async else loadingComplete"
+      color="primary"
+      mode="indeterminate"
+    >
+    </mat-progress-spinner>
+
+    <ng-template #loadingComplete>
+      <p>Your free trial has expired. We hope you found Porthole usefull. If you wish to continue using porthole then please purchase!</p>
+      <p>You can do so from the store page.</p>
+      <p><button mat-button color="primary" (click)="onOpenStoreRequest()">Go to store</button>&nbsp;<span class="mat-caption">(opens in a new tab)</span></p>
+      <p>If you dont wish to purchase, but want to provide some feedback then please get in contact by submitting feedback on the store page.</p>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
