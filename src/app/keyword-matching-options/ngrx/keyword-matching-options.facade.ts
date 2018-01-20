@@ -43,6 +43,8 @@ import {
   selectAllKeywords, selectedKeywordsByAdGroupId,
   selectedKeywordsCountByAdGroupId
 } from '../keywords/ngrx/keywords.selectors';
+import { environment } from '../../../environments/environment';
+import { ChromeStorageService } from '../../core/chrome-storage.service';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -57,7 +59,7 @@ export class KeywordMatchingOptionsFacade {
   public allSelected: Observable<boolean>;
   public keywordsSelectedCount: Observable<number>;
 
-  constructor(private store: Store<IAppState>) {
+  constructor(private store: Store<IAppState>, private chromeStorageService: ChromeStorageService) {
     this.clients = this.store.select(selectAllClients);
     this.campaigns$ = this.store.select(selectAllCampaigns);
     this.addgroups$ = this.store.select(selectAllAdgroups);
@@ -114,6 +116,15 @@ export class KeywordMatchingOptionsFacade {
     this.allSelected = Observable.of(false);
 
     this.keywordsSelectedCount = Observable.of(0);
+
+    // Get the previously stored state and import it
+    this.chromeStorageService.sync.get(environment.storageKey, (appState) => {
+      if (appState && appState[environment.storageKey]) {
+        this.importFromChromeStorage(appState[environment.storageKey]);
+      } else {
+        this.chromeStorageService.initialised = true;
+      }
+    });
   }
 
   public importFromChromeStorage(data): void {
