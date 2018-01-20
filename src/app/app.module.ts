@@ -41,7 +41,6 @@ export function getMetaReducers(stateToStorageMetareducer): MetaReducer<any>[] {
     LicenceModule.forRoot(),
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
-    KeywordMatchingOptionsModule,
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),

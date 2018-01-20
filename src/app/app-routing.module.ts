@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options/keyword-matching-options-tabs/keyword-matching-options-tabs';
+
 import { CheckingLicenceComponent } from './licence/checking-licence/checking-licence.component';
+import { LicenceValidGuard } from './licence/licence-valid.guard';
 
 const appRoutes: Routes = [{
   path: 'licence',
   component: CheckingLicenceComponent
 }, {
-    path: 'keywords',
-    component: KeywordMatchingOptionsTabsComponent
+  path: 'keywords',
+  loadChildren: './keyword-matching-options/keyword-matching-options.module#KeywordMatchingOptionsModule',
+  canActivateChild: [LicenceValidGuard]
 }, {
   path: 'about',
   loadChildren: './about/about.module#AboutModule'

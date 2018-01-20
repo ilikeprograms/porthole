@@ -5,6 +5,7 @@ import { CoreModule } from '../core/core.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialImportsModule } from '../material-imports.module';
 import { CommonModule } from '@angular/common';
+import { LicenceValidGuard } from './licence-valid.guard';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ export class LicenceModule {
     return {
       ngModule: LicenceModule,
       providers: [
-        LicenceService
+        LicenceService,
+        LicenceValidGuard
       ]
     };
   }

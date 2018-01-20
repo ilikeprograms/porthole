@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: './checking-licence.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckingLicenceComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CheckingLicenceComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(
@@ -27,8 +27,6 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy, AfterViewIni
     this.loadingError$ = this.loadingErrorSubject$.asObservable();
     this.loading$ = this.loadingSubject$.asObservable();
   }
-
-  public licence: ILicence;
 
   public loadingErrorSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public loadingError$: Observable<boolean>;
@@ -45,22 +43,7 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy, AfterViewIni
       });
 
     this.licenceService.userLicence$.takeUntil(this.unsubscribe$).subscribe((license: ILicence) => {
-      let licenceValid: boolean = false;
-
-      this.licence = license;
-
-      if (license.result && license.accessLevel === LicenceAccessLevelEnum.full) {
-        licenceValid = true;
-      } else if (license.result && license.accessLevel === LicenceAccessLevelEnum.freetrial) {
-        let daysAgoLicenseIssued: number = Date.now() - parseInt(license.createdTime, 10);
-        daysAgoLicenseIssued = daysAgoLicenseIssued / 1000 / 60 / 60 / 24;
-
-        if (daysAgoLicenseIssued <= 30) {
-          licenceValid = true;
-        }
-      }
-
-      if (licenceValid) {
+      if (LicenceService.isLicenceValid(license)) {
         this.zone.run(() => {
           this.router.navigate(['keywords']);
         });
@@ -73,13 +56,6 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy, AfterViewIni
   public ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-
-  public ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.licenceService.getLicence();
-    }, 0);
   }
 
   public onOpenStoreRequest(): void {
