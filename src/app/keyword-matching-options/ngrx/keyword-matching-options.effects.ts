@@ -12,7 +12,8 @@ import 'rxjs/add/operator/map';
 
 import { ClipboardService } from '../../core/clipboard.service';
 import {
-  COPY_ALL_KEYWORDS_ACTION, CopyAllKeywordsAction, IMPORT_FROM_CHROME_STORAGE, PASTE_KEYWORDS_ACTION,
+  COPY_KEYWORDS_ACTION, COPY_NEGATIVE_KEYWORDS_ACTION, CopyKeywordsAction, IMPORT_FROM_CHROME_STORAGE,
+  PASTE_KEYWORDS_ACTION,
   PasteKeywordsAction,
 } from './keyword-matching-options.actions';
 import { CreateTextSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
@@ -28,6 +29,7 @@ import { ChromeStorageService } from '../../core/chrome-storage.service';
 import { DELETE_CAMPAIGN_ACTION, DeleteCampaignsAction } from '../campaigns/ngrx/campaigns.actions';
 import { IAdgroup } from '../adgroups/adgroup-interface';
 import { DeleteAdgroupAction } from '../adgroups/ngrx/adgroup.actions';
+import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
 
 const newLineCharacter: string = String.fromCharCode(13, 10);
 
@@ -87,13 +89,13 @@ export class KeywordMatchingOptionsEffects {
   }
 
   @Effect()
-  public copyAllKeywordsEffect() {
+  public copyKeywordsEffect() {
     return this.actions$
-      .ofType(COPY_ALL_KEYWORDS_ACTION)
+      .ofType(COPY_KEYWORDS_ACTION)
       .withLatestFrom(this.keywordMatchingOptionsFacade.keywords)
-      .switchMap((value: [CopyAllKeywordsAction, Array<IKeyword>]) => {
+      .switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
-          return keyword.adgroupId === value[0].payload.adgroupId;
+          return keyword.adgroupId === value[0].payload.adgroupId && keyword.modifier !== KeywordModifiers.NegativeMatch;
         });
 
         const formattedKeywords: Array<string> = clientKeywords.map((keyword: IKeyword) => {
@@ -102,7 +104,29 @@ export class KeywordMatchingOptionsEffects {
 
         this.clipboardService.copyToClipboard(formattedKeywords.join(newLineCharacter));
 
-        return Observable.of(new CreateTextSnackbarAction('Copied', {
+        return Observable.of(new CreateTextSnackbarAction('Copied keywords', {
+          duration: 1500
+        }));
+      });
+  }
+
+  @Effect()
+  public copyNegativeKeywordsEffect() {
+    return this.actions$
+      .ofType(COPY_NEGATIVE_KEYWORDS_ACTION)
+      .withLatestFrom(this.keywordMatchingOptionsFacade.keywords)
+      .switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
+        const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
+          return keyword.adgroupId === value[0].payload.adgroupId && keyword.modifier === KeywordModifiers.NegativeMatch;
+        });
+
+        const formattedKeywords: Array<string> = clientKeywords.map((keyword: IKeyword) => {
+          return KeywordParser.keywordToText(keyword);
+        });
+
+        this.clipboardService.copyToClipboard(formattedKeywords.join(newLineCharacter));
+
+        return Observable.of(new CreateTextSnackbarAction('Copied negative keyword', {
           duration: 1500
         }));
       });
@@ -133,7 +157,7 @@ export class KeywordMatchingOptionsEffects {
 
         return [
           ...keywordAction,
-          new CreateTextSnackbarAction('Pasted', {
+          new CreateTextSnackbarAction('Pasted keywords', {
             duration: 1500
           })
         ];

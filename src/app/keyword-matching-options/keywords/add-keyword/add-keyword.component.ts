@@ -10,6 +10,7 @@ import { KeywordModifiers } from '../../keywords/keyword-modifier-enum';
       .keyword-entry-container {
         display: flex;
         justify-content: space-between;
+        margin-bottom:  12px;
       }
 
       .keyword-entry-card {

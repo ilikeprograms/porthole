@@ -15,7 +15,7 @@ import 'rxjs/add/observable/combineLatest';
 import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keywords/keyword.interface';
 import {
-  CopyAllKeywordsAction, ImportFromChromeStorage,
+  CopyKeywordsAction, CopyNegativeKeywordsAction, ImportFromChromeStorage,
   PasteKeywordsAction
 } from './keyword-matching-options.actions';
 import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
@@ -218,8 +218,15 @@ export class KeywordMatchingOptionsFacade {
     }));
   }
 
-  public copyAllKeywords(adgroupId: string): void {
-    this.store.dispatch(new CopyAllKeywordsAction({
+  public copyKeywords(adgroupId: string): void {
+    this.store.dispatch(new CopyKeywordsAction({
+      adgroupId
+    }));
+  }
+
+
+  public copyNegativeKeywords(adgroupId: string): void {
+      this.store.dispatch(new CopyNegativeKeywordsAction({
       adgroupId
     }));
   }

@@ -17,6 +17,8 @@ export class KeywordParser {
         return keyword.text.replace(/^|\s+/g, ` +`);
       case KeywordModifiers.ExactMatch:
         return `[${keyword.text}]`;
+      case KeywordModifiers.NegativeMatch:
+        return `-${keyword.text}`;
     }
   }
 
@@ -39,6 +41,13 @@ export class KeywordParser {
       return {
         text: keyword.slice(1, -1),
         modifier: KeywordModifiers.ExactMatch
+      };
+    }
+
+    if (keyword.charAt(0) === '-') {
+      return {
+        text: keyword.slice(1),
+        modifier: KeywordModifiers.NegativeMatch
       };
     }
 

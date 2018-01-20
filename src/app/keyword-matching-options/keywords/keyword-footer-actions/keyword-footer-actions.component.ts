@@ -34,7 +34,10 @@ export class KeywordFooterActionsComponent {
   public removeAllKeywords: EventEmitter<void> = new EventEmitter<void>();
 
   @Output()
-  public copyAllKeywords: EventEmitter<void> = new EventEmitter<void>();
+  public copyKeywords: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public copyNegativeKeywords: EventEmitter<void> = new EventEmitter<void>();
 
   @Output()
   public pasteKeywords: EventEmitter<string> = new EventEmitter<string>();
@@ -62,8 +65,12 @@ export class KeywordFooterActionsComponent {
     });
   }
 
-  public onCopyAllKeywords(): void {
-    this.copyAllKeywords.emit();
+  public onCopyKeywords(): void {
+    this.copyKeywords.emit();
+  }
+
+  public onCopyNegativeKeywords(): void {
+    this.copyNegativeKeywords.emit();
   }
 
   public onPasteKeywords(): void {

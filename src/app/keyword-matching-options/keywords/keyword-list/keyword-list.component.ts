@@ -129,8 +129,12 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     this.keywordMatchingOptionsFacade.editKeywordModifier(id, modifier);
   }
 
-  public onCopyAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.copyAllKeywords(this.addgroupId);
+  public onCopyKeywords(): void {
+    this.keywordMatchingOptionsFacade.copyKeywords(this.addgroupId);
+  }
+
+  public onCopyNegativeKeywords(): void {
+    this.keywordMatchingOptionsFacade.copyNegativeKeywords(this.addgroupId);
   }
 
   public onPasteKeywords(keywords: string) {
