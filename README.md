@@ -1,27 +1,20 @@
 # Porthole
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.0-beta.0.
+Porthole is a tools for Digital marketers which makes it easier to manage and change keywords, suitable for use within AdWords.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Uses [Chrome storage](https://developer.chrome.com/apps/storage), so you can sign in to your Google account and cary on where you left off. Seamlessly.
+- Provides a section where you can add keywords as part of Ad groups
+- Keywords be copied/pasted within each AdGroup
+- Keywords can easily be changed between different types of modifiers e.g Exact match, Broad match modifier etc
+- Clients can be added to group campaigns
+- Campaigns can hold multiple Ad groups
 
-## Code scaffolding
+Download the extension from the the Chrome store [here](https://chrome.google.com/webstore/detail/porthole/pdahngoighagemojnmeefclahlanlfhe)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Feel free to [open and issue](https://github.com/ilikeprograms/porthole/issues) and contribute to improving the tool!
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Porthole &copy; Thomas Coleman 2018
