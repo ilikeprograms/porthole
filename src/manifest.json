@@ -4,7 +4,7 @@
 
   "name": "porthole",
   "description": "Porthole is a tools for Digital marketers which makes it easier to manage and change keywords, suitable for use within AdWords.",
-  "version": "0.0.10",
+  "version": "0.0.11",
 
   "offline_enabled": false,
 
@@ -25,6 +25,12 @@
       "https://www.googleapis.com/auth/plus.login",
       "https://www.googleapis.com/auth/chromewebstore.readonly"
     ]
+  },
+
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
   },
 
   "browser_action": {
