@@ -3,10 +3,10 @@
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlP4uJjzHinDLFRJX1WI7oJRVw6W6NkX1ZoyOl+tImmyum3PT1SfSSLab3zfT7Fg7YkwJA1j3UsNgNxMPOWwqRL/9Hdtxbey1uPfziOfx3r0tOJ/0UMhL0iTN/xXvgVg2jmESqVdl8s83I9QokMA6ekP70FaJHGMtPokrUnCKgytabPR7X5EB6N2nqgNVBcWGvPcQrddjh8rXySZrqoed/K5XzezP7+FUw85rfAoMTZCOmU3vyqE2NTbkBddH+L55/SSMZo858Rq7KtKl6iJVPB03csAD3pWQIgZuEcMZIgMQHB1sF3hQ39SrfwTQSd7gXSastcdJbEd8nbRgl6JkpwIDAQAB",
 
   "name": "porthole",
-  "description": "Adwords and related stuff",
-  "version": "0.0.9",
+  "description": "Porthole is a tools for Digital marketers which makes it easier to manage and change keywords, suitable for use within AdWords.",
+  "version": "0.0.10",
 
-  "offline_enabled": true,
+  "offline_enabled": false,
 
   "author": "Thomas Coleman <tomc2k3@googlemail.com>",
 

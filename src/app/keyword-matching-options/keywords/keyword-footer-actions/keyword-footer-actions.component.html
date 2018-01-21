@@ -2,7 +2,7 @@
   <button mat-button (click)="onToggleAllKeywordSelected()" [disabled]="keywordsCount === 0">{{ keywordsAllSelected ? 'Deselect' : 'Select' }} all</button>
   <button mat-button color="warn" (click)="onRemoveSelectedKeywords()" [disabled]="keywordsSelectedCount === 0">Delete  {{ keywordsSelectedCount ? keywordsSelectedCount + ' ' : '' }}selected <mat-icon>delete</mat-icon></button>
   <button mat-button color="warn" (click)="onRemoveAllKeywords()" [disabled]="keywordsCount === 0" matTooltip="Delete all Keywords">Delete all <mat-icon>delete_forever</mat-icon></button>
-  <button mat-button color="primary" [matMenuTriggerFor]="copyOptions" [disabled]="keywordsCount === 0" matTooltip="All keywords are formatted with modifiers and copied to clipboard in an AdWords friendly format">Copy <mat-icon>content_copy</mat-icon></button>
+  <button mat-button color="primary" [matMenuTriggerFor]="copyOptions" [disabled]="keywordsCount === 0" matTooltip="All keywords are formatted with modifiers and copied to clipboard in an AdWords friendly format">Copy <mat-icon>more_vert</mat-icon></button>
   <button mat-button color="primary" (click)="onPasteKeywords()" matTooltip="Keywords can be copied straight from AdWords and modifiers will be maintained. So just simple copy and paste from AdWords">Paste <mat-icon>content_paste</mat-icon></button>
 </mat-action-row>
 
