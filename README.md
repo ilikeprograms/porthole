@@ -10,6 +10,7 @@ Porthole is a tools for Digital marketers which makes it easier to manage and ch
 - Keywords can easily be changed between different types of modifiers e.g Exact match, Broad match modifier etc
 - Clients can be added to group campaigns
 - Campaigns can hold multiple Ad groups
+- Option to export to CSV
 
 Download the extension from the the Chrome store [here](https://chrome.google.com/webstore/detail/porthole/pdahngoighagemojnmeefclahlanlfhe)
 
