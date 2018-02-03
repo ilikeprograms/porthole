@@ -10,6 +10,7 @@ export class KeywordParser {
   public static keywordToText(keyword: IKeyword): string {
     switch (keyword.modifier) {
       case KeywordModifiers.BroadMatch:
+      case KeywordModifiers.NegativeMatch:
         return keyword.text;
       case KeywordModifiers.PhraseMatch:
         return `"${keyword.text}"`;
@@ -17,8 +18,6 @@ export class KeywordParser {
         return keyword.text.replace(/^|\s+/g, ` +`);
       case KeywordModifiers.ExactMatch:
         return `[${keyword.text}]`;
-      case KeywordModifiers.NegativeMatch:
-        return `-${keyword.text}`;
     }
   }
 

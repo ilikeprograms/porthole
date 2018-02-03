@@ -58,6 +58,11 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   public addgroup$: Observable<IAdgroup>;
   public campaign$: Observable<ICampaign>;
 
+  constructor(
+    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
+    private dialog: MatDialog
+  ) {}
+
   public ngOnInit(): void {
     this.addgroup$ = this.keywordMatchingOptionsFacade.getAdgroupById(this.addgroupId)
       .takeUntil(this.unsubscribe$);
@@ -87,11 +92,6 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
-  constructor(
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
-    private dialog: MatDialog
-  ) {}
 
   public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
     this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.addgroupId, modifier);
@@ -139,6 +139,10 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
   public onPasteKeywords(keywords: string) {
     this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroupId, keywords);
+  }
+
+  public onPasteNegativeKeywords(keywords: string) {
+    this.keywordMatchingOptionsFacade.pasteNegativeKeywords(this.addgroupId, keywords);
   }
 
   public editAdgroup(): void {

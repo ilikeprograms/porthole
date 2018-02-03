@@ -13,7 +13,7 @@ import 'rxjs/add/operator/map';
 import { ClipboardService } from '../../core/clipboard.service';
 import {
   COPY_KEYWORDS_ACTION, COPY_NEGATIVE_KEYWORDS_ACTION, CopyKeywordsAction, IMPORT_FROM_CHROME_STORAGE,
-  PASTE_KEYWORDS_ACTION,
+  PASTE_KEYWORDS_ACTION, PASTE_NEGATIVE_KEYWORDS_ACTION,
   PasteKeywordsAction,
 } from './keyword-matching-options.actions';
 import { CreateTextSnackbarAction } from '../../snackbar-ngrx/ngrx/snackbar-ngrx.actions';
@@ -150,6 +150,34 @@ export class KeywordMatchingOptionsEffects {
               adgroupId: action.payload.adgroupId,
               text: keywordWithModifier.text,
               modifier: keywordWithModifier.modifier,
+              selected: false
+            }
+          });
+        });
+
+        return [
+          ...keywordAction,
+          new CreateTextSnackbarAction('Pasted keywords', {
+            duration: 1500
+          })
+        ];
+      });
+  }
+
+  @Effect()
+  public pasteNegativeKeywordsEffect() {
+    return this.actions$
+      .ofType(PASTE_NEGATIVE_KEYWORDS_ACTION)
+      .mergeMap((action: PasteKeywordsAction) => {
+        const keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
+
+        const keywordAction = keywords.map((keyword: string) => {
+          return new AddKeywordAction({
+            keyword: {
+              id: uuid(),
+              adgroupId: action.payload.adgroupId,
+              text: keyword,
+              modifier: KeywordModifiers.NegativeMatch,
               selected: false
             }
           });

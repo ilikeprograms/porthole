@@ -42,6 +42,9 @@ export class KeywordFooterActionsComponent {
   @Output()
   public pasteKeywords: EventEmitter<string> = new EventEmitter<string>();
 
+  @Output()
+  public pasteNegativeKeywords: EventEmitter<string> = new EventEmitter<string>();
+
   constructor(
     private dialog: MatDialog
   ) {}
@@ -79,6 +82,16 @@ export class KeywordFooterActionsComponent {
     dialogRef.afterClosed().take(1).subscribe(result => {
       if (result) {
         this.pasteKeywords.emit(result.trim());
+      }
+    });
+  }
+
+  public onPasteNegativeKeywords(): void {
+    const dialogRef: MatDialogRef<PasteModalComponent> = this.dialog.open(PasteModalComponent);
+
+    dialogRef.afterClosed().take(1).subscribe(result => {
+      if (result) {
+        this.pasteNegativeKeywords.emit(result.trim());
       }
     });
   }

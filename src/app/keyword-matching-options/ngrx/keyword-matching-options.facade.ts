@@ -16,7 +16,7 @@ import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keywords/keyword.interface';
 import {
   CopyKeywordsAction, CopyNegativeKeywordsAction, ImportFromChromeStorage,
-  PasteKeywordsAction
+  PasteKeywordsAction, PasteNegativeKeywordsAction
 } from './keyword-matching-options.actions';
 import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
 import { IClient } from '../clients/client.interface';
@@ -244,6 +244,13 @@ export class KeywordMatchingOptionsFacade {
 
   public pasteKeywords(adgroupId: string, text: string): void {
     this.store.dispatch(new PasteKeywordsAction({
+      adgroupId,
+      text
+    }));
+  }
+
+  public pasteNegativeKeywords(adgroupId: string, text: string): void {
+    this.store.dispatch(new PasteNegativeKeywordsAction({
       adgroupId,
       text
     }));
