@@ -45,6 +45,9 @@ export class KeywordFooterActionsComponent {
   @Output()
   public pasteNegativeKeywords: EventEmitter<string> = new EventEmitter<string>();
 
+  @Output()
+  public csvExport: EventEmitter<string> = new EventEmitter<string>();
+
   constructor(
     private dialog: MatDialog
   ) {}
@@ -94,5 +97,9 @@ export class KeywordFooterActionsComponent {
         this.pasteNegativeKeywords.emit(result.trim());
       }
     });
+  }
+
+  public onCsvExport(): void {
+    this.csvExport.emit();
   }
 }

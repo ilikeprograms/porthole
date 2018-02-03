@@ -34,6 +34,7 @@ import { AdgroupDefaultState } from './adgroups/ngrx/adgroup-default.state';
 import { keywordsReducer } from './keywords/ngrx/keywords.reducer';
 import { KeywordsDefaultState } from './keywords/ngrx/keywords-default.state';
 import { routing } from './keyword-matching-options.routing';
+import { KeywordExportService } from './keyword-export.service';
 
 export const KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN = new InjectionToken<ActionReducerMap<any>>('keywordMatchingOptions');
 
@@ -91,6 +92,7 @@ export function getInitialState() {
   ],
   providers: [
     KeywordMatchingOptionsFacade,
+    KeywordExportService,
     {
       provide: KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN,
       useFactory: getReducers

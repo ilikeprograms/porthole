@@ -14,6 +14,7 @@ import { AdgroupModalComponent } from '../../adgroups/adgroup-modal/adgroup-moda
 import { DeleteAdgroupConfirmComponent } from '../../adgroups/delete-adgroup-confirm-modal/delete-addgroup-confirm-modal';
 import { IKeyword } from '../keyword.interface';
 import { IAdgroup } from '../../adgroups/adgroup-interface';
+import { KeywordExportService } from '../../keyword-export.service';
 
 @Component({
   selector: 'app-keyword-list',
@@ -60,6 +61,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
+    private keywordExportService: KeywordExportService,
     private dialog: MatDialog
   ) {}
 
@@ -143,6 +145,10 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
   public onPasteNegativeKeywords(keywords: string) {
     this.keywordMatchingOptionsFacade.pasteNegativeKeywords(this.addgroupId, keywords);
+  }
+
+  public onCsvExport(): void {
+    this.keywordExportService.exportKeywords(this.keywords$);
   }
 
   public editAdgroup(): void {
