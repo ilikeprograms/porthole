@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { AfterViewInit, ChangeDetectionStrategy, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { LicenceService } from '../licence.service';
 import { ILicence } from '../licence.interface';
@@ -13,8 +13,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-checking-licence',
-  templateUrl: './checking-licence.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './checking-licence.component.html'
 })
 export class CheckingLicenceComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -37,11 +36,12 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
     this.licenceService.userLicenceError$
       .takeUntil(this.unsubscribe$)
       .subscribe(() => {
+        console.error('user licenc error');
         this.loadingErrorSubject$.next(true);
 
         this.loadingSubject$.next(false);
       }, (error: any) => {
-        console.error(error);
+        console.error('error from user licence errro: ' + error);
         this.loadingErrorSubject$.next(true);
 
         this.loadingSubject$.next(false);
@@ -49,6 +49,7 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
 
     this.licenceService.userLicence$.takeUntil(this.unsubscribe$).subscribe((license: ILicence) => {
       if (LicenceService.isLicenceValid(license)) {
+        console.log('keywords navigate');
         this.zone.run(() => {
           this.router.navigate(['keywords']);
         });
