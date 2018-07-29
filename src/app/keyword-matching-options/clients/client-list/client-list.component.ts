@@ -1,9 +1,10 @@
+
+import {takeUntil} from 'rxjs/operators';
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Observable ,  Subject } from 'rxjs';
+
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { ClientAddModalComponent } from '../client-add-modal/client-add-modal.component';
@@ -36,7 +37,7 @@ export class ClientListComponent implements OnDestroy {
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
     private dialog: MatDialog
   ) {
-    this.clientsWithCampaigns$ = this.keywordMatchingOptionsFacade.clientsWithCampaigns$.takeUntil(this.unsubscribe$);
+    this.clientsWithCampaigns$ = this.keywordMatchingOptionsFacade.clientsWithCampaigns$.pipe(takeUntil(this.unsubscribe$));
   }
 
   public ngOnDestroy(): void {

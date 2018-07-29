@@ -1,14 +1,17 @@
+
+import {empty as observableEmpty,  Observable } from 'rxjs';
+
+import {mergeMap, withLatestFrom, switchMap, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 import { v4 as uuid } from 'uuid';
 
 import { Actions, Effect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/map';
+
+
+
+
 
 import { ClipboardService } from '../../core/clipboard.service';
 import {
@@ -24,7 +27,7 @@ import {
   AddKeywordAction, REMOVE_ALL_KEYWORDS_ACTION,
   RemoveAllKeywordsAction
 } from '../keywords/ngrx/keywords.actions';
-import 'rxjs/add/observable/empty';
+
 import { ChromeStorageService } from '../../core/chrome-storage.service';
 import { DELETE_CAMPAIGN_ACTION, DeleteCampaignsAction } from '../campaigns/ngrx/campaigns.actions';
 import { IAdgroup } from '../adgroups/adgroup-interface';
@@ -47,20 +50,20 @@ export class KeywordMatchingOptionsEffects {
   })
   public loadFromChromeStorage() {
     return this.actions$
-      .ofType(IMPORT_FROM_CHROME_STORAGE)
-      .map((action) => {
+      .ofType(IMPORT_FROM_CHROME_STORAGE).pipe(
+      map((action) => {
         this.chromeStorageService.initialised = true;
 
-        return Observable.empty();
-      });
+        return observableEmpty();
+      }));
   }
 
   @Effect()
   public deleteCampaign() {
     return this.actions$
-      .ofType(DELETE_CAMPAIGN_ACTION)
-      .withLatestFrom(this.keywordMatchingOptionsFacade.addgroups$)
-      .mergeMap((value: [DeleteCampaignsAction, Array<IAdgroup>]): Array<DeleteAdgroupAction | undefined> => {
+      .ofType(DELETE_CAMPAIGN_ACTION).pipe(
+      withLatestFrom(this.keywordMatchingOptionsFacade.addgroups$),
+      mergeMap((value: [DeleteCampaignsAction, Array<IAdgroup>]): Array<DeleteAdgroupAction | undefined> => {
           if (value[0].payload.shouldDeleteAdgroups) {
             const adgroupsToDelete: Array<IAdgroup> = value[1].filter((adgroup: IAdgroup) => {
               return adgroup.campaignId === value[0].payload.id;
@@ -74,26 +77,26 @@ export class KeywordMatchingOptionsEffects {
           }
 
           return [];
-      });
+      }),);
   }
 
   @Effect()
   public removeAllKeywordsActionEffect() {
     return this.actions$
-      .ofType(REMOVE_ALL_KEYWORDS_ACTION)
-      .map((action: RemoveAllKeywordsAction) => {
+      .ofType(REMOVE_ALL_KEYWORDS_ACTION).pipe(
+      map((action: RemoveAllKeywordsAction) => {
         return new CreateTextSnackbarAction('All keywords removed', {
           duration: 1500
         });
-      });
+      }));
   }
 
   @Effect()
   public copyKeywordsEffect() {
     return this.actions$
-      .ofType(COPY_KEYWORDS_ACTION)
-      .withLatestFrom(this.keywordMatchingOptionsFacade.keywords)
-      .switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
+      .ofType(COPY_KEYWORDS_ACTION).pipe(
+      withLatestFrom(this.keywordMatchingOptionsFacade.keywords),
+      switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
           return keyword.adgroupId === value[0].payload.adgroupId && keyword.modifier !== KeywordModifiers.NegativeMatch;
         });
@@ -107,15 +110,15 @@ export class KeywordMatchingOptionsEffects {
         return Observable.of(new CreateTextSnackbarAction('Copied keywords', {
           duration: 1500
         }));
-      });
+      }),);
   }
 
   @Effect()
   public copyNegativeKeywordsEffect() {
     return this.actions$
-      .ofType(COPY_NEGATIVE_KEYWORDS_ACTION)
-      .withLatestFrom(this.keywordMatchingOptionsFacade.keywords)
-      .switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
+      .ofType(COPY_NEGATIVE_KEYWORDS_ACTION).pipe(
+      withLatestFrom(this.keywordMatchingOptionsFacade.keywords),
+      switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
           return keyword.adgroupId === value[0].payload.adgroupId && keyword.modifier === KeywordModifiers.NegativeMatch;
         });
@@ -129,14 +132,14 @@ export class KeywordMatchingOptionsEffects {
         return Observable.of(new CreateTextSnackbarAction('Copied negative keyword', {
           duration: 1500
         }));
-      });
+      }),);
   }
 
   @Effect()
   public pasteKeywordsEffect() {
     return this.actions$
-      .ofType(PASTE_KEYWORDS_ACTION)
-      .mergeMap((action: PasteKeywordsAction) => {
+      .ofType(PASTE_KEYWORDS_ACTION).pipe(
+      mergeMap((action: PasteKeywordsAction) => {
         let keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
 
         keywords = keywords.map((keyword: string) => {
@@ -161,14 +164,14 @@ export class KeywordMatchingOptionsEffects {
             duration: 1500
           })
         ];
-      });
+      }));
   }
 
   @Effect()
   public pasteNegativeKeywordsEffect() {
     return this.actions$
-      .ofType(PASTE_NEGATIVE_KEYWORDS_ACTION)
-      .mergeMap((action: PasteKeywordsAction) => {
+      .ofType(PASTE_NEGATIVE_KEYWORDS_ACTION).pipe(
+      mergeMap((action: PasteKeywordsAction) => {
         const keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
 
         const keywordAction = keywords.map((keyword: string) => {
@@ -189,6 +192,6 @@ export class KeywordMatchingOptionsEffects {
             duration: 1500
           })
         ];
-      });
+      }));
   }
 }

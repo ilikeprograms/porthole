@@ -1,16 +1,18 @@
+
+import {of as observableOf, combineLatest as observableCombineLatest,  Observable } from 'rxjs';
+
+import {map, take} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { v4 as uuid } from 'uuid';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/combineLatest';
+
+
+
+
+
+
 
 import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keywords/keyword.interface';
@@ -66,8 +68,8 @@ export class KeywordMatchingOptionsFacade {
     this.addgroupIds$ = this.store.select(selectAllAdgroupIds) as any;
     this.keywords = this.store.select(selectAllKeywords);
 
-    this.clientsWithCampaigns$ = Observable.combineLatest(this.clients, this.campaigns$)
-      .map((values: [Array<IClient>, Array<ICampaign>]) => {
+    this.clientsWithCampaigns$ = observableCombineLatest(this.clients, this.campaigns$).pipe(
+      map((values: [Array<IClient>, Array<ICampaign>]) => {
         return values[0].map((client: IClientWithCampaigns) => {
           const campaigns: Array<ICampaign> = [
             ...values[1]
@@ -79,10 +81,10 @@ export class KeywordMatchingOptionsFacade {
 
           return client;
         });
-      });
+      }));
 
-    this.addgroupsWithKeywords$ = Observable.combineLatest(this.addgroups$, this.keywords, this.campaigns$)
-      .map((values: [Array<IAdgroup>, Array<IKeyword>, Array<ICampaign>]) => {
+    this.addgroupsWithKeywords$ = observableCombineLatest(this.addgroups$, this.keywords, this.campaigns$).pipe(
+      map((values: [Array<IAdgroup>, Array<IKeyword>, Array<ICampaign>]) => {
         return values[0].map((addgroup: IAddGroupWithKeywords) => {
           const keywords: Array<IKeyword> = [
             ...values[1]
@@ -109,13 +111,13 @@ export class KeywordMatchingOptionsFacade {
 
           return addgroup;
         });
-      });
+      }));
 
-    this.keywordsCount = Observable.of(0);
+    this.keywordsCount = observableOf(0);
 
-    this.allSelected = Observable.of(false);
+    this.allSelected = observableOf(false);
 
-    this.keywordsSelectedCount = Observable.of(0);
+    this.keywordsSelectedCount = observableOf(0);
 
     // Get the previously stored state and import it
     this.chromeStorageService.sync.get(environment.storageKey, (appState) => {
@@ -150,7 +152,7 @@ export class KeywordMatchingOptionsFacade {
   public addKeyword(adgroupId: string, text: string): void {
     let adgroup: IAdgroup;
 
-    this.store.select(selectAdgroupById(adgroupId)).take(1)
+    this.store.select(selectAdgroupById(adgroupId)).pipe(take(1))
       .subscribe((adgroupById: IAdgroup) => {
         adgroup = adgroupById;
       });

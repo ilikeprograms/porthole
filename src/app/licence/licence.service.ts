@@ -1,18 +1,17 @@
+
+import {take, retry, catchError} from 'rxjs/operators';
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { ReplaySubject ,  Subject ,  Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ILicence } from './licence.interface';
 import { LicenceAccessLevelEnum } from './licence-access-level.enum';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/catch';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/shareReplay';
-import 'rxjs/add/operator/retry';
+
+
+
+
 
 const LICENCE_API_URL_BASE: string = 'https://www.googleapis.com/chromewebstore/v1.1/userlicenses/';
 
@@ -92,17 +91,17 @@ export class LicenceService {
       }
     });
 
-    getLicenceRequest
-    .catch(() => {
+    getLicenceRequest.pipe(
+    catchError(() => {
       console.log('error loading licence');
       this.zone.run(() => {
         chrome.identity.removeCachedAuthToken({ token: this.access_token });
       });
 
       return (getLicenceRequest);
-    })
-    .retry(2)
-    .take(1)
+    }),
+    retry(2),
+    take(1),)
     .subscribe((response: ILicence) => {
       console.log('licence load', response);
       this.userLicenceSubject$.next(response);

@@ -1,11 +1,12 @@
+
+import {takeUntil, take} from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/combineLatest';
+import { Observable ,  Subject } from 'rxjs';
+
+
+
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { KeywordModifiers } from '../keyword-modifier-enum';
@@ -66,8 +67,8 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this.addgroup$ = this.keywordMatchingOptionsFacade.getAdgroupById(this.addgroupId)
-      .takeUntil(this.unsubscribe$);
+    this.addgroup$ = this.keywordMatchingOptionsFacade.getAdgroupById(this.addgroupId).pipe(
+      takeUntil(this.unsubscribe$));
 
     this.campaign$ = Observable.combineLatest(this.keywordMatchingOptionsFacade.campaigns$, this.addgroup$)
       .map((values: [Array<ICampaign>, IAdgroup]) => {
@@ -80,14 +81,14 @@ export class KeywordListComponent implements OnInit, OnDestroy {
         }
       }).takeUntil(this.unsubscribe$);
 
-    this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroupId)
-      .takeUntil(this.unsubscribe$);
+    this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroupId).pipe(
+      takeUntil(this.unsubscribe$));
 
-    this.keywordsSelectedCount$ = this.keywordMatchingOptionsFacade.getSelectedKeywordsCountForAdgroup(this.addgroupId)
-      .takeUntil(this.unsubscribe$);
+    this.keywordsSelectedCount$ = this.keywordMatchingOptionsFacade.getSelectedKeywordsCountForAdgroup(this.addgroupId).pipe(
+      takeUntil(this.unsubscribe$));
 
-    this.keywordsAllSelected$ = this.keywordMatchingOptionsFacade.getKeywordsAllSelectedForAdgroup(this.addgroupId)
-      .takeUntil(this.unsubscribe$);
+    this.keywordsAllSelected$ = this.keywordMatchingOptionsFacade.getKeywordsAllSelectedForAdgroup(this.addgroupId).pipe(
+      takeUntil(this.unsubscribe$));
   }
 
   public ngOnDestroy(): void {
@@ -155,11 +156,11 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     let campaignsForAddModal: Array<ICampaign>;
     let adgroupForAddModal: IAdgroup;
 
-    this.keywordMatchingOptionsFacade.campaigns$.take(1).subscribe((campaigns: Array<ICampaign>) => {
+    this.keywordMatchingOptionsFacade.campaigns$.pipe(take(1)).subscribe((campaigns: Array<ICampaign>) => {
       campaignsForAddModal = campaigns;
     });
 
-    this.addgroup$.take(1).subscribe((adgroup: IAdgroup) => {
+    this.addgroup$.pipe(take(1)).subscribe((adgroup: IAdgroup) => {
       adgroupForAddModal = adgroup;
     });
 

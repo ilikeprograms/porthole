@@ -1,3 +1,5 @@
+
+import {map, take} from 'rxjs/operators';
 import { Component } from '@angular/core';
 
 import { ChromeStorageService } from './core/chrome-storage.service';
@@ -6,9 +8,9 @@ import { KeywordMatchingOptionsFacade } from './keyword-matching-options/ngrx/ke
 import { environment } from '../environments/environment';
 import { ILicence } from './licence/licence.interface';
 import { LicenceService } from './licence/licence.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+
+
 
 @Component({
   selector: 'app-root',
@@ -21,9 +23,9 @@ export class AppComponent {
   constructor(
     private licenceService: LicenceService
   ) {
-    this.licenceValid$ = this.licenceService.userLicence$.take(1).map((licence: ILicence) => {
+    this.licenceValid$ = this.licenceService.userLicence$.pipe(take(1),map((licence: ILicence) => {
       return LicenceService.isLicenceValid(licence);
-    });
+    }),);
   }
 
   title = 'app';

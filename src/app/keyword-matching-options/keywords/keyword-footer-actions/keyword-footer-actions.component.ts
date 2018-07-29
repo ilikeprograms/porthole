@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy, Component, EventEmitter, Input, Output,
 } from '@angular/core';
 
-import 'rxjs/add/operator/take';
+
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { DeleteAllConfirmComponent } from '../../adgroups/delete-all-confirm/delete-all-confirm.component';

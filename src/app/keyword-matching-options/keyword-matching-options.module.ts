@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { EffectsModule } from '@ngrx/effects';
 import { ActionReducerMap, StoreModule } from '@ngrx/store';
 
-import { MaterialImportsModule } from '../material-imports.module';
+
 import { KeywordListComponent } from './keywords/keyword-list/keyword-list.component';
 import { KeywordIconComponent } from './keywords/keyword-icon/keyword-icon.component';
 import { KeywordMatchingOptionsFacade } from './ngrx/keyword-matching-options.facade';
@@ -62,7 +62,6 @@ export function getInitialState() {
     routing,
     FormsModule,
     CommonModule,
-    MaterialImportsModule,
     StoreModule.forFeature('keywordMatchingOptions', KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN, {
       initialState: getInitialState
     }),

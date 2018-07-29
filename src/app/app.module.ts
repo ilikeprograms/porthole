@@ -6,7 +6,6 @@ import { META_REDUCERS, MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
-import { MaterialImportsModule } from './material-imports.module';
 import { KeywordMatchingOptionsModule } from './keyword-matching-options/keyword-matching-options.module';
 import { SnackbarNgrxModule } from './snackbar-ngrx/snackbar-ngrx.module';
 import { CoreModule } from './core/core.module';
@@ -16,6 +15,7 @@ import { stateToStorageMetareducer } from './core/state-to-storage.metareducer';
 import { ChromeStorageService } from './core/chrome-storage.service';
 import { environment } from '../environments/environment';
 import { LicenceModule } from './licence/licence.module';
+import { ClarityModule } from '@clr/angular';
 
 export const CHROME_STORAGE_SERVICE = new InjectionToken('CHROME_STORAGE_SERVICE');
 export const STORAGE_KEY = new InjectionToken('STORAGE_KEY');
@@ -35,7 +35,9 @@ export function getMetaReducers(stateToStorageMetareducer): MetaReducer<any>[] {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialImportsModule,
+
+    ClarityModule,
+
     CoreModule.forRoot(),
     AppRoutingModule,
     LicenceModule.forRoot(),

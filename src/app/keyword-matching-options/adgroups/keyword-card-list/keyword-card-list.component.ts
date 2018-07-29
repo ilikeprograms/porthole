@@ -1,9 +1,10 @@
+
+import {take, takeUntil} from 'rxjs/operators';
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/take';
+import { Observable ,  Subject } from 'rxjs';
+
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
@@ -35,7 +36,7 @@ export class KeywordCardListComponent implements OnDestroy {
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
     private dialog: MatDialog
   ) {
-    this.addgroupIds$ = this.keywordMatchingOptionsFacade.addgroupIds$.takeUntil(this.unsubscribe$);
+    this.addgroupIds$ = this.keywordMatchingOptionsFacade.addgroupIds$.pipe(takeUntil(this.unsubscribe$));
   }
 
   public ngOnDestroy() {
@@ -46,7 +47,7 @@ export class KeywordCardListComponent implements OnDestroy {
   public onAddAdgroup(): void {
     let campaignsForAddModal: Array<ICampaign>;
 
-    this.keywordMatchingOptionsFacade.campaigns$.take(1).subscribe((campaigns: Array<ICampaign>) => {
+    this.keywordMatchingOptionsFacade.campaigns$.pipe(take(1)).subscribe((campaigns: Array<ICampaign>) => {
       campaignsForAddModal = campaigns;
     });
 

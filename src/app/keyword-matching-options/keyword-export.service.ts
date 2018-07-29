@@ -1,10 +1,12 @@
+
+import {map, take} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { IKeyword } from './keywords/keyword.interface';
 import { KeywordModifiers } from './keywords/keyword-modifier-enum';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/pluck';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+
+
+
 
 const mimeType: string = 'text/csv;encoding:utf-8';
 const exportFields: Array<string> = [
@@ -23,14 +25,14 @@ export class KeywordExportService {
   public exportKeywords(keywords: Observable<Array<IKeyword>>): void {
     let keywordsToExport: Array<IKeywordFields>;
 
-    keywords.take(1).map((keywordsToMap: Array<IKeyword>) => {
+    keywords.pipe(take(1),map((keywordsToMap: Array<IKeyword>) => {
       return keywordsToMap.map((keyword: IKeyword) => {
         return {
           text: keyword.text,
           modifier: KeywordModifiers[keyword.modifier]
         };
       });
-    }).subscribe((keywordFields: Array<IKeywordFields>) => {
+    }),).subscribe((keywordFields: Array<IKeywordFields>) => {
       keywordsToExport = keywordFields;
     });
 

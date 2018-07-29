@@ -1,3 +1,5 @@
+
+import {takeUntil} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
@@ -5,11 +7,8 @@ import { LicenceService } from '../licence.service';
 import { ILicence } from '../licence.interface';
 import { LicenceAccessLevelEnum } from '../licence-access-level.enum';
 import { environment } from '../../../environments/environment';
-import 'rxjs/add/operator/take';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
-import { Observable } from 'rxjs/Observable';
+
+import { BehaviorSubject ,  Subject ,  Observable } from 'rxjs';
 
 @Component({
   selector: 'app-checking-licence',
@@ -34,8 +33,8 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
   public loading$:  Observable<boolean>;
 
   public ngOnInit(): void {
-    this.licenceService.userLicenceError$
-      .takeUntil(this.unsubscribe$)
+    this.licenceService.userLicenceError$.pipe(
+      takeUntil(this.unsubscribe$))
       .subscribe(() => {
         console.error('user licenc error');
         this.loadingErrorSubject$.next(true);
@@ -54,7 +53,7 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.licenceService.userLicence$.takeUntil(this.unsubscribe$).subscribe((license: ILicence) => {
+    this.licenceService.userLicence$.pipe(takeUntil(this.unsubscribe$)).subscribe((license: ILicence) => {
       if (LicenceService.isLicenceValid(license)) {
         console.log('keywords navigate');
         this.zone.run(() => {
