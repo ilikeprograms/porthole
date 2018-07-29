@@ -39,6 +39,7 @@ export class LicenceService {
   private access_token: any;
 
   public static isLicenceValid(licence: ILicence) {
+    console.log('licence', licence);
     if (licence.result && licence.accessLevel === LicenceAccessLevelEnum.full) {
       return true;
     } else if (licence.result && licence.accessLevel === LicenceAccessLevelEnum.freetrial) {
@@ -69,8 +70,9 @@ export class LicenceService {
 
     this.zone.run(() => {
       chrome.identity.getAuthToken({ interactive: true }, (token) => {
+        console.log('token', token);
         if (chrome.runtime.lastError) {
-          console.log(chrome.runtime.lastError);
+          console.log('last error', chrome.runtime.lastError);
           this.userLicenceError$.next();
 
           return;
@@ -102,6 +104,7 @@ export class LicenceService {
     .retry(2)
     .take(1)
     .subscribe((response: ILicence) => {
+      console.log('licence load', response);
       this.userLicenceSubject$.next(response);
     }, () => {
       console.log('get licence failure');

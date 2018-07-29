@@ -9,6 +9,9 @@
     >
     </mat-progress-spinner>
 
+    {{ loading$ | async }}
+    {{ loadingError$ | async }}
+
     <ng-template #loadingComplete>
       <div *ngIf="!(loadingError$ | async) else loadingFailure">
         <p>Your free trial has expired. We hope you found Porthole usefull. If you wish to continue using porthole then please purchase!</p>

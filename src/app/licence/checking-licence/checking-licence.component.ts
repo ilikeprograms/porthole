@@ -54,6 +54,7 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
           this.router.navigate(['keywords']);
         });
       } else {
+        console.log('licence is not valid');
         this.loadingSubject$.next(false);
       }
     }, (error: any) => {
