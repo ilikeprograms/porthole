@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { LicenceService } from '../licence.service';
 import { ILicence } from '../licence.interface';
@@ -21,7 +21,8 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private licenceService: LicenceService,
-    private zone: NgZone
+    private zone: NgZone,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.loadingError$ = this.loadingErrorSubject$.asObservable();
     this.loading$ = this.loadingSubject$.asObservable();
@@ -40,11 +41,17 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
         this.loadingErrorSubject$.next(true);
 
         this.loadingSubject$.next(false);
+
+
+        this.changeDetectorRef.markForCheck();
+
       }, (error: any) => {
         console.error('error from user licence errro: ' + error);
         this.loadingErrorSubject$.next(true);
 
         this.loadingSubject$.next(false);
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.licenceService.userLicence$.takeUntil(this.unsubscribe$).subscribe((license: ILicence) => {
@@ -56,12 +63,16 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
       } else {
         console.log('licence is not valid');
         this.loadingSubject$.next(false);
+
+        this.changeDetectorRef.markForCheck();
       }
     }, (error: any) => {
       console.error(error);
       this.loadingErrorSubject$.next(true);
 
       this.loadingSubject$.next(false);
+
+      this.changeDetectorRef.markForCheck();
     });
   }
 
