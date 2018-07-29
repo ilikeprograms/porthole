@@ -40,6 +40,11 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
         this.loadingErrorSubject$.next(true);
 
         this.loadingSubject$.next(false);
+      }, (error: any) => {
+        console.log(error);
+        this.loadingErrorSubject$.next(true);
+
+        this.loadingSubject$.next(false);
       });
 
     this.licenceService.userLicence$.takeUntil(this.unsubscribe$).subscribe((license: ILicence) => {
@@ -50,6 +55,11 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
       } else {
         this.loadingSubject$.next(false);
       }
+    }, (error: any) => {
+      console.log(error);
+      this.loadingErrorSubject$.next(true);
+
+      this.loadingSubject$.next(false);
     });
   }
 
