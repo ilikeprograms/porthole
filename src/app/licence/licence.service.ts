@@ -54,6 +54,7 @@ export class LicenceService {
   }
 
   public getLicence(): void {
+    console.log(environment.production);
     if (environment.production !== true) {
       this.userLicenceError$.next();
 
@@ -69,6 +70,7 @@ export class LicenceService {
     this.zone.run(() => {
       chrome.identity.getAuthToken({ interactive: true }, (token) => {
         if (chrome.runtime.lastError) {
+          console.log(chrome.runtime.lastError);
           this.userLicenceError$.next();
 
           return;
@@ -90,6 +92,7 @@ export class LicenceService {
 
     getLicenceRequest
     .catch(() => {
+      console.log('error loading licence');
       this.zone.run(() => {
         chrome.identity.removeCachedAuthToken({ token: this.access_token });
       });
@@ -101,6 +104,7 @@ export class LicenceService {
     .subscribe((response: ILicence) => {
       this.userLicenceSubject$.next(response);
     }, () => {
+      console.log('get licence failure');
       this.userLicenceError$.next();
     });
   }

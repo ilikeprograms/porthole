@@ -41,7 +41,7 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
 
         this.loadingSubject$.next(false);
       }, (error: any) => {
-        console.log(error);
+        console.error(error);
         this.loadingErrorSubject$.next(true);
 
         this.loadingSubject$.next(false);
@@ -56,7 +56,7 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
         this.loadingSubject$.next(false);
       }
     }, (error: any) => {
-      console.log(error);
+      console.error(error);
       this.loadingErrorSubject$.next(true);
 
       this.loadingSubject$.next(false);
