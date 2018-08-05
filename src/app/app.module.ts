@@ -46,7 +46,7 @@ export function getMetaReducers(stateToStorageMetareducer): MetaReducer<any>[] {
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),
-    SnackbarNgrxModule
+    // SnackbarNgrxModule
   ],
   providers: [
     {
