@@ -1,0 +1,65 @@
+<!--<mat-card>-->
+  <!--<mat-toolbar>-->
+    <!--<mat-toolbar-row class="toolbar">-->
+      <!--<span>{{ (addgroup$ | async ).name }}<br />-->
+      <!--{{ ( campaign$ | async ) ? (campaign$ | async ).name : 'No campaign'}}-->
+      <!--</span>-->
+      <!--<div class="toolbar-actions">-->
+        <!--<button mat-button color="primary" (click)="editAdgroup()" matTooltip="Edit AdGroup info">Edit</button>-->
+        <!--<span aria-hidden="true" class="toolbar-actions-spacer"></span>-->
+        <!--<button mat-button color="warn" (click)="onDeleteAdgroup()" matTooltip="Delete AdGroup and Keywords">Delete <mat-icon>delete</mat-icon></button>-->
+      <!--</div>-->
+    <!--</mat-toolbar-row>-->
+  <!--</mat-toolbar>-->
+
+<!--<app-add-keyword-->
+  <!--[selectedMatchOption]="(addgroup$ | async ).matchOption"-->
+  <!--(selectedMatchOptionChanged)="onNewKeywordMatchOptionChanged($event)"-->
+
+  <!--(addKeyword)="onAddKeyword($event)"-->
+<!--&gt;</app-add-keyword>-->
+
+<!--<app-no-keyword *ngIf="((keywords$ | async).length) === 0"></app-no-keyword>-->
+
+<!--&lt;!&ndash;<div [@listAnimation]="(keywords$ | async).length">&ndash;&gt;-->
+<!--<div>-->
+    <!--<p *ngFor="let keyword of keywords$ | async">-->
+      <!--<app-keyword-card-->
+        <!--[keyword]="keyword"-->
+        <!--[selected]="keyword.selected"-->
+
+        <!--(editKeywordText)="onEditKeywordText($event)"-->
+        <!--(removeKeyword)="onRemoveKeyword($event)"-->
+        <!--(toggleKeywordSelected)="onToggleKeywordSelected($event)"-->
+        <!--(editKeywordModifier)="onModifierChanged($event)"-->
+        <!--&gt;</app-keyword-card>-->
+    <!--</p>-->
+<!--</div>-->
+
+<!--<app-keyword-footer-actions-->
+  <!--[keywordsCount]="(keywords$ | async).length"-->
+  <!--[keywordsSelectedCount]="keywordsSelectedCount$ | async"-->
+  <!--[keywordsAllSelected]="keywordsAllSelected$ | async"-->
+
+  <!--(toggleAllSelected)="onToggleAllSelected()"-->
+  <!--(removeSelectedKeywords)="onRemoveSelectedKeywords()"-->
+  <!--(removeAllKeywords)="onRemoveAllKeywords()"-->
+  <!--(copyKeywords)="onCopyKeywords()"-->
+  <!--(copyNegativeKeywords)="onCopyNegativeKeywords()"-->
+  <!--(pasteKeywords)="onPasteKeywords($event)"-->
+  <!--(pasteNegativeKeywords)="onPasteNegativeKeywords($event)"-->
+  <!--(csvExport)="onCsvExport()"-->
+<!--&gt;</app-keyword-footer-actions>-->
+<!--</mat-card>-->
+
+
+<clr-modal [(clrModalOpen)]="pasteModalOpened">
+  <h3 class="modal-title">Paste keywords below</h3>
+  <div class="modal-body">
+    <textarea matInput #paste placeholder="Keywords"></textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="pasteModalOpened = false">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="onPasteKeywords(paste.value)">Ok</button>
+  </div>
+</clr-modal>

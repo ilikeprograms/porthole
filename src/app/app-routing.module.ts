@@ -11,11 +11,11 @@ const appRoutes: Routes = [{
 
 
 
-// {
-//   path: 'keywords',
-//   loadChildren: './keyword-matching-options/keyword-matching-options.module#KeywordMatchingOptionsModule',
-//   canActivateChild: [LicenceValidGuard]
-// }
+{
+  path: 'keywords',
+  loadChildren: './keyword-matching-options/keyword-matching-options.module#KeywordMatchingOptionsModule',
+  canActivateChild: [LicenceValidGuard]
+},
 
 
 {

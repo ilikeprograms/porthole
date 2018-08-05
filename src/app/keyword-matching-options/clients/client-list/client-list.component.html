@@ -1,0 +1,139 @@
+<!--<mat-card>-->
+  <!--<mat-card-content>-->
+    <!--<p>Clients can be added to associate with campaigns.<br/>-->
+      <!--Campaigns can then be added to associate with Ad Groups.</p>-->
+
+    <!--<p *ngIf="(clientsWithCampaigns$ | async).length === 0">No Clients, use the button below to add a new one and add Campaigns.</p>-->
+  <!--</mat-card-content>-->
+<!--</mat-card>-->
+
+<!--<mat-card *ngFor="let client of clientsWithCampaigns$ | async">-->
+  <!--<mat-card-title>-->
+    <!--<mat-toolbar>-->
+      <!--{{ client.name }}-->
+      <!--<button mat-button color="primary" (click)="onEditClient(client)">Rename</button>-->
+      <!--<span class="toolbar-spacer"></span>-->
+      <!--<button mat-button color="warn" (click)="onDeleteClient(client.id)" matTooltip="All Campaigns will also be deleted (but Ad Groups wont)">Delete <mat-icon>delete</mat-icon></button>-->
+    <!--</mat-toolbar>-->
+  <!--</mat-card-title>-->
+  <!--<mat-card-content>-->
+    <!--<p *ngIf="client.campaigns.length === 0">No campaigns, use the button below to add one. Then you can associate Ad Groups with it</p>-->
+    <!--<p *ngFor="let campaign of client.campaigns">-->
+      <!--{{ campaign.name }}-->
+      <!--<button mat-button (click)="onEditCampaign(campaign)">Rename</button>-->
+      <!--<button mat-button color="warn" (click)="onDeleteCampaign(campaign.id)" matTooltip="Deleting campaign also gives option to Delete all Keywords">Delete <mat-icon>delete</mat-icon></button>-->
+    <!--</p>-->
+  <!--</mat-card-content>-->
+  <!--<mat-card-actions>-->
+    <!--<button mat-button color="primary" (click)="onAddCampaign(client.id)">Add campaign</button>-->
+  <!--</mat-card-actions>-->
+<!--</mat-card>-->
+
+<!--<mat-action-row>-->
+  <!--<button mat-button color="primary" (click)="onAddClient()">Add client</button>-->
+<!--</mat-action-row>-->
+
+
+<div class="card">
+  <div class="card-block">
+    <p>Clients can be added to associate with campaigns.<br/>
+      Campaigns can then be added to associate with Ad Groups.</p>
+
+    <p *ngIf="(clientsWithCampaigns$ | async).length === 0">No Clients, use the button below to add a new one and add Campaigns.</p>
+  </div>
+  <div class="card-footer">
+    <a class="btn btn-primary" (click)="showAddClientModal()">Add client</a>
+  </div>
+</div>
+
+<div class="card" *ngFor="let client of clientsWithCampaigns$ | async">
+  <div class="card-header">
+    {{ client.name }}
+  </div>
+  <div class="card-block">
+    <p *ngIf="client.campaigns.length === 0">No campaigns, use the button below to add one. Then you can associate Ad Groups with it</p>
+    <p *ngFor="let campaign of client.campaigns">
+      {{ campaign.name }}
+
+      <clr-button-group>
+        <clr-button class="btn" (click)="showEditCampaignModal(campaign)">Rename</clr-button>
+        <clr-button class="btn btn-warning" (click)="showDeleteCampaignModal(campaign.id)">Delete</clr-button>
+      </clr-button-group>
+    </p>
+    <button class="btn btn-primary" (click)="showAddCampaignModal(client.id)">Add campaign</button>
+  </div>
+  <div class="card-footer">
+    <a class="btn btn-primary" (click)="showEditClientModal(client)">Rename</a>
+    <a class="btn btn-warning" (click)="showDeleteClientModal(client.id)">Delete</a>
+  </div>
+</div>
+
+<clr-modal [(clrModalOpen)]="addCampaignModel">
+  <h3 class="modal-title">{{ editCampaign ? 'Change name' : 'Add new campaign' }}</h3>
+  <div class="modal-body">
+    <form [formGroup]="campaignForm" clrForm>
+      <clr-input-container>
+        <label for="campaign">Campaign name</label>
+        <input clrInput type="text" id="campaign" name="campaign" formControlName="campaign" autofocus (keyup.enter)="addCampaignModel = false" />
+      </clr-input-container>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="addCampaignModel = false">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="onAddCampaign()">Ok</button>
+  </div>
+</clr-modal>
+
+
+<clr-modal [(clrModalOpen)]="addClientModal">
+  <h3 class="modal-title">{{ editClient ? 'Change name' : 'Add new client' }}</h3>
+  <div class="modal-body">
+    <form [formGroup]="clientForm" clrForm>
+      <clr-input-container>
+        <label for="client">Client</label>
+        <input clrInput type="text" id="client" name="client" formControlName="client" autofocus />
+      </clr-input-container>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="addClientModal = false">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="onAddClient()">Ok</button>
+  </div>
+</clr-modal>
+
+
+<clr-modal [(clrModalOpen)]="deleteClientModal">
+  <h3 class="modal-title">{{ 'Confirm delete campaign' }}</h3>
+  <div class="modal-body">
+    Are you sure? This will also remove all Campaigns (but not Ad Groups) from this client and cannot be undone.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="deleteClientModal = false">No</button>
+    <button type="button" class="btn btn-primary" (click)="onDeleteClient()">Yes</button>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="deleteCampaignModal">
+  <h3 class="modal-title">{{ 'Delete Client' }}</h3>
+  <div class="modal-body">
+    <p>Are you sure you want to remove this campaign?</p>
+    <p>Use the below toggle to also remove all Add Groups and Keywords associated with this campaign.</p>
+
+    <form>
+      <section class="form-block">
+        <div class="form-group">
+          <!--<label>Toggles</label>-->
+          <div class="toggle-switch">
+            <input type="checkbox" id="removeAdgroups" #removeAdgroups>
+            <label for="removeAdgroups">Remove Ad Groups and Keywords?</label>
+          </div>
+        </div>
+      </section>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="deleteCampaignModal = false">No</button>
+    <button type="button" class="btn btn-primary" (click)="onDeleteCampaign(removeAdgroups.checked)">Yes</button>
+  </div>
+</clr-modal>

@@ -1,17 +1,12 @@
-
-import {take, retry, catchError} from 'rxjs/operators';
+import { take, retry, catchError, startWith, shareReplay } from 'rxjs/operators';
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { ReplaySubject ,  Subject ,  Observable } from 'rxjs';
+import { ReplaySubject, Subject, Observable, of, combineLatest } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ILicence } from './licence.interface';
 import { LicenceAccessLevelEnum } from './licence-access-level.enum';
-
-
-
-
 
 const LICENCE_API_URL_BASE: string = 'https://www.googleapis.com/chromewebstore/v1.1/userlicenses/';
 
@@ -21,14 +16,18 @@ export class LicenceService {
     private httpClient: HttpClient,
     private zone: NgZone
   ) {
-    this.userLicence$ = Observable.create(() => {
-      this.getLicence();
-    })
-      .startWith({})
-      .combineLatest(this.userLicenceSubject$, (values, value2) => {
-        return value2;
-      })
-      .shareReplay(1);
+    this.userLicence$ = this.userLicenceSubject$.asObservable();
+
+    this.getLicence();
+    // )
+    // this.userLicence$ = Observable.create(() => {
+    //   this.getLicence();
+    // })
+    //   .startWith({})
+    //   .combineLatest(this.userLicenceSubject$, (values, value2) => {
+    //     return value2;
+    //   })
+    //   .shareReplay(1);
   }
 
   public userLicence$: Observable<ILicence>;
@@ -92,16 +91,17 @@ export class LicenceService {
     });
 
     getLicenceRequest.pipe(
-    catchError(() => {
-      console.log('error loading licence');
-      this.zone.run(() => {
-        chrome.identity.removeCachedAuthToken({ token: this.access_token });
-      });
+      catchError(() => {
+        console.log('error loading licence');
+        this.zone.run(() => {
+          chrome.identity.removeCachedAuthToken({ token: this.access_token });
+        });
 
-      return (getLicenceRequest);
-    }),
-    retry(2),
-    take(1),)
+        return (getLicenceRequest);
+      }),
+      retry(2),
+      take(1)
+    )
     .subscribe((response: ILicence) => {
       console.log('licence load', response);
       this.userLicenceSubject$.next(response);
