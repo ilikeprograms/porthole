@@ -1,9 +1,8 @@
+/// <reference path="../../../node_modules/@types/chrome/index.d.ts" />
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
 import SyncStorageArea = chrome.storage.SyncStorageArea;
-
-import {} from '@types/chrome';
 
 interface IMockSync {
   get: (keys: string | string[] | Object | null, callback: (items: { [key: string]: any }) => void) => void;

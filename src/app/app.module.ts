@@ -6,8 +6,6 @@ import { META_REDUCERS, MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
-import { KeywordMatchingOptionsModule } from './keyword-matching-options/keyword-matching-options.module';
-import { SnackbarNgrxModule } from './snackbar-ngrx/snackbar-ngrx.module';
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { EffectsModule } from '@ngrx/effects';
