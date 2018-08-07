@@ -1,27 +1,89 @@
-import { Component, Inject } from '@angular/core';
+import {
+  Component, ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChange,
+  ViewChild
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ResetModalService } from '../../../core/reset-modal.service';
 
 @Component({
   selector: 'app-campaign-modal',
   template: `
-    <!--<h2 mat-dialog-title>{{ data ? 'Change name' : 'Add new campaign' }}</h2>-->
-    <!--<mat-dialog-content>-->
-      <!--<mat-form-field>-->
-        <!--<input #campaignName placeholder="name" type="text" matInput [value]="data?.campaign.name" (keyup.enter)="closeWithData(campaignName.value)" />-->
-      <!--</mat-form-field>-->
-    <!--</mat-dialog-content>-->
-    <!--<mat-dialog-actions>-->
-      <!--<button mat-button mat-dialog-close tabindex="-1">Cancel</button>-->
-      <!--&lt;!&ndash; Can optionally provide a result for the closing dialog. &ndash;&gt;-->
-      <!--<button mat-button color="primary" [mat-dialog-close]="campaignName.value">Confirm</button>-->
-    <!--</mat-dialog-actions>-->
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+      <h3 class="modal-title">{{ editCampaign ? 'Change name' : 'Add new campaign' }}</h3>
+      <div class="modal-body">
+        <form [formGroup]="campaignForm" clrForm>
+          <clr-input-container>
+            <label for="campaign">Campaign name</label>
+            <input #campaignInput clrInput type="text" id="campaign" name="campaign" formControlName="campaign" autofocus (keyup.enter)="addCampaignModel = false" />
+          </clr-input-container>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="closeWithData()">Ok</button>
+      </div>
+    </clr-modal>
   `,
+  providers: [ResetModalService]
 })
-export class CampaignModalComponent {
-  public onNoClick(): void {
-    // this.dialogRef.close();
+export class CampaignModalComponent implements OnDestroy, OnChanges {
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
+  public campaignForm: FormGroup;
+
+  @ViewChild('campaignInput')
+  public campaignInput: ElementRef;
+
+  constructor(
+    private resetModalService: ResetModalService
+  ) {
+    this.setupForm();
+
+    this.resetModalService.setFormGroup(this.campaignForm);
   }
 
-  public closeWithData(campaignName: string): void {
-    // this.dialogRef.close(campaignName);
+  public setupForm(): void {
+    this.campaignForm = new FormGroup({
+      campaign: new FormControl('', Validators.required)
+    });
+  }
+
+  public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+    this.resetModalService.reset(changes, this.campaignInput);
+
+    if (changes.editCampaign && changes.editCampaign.currentValue) {
+      this.campaignForm.patchValue({ campaign: changes.editCampaign.currentValue.name }, {
+        emitEvent: false
+      });
+    }
+  }
+
+  public ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  @Input()
+  public modalOpen: boolean = false;
+
+  @Input()
+  public editCampaign: any;
+
+  @Output()
+  public modalClosed: EventEmitter<any> = new EventEmitter<any>();
+
+  public close(): void {
+    this.modalClosed.emit(false);
+  }
+
+  public closeWithData(): void {
+    this.modalClosed.emit({ campaign: this.campaignForm.value.campaign });
   }
 }

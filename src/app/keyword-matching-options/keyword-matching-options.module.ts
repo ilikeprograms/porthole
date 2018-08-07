@@ -18,7 +18,7 @@ import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.e
 import { ClientListComponent } from './clients/client-list/client-list.component';
 import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options-tabs/keyword-matching-options-tabs';
 import { ClientAddModalComponent } from './clients/client-add-modal/client-add-modal.component';
-import { CampaignDeleteModalComponent } from './campaigns/campaign-delete-modal/campaign-delete-modal';
+import { CampaignDeleteModalComponent } from './campaigns/campaign-delete-modal/campaign-delete-modal.component';
 import { CampaignModalComponent } from './campaigns/campaign-modal/campaign-modal.component';
 import { KeywordCardListComponent } from './adgroups/keyword-card-list/keyword-card-list.component';
 import { AdgroupModalComponent } from './adgroups/adgroup-modal/adgroup-modal.component';

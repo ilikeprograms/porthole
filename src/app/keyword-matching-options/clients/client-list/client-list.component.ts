@@ -16,16 +16,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-client-list',
-  templateUrl: './client-list.component.html',
-  styles: [`
-    .toolbar-spacer {
-      flex: 1 1 auto;
-    }
-
-    .tab-content {
-      padding: 1rem;
-    }
-  `]
+  templateUrl: './client-list.component.html'
 })
 export class ClientListComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -41,50 +32,15 @@ export class ClientListComponent implements OnDestroy {
   public editCampaign: boolean | ICampaign;
   public clientsWithCampaigns$: Observable<Array<IClientWithCampaigns>>;
 
-  public clientForm: FormGroup;
-  public campaignForm: FormGroup;
-
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {
-    this.clientsWithCampaigns$ = this.keywordMatchingOptionsFacade.clientsWithCampaigns$.pipe(takeUntil(this.unsubscribe$));
-
-    this.clientForm = new FormGroup({
-      client: new FormControl('', Validators.required)
-    });
-
-    this.campaignForm = new FormGroup({
-      campaign: new FormControl('', Validators.required)
-    });
+    this.clientsWithCampaigns$ = this.keywordMatchingOptionsFacade.clientsWithCampaigns$.pipe(takeUntil(this.unsubscribe$));;
   }
 
   public ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  public onDeleteCampaign(shouldDeleteAdgroups: boolean): void {
-    this.keywordMatchingOptionsFacade.deleteCampaign(this.campaignToDelete, shouldDeleteAdgroups);
-
-    this.deleteCampaignModal = false;
-  }
-
-  public onAddClient(): void {
-    if (!this.editClient) {
-      this.keywordMatchingOptionsFacade.addClient(this.clientForm.value.client);
-    } else {
-      const clientId: IClient = this.editClient as IClient;
-
-      this.keywordMatchingOptionsFacade.editClient(clientId.id, this.clientForm.value.client);
-    }
-
-    this.addClientModal = false;
-    this.clientForm.reset();
-  }
-
-  public showDeleteClientModal(clientId: string): void {
-    this.clientToDelete = clientId;
-    this.deleteClientModal = true;
   }
 
   public showDeleteCampaignModal(campaignId: string): void {
@@ -95,22 +51,41 @@ export class ClientListComponent implements OnDestroy {
   public showAddClientModal(): void {
     this.editClient = false;
 
-    this.clientForm.patchValue({
-      client: ''
-    });
-    this.clientForm.markAsUntouched();
-
     this.addClientModal = true;
   }
 
   public showEditClientModal(client): void {
-    this.editClient = client;
-
-    this.clientForm.patchValue({
-      client: client.name
-    });
+    this.editClient = {...client as IClient};
 
     this.addClientModal = true;
+  }
+
+  public showDeleteClientModal(clientId: string): void {
+    this.clientToDelete = clientId;
+
+    this.deleteClientModal = true;
+  }
+
+  public onAddClient(result: any): void {
+    if (result) {
+      if (!this.editClient) {
+        this.keywordMatchingOptionsFacade.addClient(result.client);
+      } else {
+        const clientId: IClient = this.editClient as IClient;
+
+        this.keywordMatchingOptionsFacade.editClient(clientId.id, result.client);
+      }
+    }
+
+    this.addClientModal = false;
+  }
+
+  public onDeleteClient(result: any): void {
+    if (result) {
+      this.keywordMatchingOptionsFacade.deleteClient(this.clientToDelete);
+    }
+
+    this.deleteClientModal = false;
   }
 
   public showAddCampaignModal(clientId: string): void {
@@ -118,39 +93,34 @@ export class ClientListComponent implements OnDestroy {
 
     this.editCampaign = false;
 
-    this.campaignForm.patchValue({
-      client: ''
-    });
-    this.campaignForm.markAsUntouched();
-
     this.addCampaignModel = true;
   }
 
   public showEditCampaignModal(campaign): void {
-    this.editCampaign = campaign;
-
-    this.campaignForm.patchValue({
-      client: campaign.name
-    });
+    this.editCampaign = { ...campaign as ICampaign };
 
     this.addCampaignModel = true;
   }
 
-  public onDeleteClient(): void {
-    this.keywordMatchingOptionsFacade.deleteClient(this.clientToDelete);
+  public onAddCampaign(result: any): void {
+    if (result) {
+      if (!this.editCampaign) {
+        this.keywordMatchingOptionsFacade.addCampaign(this.clientToAddCampaign, result.campaign);
+      } else {
+        const campaign: ICampaign = this.editCampaign as ICampaign;
 
-    this.deleteClientModal = false;
-  }
-
-  public onAddCampaign(): void {
-    if (!this.editCampaign) {
-      this.keywordMatchingOptionsFacade.addCampaign(this.clientToAddCampaign, this.campaignForm.value.campaign);
-    } else {
-      const campaign: ICampaign = this.editCampaign as ICampaign;
-
-      this.keywordMatchingOptionsFacade.editCampaign(campaign.id, this.campaignForm.value.campaign);
+        this.keywordMatchingOptionsFacade.editCampaign(campaign.id, result.campaign);
+      }
     }
 
     this.addCampaignModel = false;
+  }
+
+  public onDeleteCampaign(result: any): void {
+    if (result && result.deleteCampaign) {
+      this.keywordMatchingOptionsFacade.deleteCampaign(this.campaignToDelete, result.shouldDeleteAdgroups);
+    }
+
+    this.deleteCampaignModal = false;
   }
 }

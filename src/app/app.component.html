@@ -1,41 +1,3 @@
-<!--<mat-sidenav-container class="mat-typography">-->
-  <!--<mat-sidenav #sidenav mode="push">-->
-    <!--<mat-nav-list>-->
-      <!--<a mat-list-item *ngIf="(licenceValid$ | async) === true" (click)="sidenav.close()"-->
-         <!--routerLink="keywords" routerLinkActive="active">-->
-        <!--Keywords-->
-      <!--</a>-->
-
-      <!--<a mat-list-item (click)="sidenav.close()"-->
-         <!--routerLink="about" routerLinkActive="active">-->
-        <!--About-->
-      <!--</a>-->
-    <!--</mat-nav-list>-->
-  <!--</mat-sidenav>-->
-
-  <!--<mat-sidenav-content>-->
-    <!--<mat-toolbar color="primary">-->
-    <!--<h1>Porthole</h1>-->
-    <!--<span class="navigation-spacer"></span>-->
-    <!--<button mat-icon-button (click)="sidenav.open()">-->
-      <!--<mat-icon>menu</mat-icon>-->
-    <!--</button>-->
-    <!--</mat-toolbar>-->
-
-    <!--<mat-card [ngStyle]="{margin: '10px 0 10px 0'}">-->
-      <!--A new verion will be coming soon, which will be a re design of the UI. If you would like to look at it before its finished.-->
-      <!--Send an email to <a href="mailto:tomc2k3@googlemail.com">tomc2k3@googlemail.com</a>-->
-    <!--</mat-card>-->
-
-    <!--<router-outlet></router-outlet>-->
-  <!--</mat-sidenav-content>-->
-<!--</mat-sidenav-container>-->
-
-<!--<section class="mat-typography">-->
-  <!--<p>Porthole &copy; Parity shift 2018</p>-->
-<!--</section>-->
-
-
 <clr-main-container>
   <div class="alert alert-app-level">
     ...
@@ -52,9 +14,10 @@
   <div class="content-container">
     <div class="content-area">
       <router-outlet></router-outlet>
+
+      <section>
+        <p>Porthole &copy; Parity shift 2018</p>
+      </section>
     </div>
   </div>
-  <section>
-  <p>Porthole &copy; Parity shift 2018</p>
-  </section>
 </clr-main-container>

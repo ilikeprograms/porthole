@@ -68,72 +68,8 @@
   </div>
 </div>
 
-<clr-modal [(clrModalOpen)]="addCampaignModel">
-  <h3 class="modal-title">{{ editCampaign ? 'Change name' : 'Add new campaign' }}</h3>
-  <div class="modal-body">
-    <form [formGroup]="campaignForm" clrForm>
-      <clr-input-container>
-        <label for="campaign">Campaign name</label>
-        <input clrInput type="text" id="campaign" name="campaign" formControlName="campaign" autofocus (keyup.enter)="addCampaignModel = false" />
-      </clr-input-container>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="addCampaignModel = false">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="onAddCampaign()">Ok</button>
-  </div>
-</clr-modal>
+<app-client-add-modal [modalOpen]="addClientModal" [editClient]="editClient" (modalClosed)="onAddClient($event)"></app-client-add-modal>
+<app-delete-client-confirm-modal [modalOpen]="deleteClientModal" (modalClosed)="onDeleteClient($event)"></app-delete-client-confirm-modal>
 
-
-<clr-modal [(clrModalOpen)]="addClientModal">
-  <h3 class="modal-title">{{ editClient ? 'Change name' : 'Add new client' }}</h3>
-  <div class="modal-body">
-    <form [formGroup]="clientForm" clrForm>
-      <clr-input-container>
-        <label for="client">Client</label>
-        <input clrInput type="text" id="client" name="client" formControlName="client" autofocus />
-      </clr-input-container>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="addClientModal = false">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="onAddClient()">Ok</button>
-  </div>
-</clr-modal>
-
-
-<clr-modal [(clrModalOpen)]="deleteClientModal">
-  <h3 class="modal-title">{{ 'Confirm delete campaign' }}</h3>
-  <div class="modal-body">
-    Are you sure? This will also remove all Campaigns (but not Ad Groups) from this client and cannot be undone.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="deleteClientModal = false">No</button>
-    <button type="button" class="btn btn-primary" (click)="onDeleteClient()">Yes</button>
-  </div>
-</clr-modal>
-
-<clr-modal [(clrModalOpen)]="deleteCampaignModal">
-  <h3 class="modal-title">{{ 'Delete Client' }}</h3>
-  <div class="modal-body">
-    <p>Are you sure you want to remove this campaign?</p>
-    <p>Use the below toggle to also remove all Add Groups and Keywords associated with this campaign.</p>
-
-    <form>
-      <section class="form-block">
-        <div class="form-group">
-          <!--<label>Toggles</label>-->
-          <div class="toggle-switch">
-            <input type="checkbox" id="removeAdgroups" #removeAdgroups>
-            <label for="removeAdgroups">Remove Ad Groups and Keywords?</label>
-          </div>
-        </div>
-      </section>
-    </form>
-
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="deleteCampaignModal = false">No</button>
-    <button type="button" class="btn btn-primary" (click)="onDeleteCampaign(removeAdgroups.checked)">Yes</button>
-  </div>
-</clr-modal>
+<app-campaign-modal [modalOpen]="addCampaignModel" [editCampaign]="editCampaign" (modalClosed)="onAddCampaign($event)"></app-campaign-modal>
+<app-campaign-delete-modal [modalOpen]="deleteCampaignModal" (modalClosed)="onDeleteCampaign($event)"></app-campaign-delete-modal>

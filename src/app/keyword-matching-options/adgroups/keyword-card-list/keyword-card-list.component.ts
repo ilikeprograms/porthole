@@ -1,34 +1,40 @@
-import { take, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Component, OnDestroy } from '@angular/core';
 
 import { Observable ,  Subject } from 'rxjs';
 
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
-import { IAddGroupWithKeywords } from '../../addgroup-with-keywords.interface';
-import { AdgroupModalComponent } from '../adgroup-modal/adgroup-modal.component';
-import { ICampaign } from '../../campaigns/campaign.interface';
 
 @Component({
   selector: 'app-keyword-card-list',
   template: `
-    <!--<mat-card>-->
-      <!--<mat-card-content>-->
-        <!--<p>AdGroups and keywords can be added so there is an easier way to group, change, and manage keywords for AdWords.</p>-->
-        <!--<p>When copy is clicked all keywords are formatted with modifiers and copied to clipboard in an AdWords friendly format.<br />-->
-          <!--Keywords can be copied straight from AdWords and modifiers will be maintained. So just simply copy and paste from AdWords, once happy, press copy and paste back in.-->
-        <!--</p>-->
-        <!--<p *ngIf="(addgroupIds$| async).length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>-->
-      <!--</mat-card-content>-->
-    <!--</mat-card>-->
-    <!--<app-keyword-list *ngFor="let adgroupId of addgroupIds$ | async" [addgroupId]="adgroupId"></app-keyword-list>-->
-    <!--<button mat-button color="primary" (click)="onAddAdgroup()">Add AdGroup</button>-->
+    <div class="card">
+      <div class="card-block">
+        <p>AdGroups and keywords can be added so there is an easier way to group, change, and manage keywords for AdWords.</p>
+        <p>When copy is clicked all keywords are formatted with modifiers and copied to clipboard in an AdWords friendly format.<br />
+        Keywords can be copied straight from AdWords and modifiers will be maintained. So just simply copy and paste from AdWords, once happy, press copy and paste back in.
+        </p>
+
+        <p *ngIf="(addgroupIds$ | async).length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>
+      </div>
+      
+      <div class="card-block">
+        <app-keyword-list *ngFor="let adgroupId of addgroupIds$ | async" [addgroupId]="adgroupId"></app-keyword-list>
+      </div>
+    </div>
+    
+    <button class="btn btn-primary" (click)="addAdgroupModal = true">Add AdGroup</button>
+
+    <app-adgroup-modal [modalOpen]="addAdgroupModal" (modalClosed)="onAddAdgroup($event)"></app-adgroup-modal>
   `
 })
 export class KeywordCardListComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   public addgroupIds$: Observable<Array<string>>;
+
+  public addAdgroupModal: boolean = false;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
@@ -41,24 +47,11 @@ export class KeywordCardListComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  public onAddAdgroup(): void {
-    // let campaignsForAddModal: Array<ICampaign>;
-    //
-    // this.keywordMatchingOptionsFacade.campaigns$.pipe(take(1)).subscribe((campaigns: Array<ICampaign>) => {
-    //   campaignsForAddModal = campaigns;
-    // });
-    //
-    // // Open confirmation dialog, then remove all if yes is clicked
-    // const dialogRef: MatDialogRef<AdgroupModalComponent> = this.dialog.open(AdgroupModalComponent, {
-    //   data: {
-    //     campaigns: campaignsForAddModal
-    //   }
-    // });
-    //
-    // dialogRef.afterClosed().take(1).subscribe(result => {
-    //   if (result) {
-    //     this.keywordMatchingOptionsFacade.addAdgroup(result.name, result.campaignId);
-    //   }
-    // });
+  public onAddAdgroup(result: any): void {
+    if (result) {
+      this.keywordMatchingOptionsFacade.addAdgroup(result.name, result.campaignId);
+    }
+
+    this.addAdgroupModal = false;
   }
 }

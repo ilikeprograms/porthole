@@ -1,27 +1,89 @@
-import { Component, Inject } from '@angular/core';
+import {
+  Component, ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChange,
+  ViewChild
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ResetModalService } from '../../../core/reset-modal.service';
 
 @Component({
   selector: 'app-client-add-modal',
   template: `
-    <!--<h2 mat-dialog-title>{{ data ? 'Change name' : 'Add new client' }}</h2>-->
-    <!--<mat-dialog-content>-->
-      <!--<mat-form-field>-->
-        <!--<input #clientName placeholder="name" type="text" matInput [value]="data?.client.name" (keyup.enter)="closeWithData(clientName.value)" />-->
-      <!--</mat-form-field>-->
-    <!--</mat-dialog-content>-->
-    <!--<mat-dialog-actions>-->
-      <!--<button mat-button mat-dialog-close tabindex="-1">Cancel</button>-->
-      <!--&lt;!&ndash; Can optionally provide a result for the closing dialog. &ndash;&gt;-->
-      <!--<button mat-button color="primary" [mat-dialog-close]="clientName.value">Confirm</button>-->
-    <!--</mat-dialog-actions>-->
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+      <h3 class="modal-title">{{ editClient ? 'Change name' : 'Add new client' }}</h3>
+      <div class="modal-body">
+        <form [formGroup]="clientForm" clrForm>
+          <clr-input-container>
+            <label for="client">Client</label>
+            <input clrInput type="text" id="client" name="client" formControlName="client" #clientInput />
+          </clr-input-container>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="closeWithData()">Ok</button>
+      </div>
+    </clr-modal>
   `,
+  providers: [ResetModalService]
 })
-export class ClientAddModalComponent {
-  public onNoClick(): void {
-    // this.dialogRef.close();
+export class ClientAddModalComponent implements OnDestroy, OnChanges {
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
+  public clientForm: FormGroup;
+
+  @ViewChild('clientInput')
+  public clientInput: ElementRef;
+
+  constructor(
+    private resetModalService: ResetModalService
+  ) {
+    this.setupForm();
+
+    this.resetModalService.setFormGroup(this.clientForm);
   }
 
-  public closeWithData(clientName: string): void {
-    // this.dialogRef.close(clientName);
+  public setupForm(): void {
+    this.clientForm = new FormGroup({
+      client: new FormControl('', Validators.required)
+    });
+  }
+
+  public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+    this.resetModalService.reset(changes, this.clientInput);
+
+    if (changes.editClient && changes.editClient.currentValue) {
+      this.clientForm.patchValue({ client: changes.editClient.currentValue.name }, {
+        emitEvent: false
+      });
+    }
+  }
+
+  public ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  @Input()
+  public modalOpen: boolean = false;
+
+  @Input()
+  public editClient: any;
+
+  @Output()
+  public modalClosed: EventEmitter<any> = new EventEmitter<any>();
+
+  public close(): void {
+    this.modalClosed.emit(false);
+  }
+
+  public closeWithData(): void {
+    this.modalClosed.emit({ client: this.clientForm.value.client });
   }
 }
