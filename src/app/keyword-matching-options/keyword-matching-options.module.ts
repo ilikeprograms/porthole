@@ -35,6 +35,7 @@ import { KeywordsDefaultState } from './keywords/ngrx/keywords-default.state';
 import { routing } from './keyword-matching-options.routing';
 import { KeywordExportService } from './keyword-export.service';
 import { ClarityModule, ClrFormsNextModule } from '@clr/angular';
+import { KeywordModifierPipe } from './keywords/keyword-modifier/keyword-modifier.pipe';
 
 export const KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN = new InjectionToken<ActionReducerMap<any>>('keywordMatchingOptions');
 
@@ -86,7 +87,9 @@ export function getInitialState() {
     CampaignModalComponent,
     AdgroupModalComponent,
     DeleteAdgroupConfirmComponent,
-    DeleteClientConfirmComponent
+    DeleteClientConfirmComponent,
+
+    KeywordModifierPipe
   ],
   exports: [
     KeywordMatchingOptionsTabsComponent

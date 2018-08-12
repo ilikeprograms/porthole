@@ -54,6 +54,8 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
   @ViewChild('textInput')
   public textInput: ElementRef;
 
+  public keywordModifiers: any = KeywordModifiers;
+
   constructor(
     private resetModalService: ResetModalService
   ) {
@@ -102,6 +104,7 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
 
   public closeWithData(): void {
     this.modalForm.controls.keyword.updateValueAndValidity();
+    this.modalForm.controls.modifier.updateValueAndValidity();
 
     if (this.modalForm.valid) {
       this.modalClosed.emit({keyword: this.modalForm.value.keyword, modifier: this.modalForm.value.modifier});

@@ -15,7 +15,7 @@ import { IKey } from 'selenium-webdriver';
 import { ClrDatagridComparatorInterface } from '@clr/angular';
 
 
-class KeywordNameComparator implements ClrDatagridComparatorInterface<ICampaign> {
+class KeywordNameComparator implements ClrDatagridComparatorInterface<IKeyword> {
   compare(a: IKeyword, b: IKeyword) {
     return ('' + a.text).localeCompare(b.text);
   }
@@ -41,32 +41,32 @@ class KeywordNameComparator implements ClrDatagridComparatorInterface<ICampaign>
   //   // ])
   // ],
   styles: [`
-    .toolbar-actions {
-      display: flex;
-      flex: 1 1 auto;
-    }
-
-    .toolbar-actions-spacer {
-      flex: 1 1 auto;
-    }
-
-    clr-dg-footer /deep/ .datagrid-foot-description {
-      display: flex;
-      flex-direction: row;
-      align-content: space-between;
-    }
+    /*.toolbar-actions {*/
+      /*display: flex;*/
+      /*flex: 1 1 auto;*/
+    /*}*/
     
-    .data-grid-footer-left, .data-grid-footer-right {
-      flex: 1 1 auto;
-    }
-
-    .data-grid-footer-left {
-      text-align: left;
-    }
-
-    .data-grid-footer-right {
-      text-align: right;
-    }
+    /*.toolbar-actions-spacer {*/
+      /*flex: 1 1 auto;*/
+    /*}*/
+    
+    /*clr-dg-footer /deep/ .datagrid-foot-description {*/
+      /*display: flex;*/
+      /*flex-direction: row;*/
+      /*align-content: space-between;*/
+    /*}*/
+    
+    /*.data-grid-footer-left, .data-grid-footer-right {*/
+      /*flex: 1 1 auto;*/
+    /*}*/
+    
+    /*.data-grid-footer-left {*/
+      /*text-align: left;*/
+    /*}*/
+    
+    /*.data-grid-footer-right {*/
+      /*text-align: right;*/
+    /*}*/
   `]
 })
 export class KeywordListComponent implements OnInit, OnDestroy {
@@ -148,7 +148,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
         this.keywordMatchingOptionsFacade.editKeywordText(editKeyword.id, result.keyword);
       } else {
-        this.keywordMatchingOptionsFacade.addKeyword(this.addgroup.id, result.keyword);
+        this.keywordMatchingOptionsFacade.addKeyword(this.addgroup.id, result.keyword, result.modifier);
       }
     }
 

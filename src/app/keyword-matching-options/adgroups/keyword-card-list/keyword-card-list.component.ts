@@ -26,11 +26,15 @@ import { IAdgroup } from '../adgroup-interface';
     <app-adgroup-modal [modalOpen]="addAdgroupModal" [editModal]="editAdgroup" (modalClosed)="onAddAdgroup($event)"></app-adgroup-modal>
 
 
+    <app-delete-adgroup-confirm-modal [modalOpen]="deleteAdgroupModal" (modalClosed)="onDeleteAdgroup($event)"></app-delete-adgroup-confirm-modal>
+
+
     <div class="card" *ngFor="let adgroup of addgroups$ | async">
         <app-keyword-list [addgroup]="adgroup"></app-keyword-list>
       
         <div class="card-footer">
           <button class="btn btn-primary" (click)="showEditAdgroupModal(adgroup)">Edit adgroup</button>
+          <button class="btn btn-danger" (click)="showDeleteAdgroupModal(adgroup.id)">Delete adgroup</button>
         </div>
     </div>
   `
@@ -42,6 +46,8 @@ export class KeywordCardListComponent implements OnDestroy {
 
   public addAdgroupModal: boolean = false;
   public editAdgroup: boolean | IAdgroup = false;
+  public deleteAdgroupModal: boolean = false;
+  public adgroupToDelete: string;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
@@ -77,5 +83,19 @@ export class KeywordCardListComponent implements OnDestroy {
 
     this.editAdgroup = false;
     this.addAdgroupModal = false;
+  }
+
+  public showDeleteAdgroupModal(adgroupId: string): void {
+    this.adgroupToDelete = adgroupId;
+
+    this.deleteAdgroupModal = true;
+  }
+
+  public onDeleteAdgroup(result): void {
+    if (result) {
+      this.keywordMatchingOptionsFacade.deleteAdgroup(this.adgroupToDelete);
+    }
+
+    this.deleteAdgroupModal = false;
   }
 }

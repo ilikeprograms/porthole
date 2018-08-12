@@ -8,7 +8,8 @@
       <div class="btn-group">
         <!--<button type="button" class="btn btn-sm btn-secondary" (click)="onAdd()"><clr-icon shape="plus"></clr-icon> Add-->
           <!--to group</button>-->
-        <button type="button" class="btn btn-sm btn-secondary" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete</button>
+        <button class="btn btn-outline btn-sm" type="button" (click)="showAddKeywordModal()">Add</button>
+        <button type="button" class="btn btn-sm btn-secondary" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete</button>
         <!--<button type="button" class="btn btn-sm btn-secondary" (click)="onEdit()" *ngIf="selected.length == 1"><clr-icon shape="pencil"></clr-icon> Edit</button>-->
       </div>
     </clr-dg-action-bar>
@@ -23,10 +24,10 @@
       </clr-dg-action-overflow>
 
       <clr-dg-cell>{{ keyword.text }}</clr-dg-cell>
-      <clr-dg-cell>{{ keyword.modifier }}</clr-dg-cell>
+      <clr-dg-cell>{{ keyword.modifier | keywordModifier }}</clr-dg-cell>
     </clr-dg-row>
 
-    <clr-dg-footer><div class="data-grid-footer-left"><button class="btn btn-outline btn-sm" type="button" (click)="showAddKeywordModal()">Add</button></div><div class="data-grid-footer-right">{{(keywords$ | async)?.length}} keywords</div></clr-dg-footer>
+    <clr-dg-footer>{{ (keywords$ | async)?.length }} keywords</clr-dg-footer>
   </clr-datagrid>
 </div>
 

@@ -23,6 +23,36 @@
 
         <clr-control-error>A name must be provided</clr-control-error>
       </clr-input-container>
+
+
+      <div class="clr-form-control clr-row">
+        <label class="clr-control-label" for="modifier">Modifier</label>
+        <div class="clr-control-container clr-col-md-10 clr-col-xs-12" [ngClass]="{'clr-error': modalForm.get('modifier').invalid }">
+          <div class="clr-select-wrapper">
+            <select id="modifier" name="modifier" formControlName="modifier" #modifier required>
+              <option value="" disabled readonly>Please select</option>
+
+              <option [ngValue]="keywordModifiers.BroadMatch">
+                <span class="keyword-icon">B</span>
+              </option>
+              <option [ngValue]="keywordModifiers.PhraseMatch">
+                <span class="keyword-icon">PM</span>
+              </option>
+              <option [ngValue]="keywordModifiers.BroadMatchModifier">
+                <span class="keyword-icon">BM</span>
+              </option>
+              <option [ngValue]="keywordModifiers.ExactMatch">
+                <span class="keyword-icon">E</span>
+              </option>
+              <option [ngValue]="keywordModifiers.NegativeMatch">
+                <span class="keyword-icon">N</span>
+              </option>
+            </select>
+
+            <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+          </div>
+        </div>
+      </div>
     </form>
 
     <p>Enter a keyword and hit the button or press the enter key. Keyword will be added and can be changed later.</p>

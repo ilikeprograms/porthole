@@ -128,7 +128,7 @@ export class KeywordMatchingOptionsFacade {
     return this.store.select(selectedKeywordsByAdGroupId(adGroupId));
   }
 
-  public addKeyword(adgroupId: string, text: string): void {
+  public addKeyword(adgroupId: string, text: string, modifier: KeywordModifiers): void {
     let adgroup: IAdgroup;
 
     this.store.select(selectAdgroupById(adgroupId)).pipe(take(1))
@@ -141,7 +141,7 @@ export class KeywordMatchingOptionsFacade {
         id: uuid(),
         adgroupId,
         text,
-        modifier: adgroup.matchOption
+        modifier: modifier
       }
     }));
   }

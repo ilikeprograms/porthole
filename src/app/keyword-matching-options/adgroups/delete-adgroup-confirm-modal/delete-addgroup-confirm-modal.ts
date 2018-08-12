@@ -1,23 +1,41 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-delete-adgroup-confirm-modal',
   template: `
-    <!--<h2 mat-dialog-title>Delete Ad Group</h2>-->
-    <!--<mat-dialog-content>Are you sure? This will also remove all Keywords withing this Ad Group and cannot be undone.</mat-dialog-content>-->
-    <!--<mat-dialog-actions>-->
-      <!--<button mat-button mat-dialog-close tabindex="-1">No</button>-->
-      <!--&lt;!&ndash; Can optionally provide a result for the closing dialog. &ndash;&gt;-->
-      <!--<button mat-button color="warn" [mat-dialog-close]="true">Yes</button>-->
-    <!--</mat-dialog-actions>-->
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+      <h3 class="modal-title">{{ 'Delete Ad Group' }}</h3>
+      <div class="modal-body">
+        Are you sure? This will also remove all Keywords withing this Ad Group and cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="close()">No</button>
+        <button type="button" class="btn btn-primary" (click)="closeWithData()">Yes</button>
+      </div>
+    </clr-modal>
   `,
 })
-export class DeleteAdgroupConfirmComponent {
-  constructor(
-    // public dialogRef: MatDialogRef<DeleteAdgroupConfirmComponent>
-  ) {}
+export class DeleteAdgroupConfirmComponent implements OnDestroy {
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
-  public onNoClick(): void {
-    // this.dialogRef.close();
+  public ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  @Input()
+  public modalOpen: boolean = false;
+
+  @Output()
+  public modalClosed: EventEmitter<any> = new EventEmitter<any>();
+
+  public close(): void {
+    this.modalClosed.emit(false);
+  }
+
+  public closeWithData(): void {
+    this.modalClosed.emit(true);
   }
 }
