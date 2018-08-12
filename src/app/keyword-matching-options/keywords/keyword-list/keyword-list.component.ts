@@ -12,12 +12,18 @@ import { IKeyword } from '../keyword.interface';
 import { IAdgroup } from '../../adgroups/adgroup-interface';
 import { KeywordExportService } from '../../keyword-export.service';
 import { IKey } from 'selenium-webdriver';
-import { ClrDatagridComparatorInterface } from '@clr/angular';
+import { ClrDatagridComparatorInterface, ClrDatagridStringFilterInterface } from '@clr/angular';
 
 
 class KeywordNameComparator implements ClrDatagridComparatorInterface<IKeyword> {
   compare(a: IKeyword, b: IKeyword) {
     return ('' + a.text).localeCompare(b.text);
+  }
+}
+
+class KeywordNameFilter implements ClrDatagridStringFilterInterface<IKeyword> {
+  accepts(keyword: IKeyword, search: string):boolean {
+    return keyword.text.indexOf(search) > -1;
   }
 }
 
@@ -78,7 +84,6 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
   public editKeyword: boolean | IKeyword = false;
   public addKeywordModal: boolean = false;
-  public nameFilter: string = '';
 
   public selected: any = [];
 
@@ -88,6 +93,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   public campaign$: Observable<ICampaign>;
 
   public nameComparator: KeywordNameComparator = new KeywordNameComparator();
+  public nameFilter = new KeywordNameFilter();
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,

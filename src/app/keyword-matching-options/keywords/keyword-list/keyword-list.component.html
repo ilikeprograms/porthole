@@ -14,7 +14,9 @@
       </div>
     </clr-dg-action-bar>
 
-    <clr-dg-column [clrDgField]="'name'" [clrDgSortBy]="nameComparator" [(clrFilterValue)]="nameFilter"> Name</clr-dg-column>
+    <clr-dg-column [clrDgField]="'name'" [clrDgSortBy]="nameComparator">Name
+      <clr-dg-string-filter [clrDgStringFilter]="nameFilter"></clr-dg-string-filter>
+    </clr-dg-column>
     <clr-dg-column [clrDgField]="'modifier'">Modifier</clr-dg-column>
 
     <clr-dg-row *clrDgItems="let keyword of keywords$ | async" [clrDgItem]="keyword">
