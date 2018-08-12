@@ -16,12 +16,14 @@ import { ResetModalService } from '../../../core/reset-modal.service';
   selector: 'app-campaign-modal',
   template: `
     <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
-      <h3 class="modal-title">{{ editCampaign ? 'Change name' : 'Add new campaign' }}</h3>
+      <h3 class="modal-title">{{ editCampaign ? 'Rename campaign' : 'Add new campaign' }}</h3>
       <div class="modal-body">
         <form [formGroup]="campaignForm" clrForm>
           <clr-input-container>
-            <label for="campaign">Campaign name</label>
-            <input #campaignInput clrInput type="text" id="campaign" name="campaign" formControlName="campaign" autofocus (keyup.enter)="addCampaignModel = false" />
+            <label for="campaign">Name</label>
+            <input #campaignInput clrInput type="text" id="campaign" name="campaign" formControlName="campaign" required autofocus (keyup.enter)="closeWithData()" />
+            
+            <clr-control-error>A name is required</clr-control-error>
           </clr-input-container>
         </form>
       </div>
@@ -84,6 +86,10 @@ export class CampaignModalComponent implements OnDestroy, OnChanges {
   }
 
   public closeWithData(): void {
-    this.modalClosed.emit({ campaign: this.campaignForm.value.campaign });
+    this.campaignForm.controls.campaign.updateValueAndValidity();
+
+    if (this.campaignForm.valid) {
+      this.modalClosed.emit({campaign: this.campaignForm.value.campaign});
+    }
   }
 }

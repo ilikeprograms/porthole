@@ -1,4 +1,37 @@
-<span>{{ (addgroup$ | async ).name }}</span>
+<div class="card-header"><span>{{ addgroup.name }}</span></div>
+
+<div class="card-block">
+  <clr-datagrid [(clrDgSelected)]="selected">
+    <clr-dg-placeholder>No keywords</clr-dg-placeholder>
+
+    <clr-dg-action-bar>
+      <div class="btn-group">
+        <!--<button type="button" class="btn btn-sm btn-secondary" (click)="onAdd()"><clr-icon shape="plus"></clr-icon> Add-->
+          <!--to group</button>-->
+        <button type="button" class="btn btn-sm btn-secondary" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete</button>
+        <!--<button type="button" class="btn btn-sm btn-secondary" (click)="onEdit()" *ngIf="selected.length == 1"><clr-icon shape="pencil"></clr-icon> Edit</button>-->
+      </div>
+    </clr-dg-action-bar>
+
+    <clr-dg-column [clrDgField]="'name'" [clrDgSortBy]="nameComparator" [(clrFilterValue)]="nameFilter"> Name</clr-dg-column>
+    <clr-dg-column [clrDgField]="'modifier'">Modifier</clr-dg-column>
+
+    <clr-dg-row *clrDgItems="let keyword of keywords$ | async" [clrDgItem]="keyword">
+      <clr-dg-action-overflow>
+        <button class="action-item" (click)="showEditKeywordModal(keyword)">Edit</button>
+        <!--<button class="action-item" (click)="onDelete(user)">Delete</button>-->
+      </clr-dg-action-overflow>
+
+      <clr-dg-cell>{{ keyword.text }}</clr-dg-cell>
+      <clr-dg-cell>{{ keyword.modifier }}</clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-footer><div class="data-grid-footer-left"><button class="btn btn-outline btn-sm" type="button" (click)="showAddKeywordModal()">Add</button></div><div class="data-grid-footer-right">{{(keywords$ | async)?.length}} keywords</div></clr-dg-footer>
+  </clr-datagrid>
+</div>
+
+<app-add-keyword [modalOpen]="addKeywordModal" [editModal]="editKeyword" (modalClosed)="onAddKeyword($event)"></app-add-keyword>
+
 <!--<mat-card>-->
   <!--<mat-toolbar>-->
     <!--<mat-toolbar-row class="toolbar">-->

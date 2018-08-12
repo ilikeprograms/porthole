@@ -22,8 +22,7 @@ import { KeywordMatchingOptionsFacade } from './keyword-matching-options.facade'
 import { IKeyword } from '../keywords/keyword.interface';
 import { IParseKeywordTextModifier, KeywordParser } from '../keyword-parser';
 import {
-  AddKeywordAction, REMOVE_ALL_KEYWORDS_ACTION,
-  RemoveAllKeywordsAction
+  AddKeywordAction
 } from '../keywords/ngrx/keywords.actions';
 
 import { ChromeStorageService } from '../../core/chrome-storage.service';
@@ -76,18 +75,6 @@ export class KeywordMatchingOptionsEffects {
         }
 
         return [];
-      })
-    );
-  }
-
-  @Effect()
-  public removeAllKeywordsActionEffect() {
-    return this.actions$.pipe(
-      ofType(REMOVE_ALL_KEYWORDS_ACTION),
-      map((action: RemoveAllKeywordsAction) => {
-        return new CreateTextSnackbarAction('All keywords removed', {
-          duration: 1500
-        });
       })
     );
   }
@@ -155,8 +142,7 @@ export class KeywordMatchingOptionsEffects {
               id: uuid(),
               adgroupId: action.payload.adgroupId,
               text: keywordWithModifier.text,
-              modifier: keywordWithModifier.modifier,
-              selected: false
+              modifier: keywordWithModifier.modifier
             }
           });
         });
@@ -184,8 +170,7 @@ export class KeywordMatchingOptionsEffects {
               id: uuid(),
               adgroupId: action.payload.adgroupId,
               text: keyword,
-              modifier: KeywordModifiers.NegativeMatch,
-              selected: false
+              modifier: KeywordModifiers.NegativeMatch
             }
           });
         });

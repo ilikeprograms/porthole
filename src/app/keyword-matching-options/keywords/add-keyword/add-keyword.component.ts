@@ -1,6 +1,20 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, ElementRef,
+  EventEmitter,
+  Input, OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChange, ViewChild
+} from '@angular/core';
 
 import { KeywordModifiers } from '../../keywords/keyword-modifier-enum';
+import { ResetModalService } from '../../../core/reset-modal.service';
+import { Observable, Subject } from 'rxjs';
+import { ICampaign } from '../../campaigns/campaign.interface';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-keyword',
@@ -30,42 +44,105 @@ import { KeywordModifiers } from '../../keywords/keyword-modifier-enum';
       }
     `
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  providers: [ResetModalService]
 })
-export class AddKeywordComponent {
-  public newKeywordText: string = '';
+export class AddKeywordComponent implements OnDestroy, OnChanges {
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
-  @Input()
-  public selectedMatchOption: KeywordModifiers;
+  public modalForm: FormGroup;
 
-  @Output()
-  public selectedMatchOptionChanged: EventEmitter<KeywordModifiers> = new EventEmitter<KeywordModifiers>();
+  @ViewChild('textInput')
+  public textInput: ElementRef;
 
-  @Output()
-  public addKeyword: EventEmitter<string> = new EventEmitter<string>();
+  constructor(
+    private resetModalService: ResetModalService
+  ) {
+    this.setupForm();
 
-  public setAddKeywordText(text: string) {
-    this.newKeywordText = text;
+    this.resetModalService.setFormGroup(this.modalForm);
   }
 
-  public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
-    this.selectedMatchOptionChanged.emit(modifier);
+  private setupForm(): void {
+    this.modalForm = new FormGroup({
+      keyword: new FormControl('', Validators.required),
+      modifier: new FormControl('', Validators.required)
+    });
   }
 
-  public onAddKeyword(event: KeyboardEvent): void {
-    const input: HTMLInputElement = event.target as HTMLInputElement;
-    const value: string = input.value.trim();
+  public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+    this.resetModalService.reset(changes, this.textInput);
 
-    if (value) {
-      this.addKeyword.emit(value);
+    if (changes.editModal && changes.editModal.currentValue) {
+      this.modalForm.patchValue({
+        keyword: changes.editModal.currentValue.text,
 
-      this.setAddKeywordText('');
+      }, {
+        emitEvent: false
+      });
     }
   }
 
-  public onAddKeywordButtonClicked(): void {
-    this.addKeyword.emit(this.newKeywordText);
-
-    this.setAddKeywordText('');
+  public ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
+
+  @Input()
+  public modalOpen: boolean = false;
+
+  @Input()
+  public editModal: boolean = false;
+
+  @Output()
+  public modalClosed: EventEmitter<any> = new EventEmitter<any>();
+
+  public close(): void {
+    this.modalClosed.emit(false);
+  }
+
+  public closeWithData(): void {
+    this.modalForm.controls.keyword.updateValueAndValidity();
+
+    if (this.modalForm.valid) {
+      this.modalClosed.emit({keyword: this.modalForm.value.keyword, modifier: this.modalForm.value.modifier});
+    }
+  }
+
+
+
+  // public newKeywordText: string = '';
+  //
+  // @Input()
+  // public selectedMatchOption: KeywordModifiers;
+  //
+  // @Output()
+  // public selectedMatchOptionChanged: EventEmitter<KeywordModifiers> = new EventEmitter<KeywordModifiers>();
+  //
+  // @Output()
+  // public addKeyword: EventEmitter<string> = new EventEmitter<string>();
+  //
+  // public setAddKeywordText(text: string) {
+  //   this.newKeywordText = text;
+  // }
+  //
+  // public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
+  //   this.selectedMatchOptionChanged.emit(modifier);
+  // }
+  //
+  // public onAddKeyword(event: KeyboardEvent): void {
+  //   const input: HTMLInputElement = event.target as HTMLInputElement;
+  //   const value: string = input.value.trim();
+  //
+  //   if (value) {
+  //     this.addKeyword.emit(value);
+  //
+  //     this.setAddKeywordText('');
+  //   }
+  // }
+  //
+  // public onAddKeywordButtonClicked(): void {
+  //   this.addKeyword.emit(this.newKeywordText);
+  //
+  //   this.setAddKeywordText('');
+  // }
 }

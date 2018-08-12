@@ -28,14 +28,13 @@ import {
 } from '../adgroups/ngrx/adgroup.actions';
 import { selectAdgroupById, selectAllAdgroupIds, selectAllAdgroups } from '../adgroups/ngrx/adgroups.selectors';
 import {
-  AddKeywordAction, EditKeywordModifierAction, EditKeywordTextAction,
-  RemoveAllKeywordsAction,
-  RemoveKeywordAction, RemoveSelectedKeywordsAction, ToggleKeywordAllSelectedAction, ToggleKeywordSelectedAction
+  AddKeywordAction,
+  EditKeywordModifierAction,
+  EditKeywordTextAction,
+  RemoveSelectedKeywordsAction
 } from '../keywords/ngrx/keywords.actions';
 import {
-  keywordsAllSelectedByAdGroupId,
-  selectAllKeywords, selectedKeywordsByAdGroupId,
-  selectedKeywordsCountByAdGroupId
+  selectAllKeywords, selectedKeywordsByAdGroupId
 } from '../keywords/ngrx/keywords.selectors';
 import { environment } from '../../../environments/environment';
 import { ChromeStorageService } from '../../core/chrome-storage.service';
@@ -125,20 +124,8 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new ImportFromChromeStorage(data));
   }
 
-  public getAdgroupById(adGroupId: string) {
-    return this.store.select(selectAdgroupById(adGroupId));
-  }
-
   public getKeywordsForAdgroup(adGroupId: string) {
     return this.store.select(selectedKeywordsByAdGroupId(adGroupId));
-  }
-
-  public getSelectedKeywordsCountForAdgroup(adGroupId: string) {
-    return this.store.select(selectedKeywordsCountByAdGroupId(adGroupId));
-  }
-
-  public getKeywordsAllSelectedForAdgroup(adGroupId: string) {
-    return this.store.select(keywordsAllSelectedByAdGroupId(adGroupId));
   }
 
   public addKeyword(adgroupId: string, text: string): void {
@@ -154,7 +141,6 @@ export class KeywordMatchingOptionsFacade {
         id: uuid(),
         adgroupId,
         text,
-        selected: false,
         modifier: adgroup.matchOption
       }
     }));
@@ -182,28 +168,8 @@ export class KeywordMatchingOptionsFacade {
     }));
   }
 
-  public removeKeyword(id: string): void {
-    this.store.dispatch(new RemoveKeywordAction({
-      id
-    }));
-  }
-
-  public removeSelectedKeywords(adgroupId: string): void {
-    this.store.dispatch(new RemoveSelectedKeywordsAction({
-      adgroupId
-    }));
-  }
-
-  public removeAllKeywords(adgroupId: string): void {
-    this.store.dispatch(new RemoveAllKeywordsAction({
-      adgroupId
-    }));
-  }
-
-  public toggleKeywordSelected(id: string): void {
-    this.store.dispatch(new ToggleKeywordSelectedAction({
-      id
-    }));
+  public removeSelectedKeywords(ids: Array<string>): void {
+    this.store.dispatch(new RemoveSelectedKeywordsAction(ids));
   }
 
   public changeNewKeywordOption(id: string, matchOption: KeywordModifiers): void {
@@ -214,12 +180,6 @@ export class KeywordMatchingOptionsFacade {
          matchOption
        }
       }
-    }));
-  }
-
-  public toggleAllSelected(adgroupId: string): void {
-    this.store.dispatch(new ToggleKeywordAllSelectedAction({
-      adgroupId
     }));
   }
 

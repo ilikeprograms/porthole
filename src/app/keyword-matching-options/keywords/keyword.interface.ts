@@ -5,5 +5,4 @@ export interface IKeyword {
   adgroupId?: string;
   modifier: KeywordModifiers;
   text: string;
-  selected: boolean;
 }

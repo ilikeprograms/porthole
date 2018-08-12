@@ -17,17 +17,3 @@ export const selectedKeywordsByAdGroupId = (adGroupId: string) => {
     return keywords.filter((keyword: IKeyword) => keyword.adgroupId === adGroupId);
   });
 };
-
-export const selectedKeywordsCountByAdGroupId = (adGroupId: string) => {
-  return createSelector(selectedKeywordsByAdGroupId(adGroupId), (keywords: Array<IKeyword>) => {
-    return keywords.filter((keyword: IKeyword) => keyword.selected).length;
-  });
-};
-
-export const keywordsAllSelectedByAdGroupId = (adGroupId: string) => {
-  return createSelector(selectedKeywordsByAdGroupId(adGroupId), (keywords: Array<IKeyword>) => {
-    return !keywords.some((keyword: IKeyword) => {
-      return !keyword.selected;
-    });
-  });
-};

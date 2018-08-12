@@ -11,11 +11,20 @@ import { DeleteAdgroupConfirmComponent } from '../../adgroups/delete-adgroup-con
 import { IKeyword } from '../keyword.interface';
 import { IAdgroup } from '../../adgroups/adgroup-interface';
 import { KeywordExportService } from '../../keyword-export.service';
+import { IKey } from 'selenium-webdriver';
+import { ClrDatagridComparatorInterface } from '@clr/angular';
+
+
+class KeywordNameComparator implements ClrDatagridComparatorInterface<ICampaign> {
+  compare(a: IKeyword, b: IKeyword) {
+    return ('' + a.text).localeCompare(b.text);
+  }
+}
 
 @Component({
   selector: 'app-keyword-list',
   templateUrl: './keyword-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   // animations: [
   //   // trigger('listAnimation', [
   //   //   transition(':increment', [
@@ -40,22 +49,45 @@ import { KeywordExportService } from '../../keyword-export.service';
     .toolbar-actions-spacer {
       flex: 1 1 auto;
     }
+
+    clr-dg-footer /deep/ .datagrid-foot-description {
+      display: flex;
+      flex-direction: row;
+      align-content: space-between;
+    }
+    
+    .data-grid-footer-left, .data-grid-footer-right {
+      flex: 1 1 auto;
+    }
+
+    .data-grid-footer-left {
+      text-align: left;
+    }
+
+    .data-grid-footer-right {
+      text-align: right;
+    }
   `]
 })
 export class KeywordListComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   public keywords$: Observable<Array<IKeyword>>;
-  public keywordsSelectedCount$: Observable<number>;
-  public keywordsAllSelected$: Observable<boolean>;
 
   public pasteModalOpened: boolean = false;
 
-  @Input()
-  public addgroupId: string;
+  public editKeyword: boolean | IKeyword = false;
+  public addKeywordModal: boolean = false;
+  public nameFilter: string = '';
 
-  public addgroup$: Observable<IAdgroup>;
+  public selected: any = [];
+
+  @Input()
+  public addgroup: IKeyword;
+
   public campaign$: Observable<ICampaign>;
+
+  public nameComparator: KeywordNameComparator = new KeywordNameComparator();
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
@@ -63,30 +95,20 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this.addgroup$ = this.keywordMatchingOptionsFacade.getAdgroupById(this.addgroupId).pipe(
-      takeUntil(this.unsubscribe$)
-    );
+    // this.campaign$ = combineLatest(this.keywordMatchingOptionsFacade.campaigns$, this.addgroup).pipe(
+    //   takeUntil(this.unsubscribe$),
+    //   map((values: [Array<ICampaign>, IAdgroup]) => {
+    //     if (values[1]) {
+    //       return values[0].filter((campaign: ICampaign) => {
+    //         return campaign.id === values[1].campaignId;
+    //       })[0];
+    //     } else {
+    //       return;
+    //     }
+    //   })
+    // );
 
-    this.campaign$ = combineLatest(this.keywordMatchingOptionsFacade.campaigns$, this.addgroup$).pipe(
-      takeUntil(this.unsubscribe$),
-      map((values: [Array<ICampaign>, IAdgroup]) => {
-        if (values[1]) {
-          return values[0].filter((campaign: ICampaign) => {
-            return campaign.id === values[1].campaignId;
-          })[0];
-        } else {
-          return;
-        }
-      })
-    );
-
-    this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroupId).pipe(
-      takeUntil(this.unsubscribe$));
-
-    this.keywordsSelectedCount$ = this.keywordMatchingOptionsFacade.getSelectedKeywordsCountForAdgroup(this.addgroupId).pipe(
-      takeUntil(this.unsubscribe$));
-
-    this.keywordsAllSelected$ = this.keywordMatchingOptionsFacade.getKeywordsAllSelectedForAdgroup(this.addgroupId).pipe(
+    this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroup.id).pipe(
       takeUntil(this.unsubscribe$));
   }
 
@@ -95,36 +117,47 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
-    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.addgroupId, modifier);
+  public onDeleteKeywords(): void {
+    const keywordIds: Array<string> = this.selected.map((keyword: IKeyword) => {
+      return keyword.id;
+    });
+
+    this.keywordMatchingOptionsFacade.removeSelectedKeywords(keywordIds);
+
+    this.selected = [];
   }
 
-  public onAddKeyword(keywordText: string) {
-    this.keywordMatchingOptionsFacade.addKeyword(this.addgroupId, keywordText);
+  public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
+    this.keywordMatchingOptionsFacade.changeNewKeywordOption(this.addgroup.id, modifier);
+  }
+
+  public showAddKeywordModal(): void {
+    this.addKeywordModal = true;
+  }
+
+  public showEditKeywordModal(keyword: IKeyword): void {
+    this.editKeyword = { ...keyword as IKeyword };
+
+    this.addKeywordModal = true;
+  }
+
+  public onAddKeyword(result: any) {
+    if (result) {
+      if (this.editKeyword) {
+        const editKeyword: IKeyword = this.editKeyword as IKeyword;
+
+        this.keywordMatchingOptionsFacade.editKeywordText(editKeyword.id, result.keyword);
+      } else {
+        this.keywordMatchingOptionsFacade.addKeyword(this.addgroup.id, result.keyword);
+      }
+    }
+
+    this.editKeyword = false;
+    this.addKeywordModal = false;
   }
 
   public onEditKeywordText({id, text}: { id: string; text: string; }): void {
     this.keywordMatchingOptionsFacade.editKeywordText(id, text);
-  }
-
-  public onRemoveKeyword(id: string): void {
-    this.keywordMatchingOptionsFacade.removeKeyword(id);
-  }
-
-  public onToggleKeywordSelected(id: string): void {
-    this.keywordMatchingOptionsFacade.toggleKeywordSelected(id);
-  }
-
-  public onToggleAllSelected(): void {
-    this.keywordMatchingOptionsFacade.toggleAllSelected(this.addgroupId);
-  }
-
-  public onRemoveSelectedKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeSelectedKeywords(this.addgroupId);
-  }
-
-  public onRemoveAllKeywords(): void {
-    this.keywordMatchingOptionsFacade.removeAllKeywords(this.addgroupId);
   }
 
   public onModifierChanged({ id, modifier}: { id: string; modifier: KeywordModifiers }): void {
@@ -132,21 +165,21 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   }
 
   public onCopyKeywords(): void {
-    this.keywordMatchingOptionsFacade.copyKeywords(this.addgroupId);
+    this.keywordMatchingOptionsFacade.copyKeywords(this.addgroup.id);
   }
 
   public onCopyNegativeKeywords(): void {
-    this.keywordMatchingOptionsFacade.copyNegativeKeywords(this.addgroupId);
+    this.keywordMatchingOptionsFacade.copyNegativeKeywords(this.addgroup.id);
   }
 
   public onPasteKeywords(keywords: string) {
     this.pasteModalOpened = false;
 
-    this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroupId, keywords);
+    this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroup.id, keywords);
   }
 
   public onPasteNegativeKeywords(keywords: string) {
-    this.keywordMatchingOptionsFacade.pasteNegativeKeywords(this.addgroupId, keywords);
+    this.keywordMatchingOptionsFacade.pasteNegativeKeywords(this.addgroup.id, keywords);
   }
 
   public onCsvExport(): void {

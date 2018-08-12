@@ -4,7 +4,10 @@
   </div>
   <clr-header class="header header-6">
     <div class="branding">
-      Porthole
+      <a routerLink="keywords" class="nav-link">
+        <img src="/assets/favicon-32x32.png" />&nbsp;&nbsp;
+        <span class="title">Porthole</span>
+      </a>
     </div>
     <div class="header-nav" [clr-nav-level]="1">
       <a routerLink="keywords" routerLinkActive="active" *ngIf="(licenceValid$ | async) === true" class="nav-link"><span class="nav-text">Keywords</span></a>

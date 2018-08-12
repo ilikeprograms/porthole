@@ -9,3 +9,27 @@
 <!--</section>-->
 
 <!--<p>Enter a keyword and hit the button or press the enter key. Keyword will be added and can be changed later.</p>-->
+
+
+
+<clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+  <h3 class="modal-title">{{ editModal ? 'Rename keyword' : 'Add new keyword' }}</h3>
+
+  <div class="modal-body">
+    <form [formGroup]="modalForm" clrForm clrLayout="horizontal">
+      <clr-input-container>
+        <label for="keyword">Name</label>
+        <input clrInput type="text" id="keyword" name="keyword" formControlName="keyword" #textInput (keyup.enter)="closeWithData()" required autofocus />
+
+        <clr-control-error>A name must be provided</clr-control-error>
+      </clr-input-container>
+    </form>
+
+    <p>Enter a keyword and hit the button or press the enter key. Keyword will be added and can be changed later.</p>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="close()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="closeWithData()">Ok</button>
+  </div>
+</clr-modal>

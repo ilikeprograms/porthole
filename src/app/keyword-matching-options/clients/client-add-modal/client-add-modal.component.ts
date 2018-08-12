@@ -16,12 +16,14 @@ import { ResetModalService } from '../../../core/reset-modal.service';
   selector: 'app-client-add-modal',
   template: `
     <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
-      <h3 class="modal-title">{{ editClient ? 'Change name' : 'Add new client' }}</h3>
+      <h3 class="modal-title">{{ editClient ? 'Rename client' : 'Add new client' }}</h3>
       <div class="modal-body">
         <form [formGroup]="clientForm" clrForm>
           <clr-input-container>
-            <label for="client">Client</label>
-            <input clrInput type="text" id="client" name="client" formControlName="client" #clientInput />
+            <label for="client">Name</label>
+            <input clrInput type="text" id="client" name="client" formControlName="client" #clientInput (keyup.enter)="closeWithData()" required />
+            
+            <clr-control-error>A name must be provided</clr-control-error>
           </clr-input-container>
         </form>
       </div>
@@ -84,6 +86,10 @@ export class ClientAddModalComponent implements OnDestroy, OnChanges {
   }
 
   public closeWithData(): void {
-    this.modalClosed.emit({ client: this.clientForm.value.client });
+    this.clientForm.controls.client.updateValueAndValidity();
+
+    if (this.clientForm.valid) {
+      this.modalClosed.emit({client: this.clientForm.value.client});
+    }
   }
 }

@@ -5,10 +5,11 @@ import { Observable ,  Subject } from 'rxjs';
 
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
+import { IAdgroup } from '../adgroup-interface';
 
 @Component({
   selector: 'app-keyword-card-list',
-  template: `
+  template: `    
     <div class="card">
       <div class="card-block">
         <p>AdGroups and keywords can be added so there is an easier way to group, change, and manage keywords for AdWords.</p>
@@ -16,30 +17,36 @@ import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-option
         Keywords can be copied straight from AdWords and modifiers will be maintained. So just simply copy and paste from AdWords, once happy, press copy and paste back in.
         </p>
 
-        <p *ngIf="(addgroupIds$ | async).length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>
-      </div>
-      
-      <div class="card-block">
-        <app-keyword-list *ngFor="let adgroupId of addgroupIds$ | async" [addgroupId]="adgroupId"></app-keyword-list>
+        <p *ngIf="(addgroups$ | async).length === 0">No AdGroups, add one using the button below and you can then start managing keywords.</p>
       </div>
     </div>
-    
-    <button class="btn btn-primary" (click)="addAdgroupModal = true">Add AdGroup</button>
 
-    <app-adgroup-modal [modalOpen]="addAdgroupModal" (modalClosed)="onAddAdgroup($event)"></app-adgroup-modal>
+    <button class="btn btn-link" (click)="showAdgroupModal()">Add AdGroup</button>
+
+    <app-adgroup-modal [modalOpen]="addAdgroupModal" [editModal]="editAdgroup" (modalClosed)="onAddAdgroup($event)"></app-adgroup-modal>
+
+
+    <div class="card" *ngFor="let adgroup of addgroups$ | async">
+        <app-keyword-list [addgroup]="adgroup"></app-keyword-list>
+      
+        <div class="card-footer">
+          <button class="btn btn-primary" (click)="showEditAdgroupModal(adgroup)">Edit adgroup</button>
+        </div>
+    </div>
   `
 })
 export class KeywordCardListComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  public addgroupIds$: Observable<Array<string>>;
+  public addgroups$: Observable<Array<IAdgroup>>;
 
   public addAdgroupModal: boolean = false;
+  public editAdgroup: boolean | IAdgroup = false;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {
-    this.addgroupIds$ = this.keywordMatchingOptionsFacade.addgroupIds$.pipe(takeUntil(this.unsubscribe$));
+    this.addgroups$ = this.keywordMatchingOptionsFacade.addgroups$.pipe(takeUntil(this.unsubscribe$));
   }
 
   public ngOnDestroy() {
@@ -47,11 +54,28 @@ export class KeywordCardListComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  public showAdgroupModal(): void {
+    this.addAdgroupModal = true;
+  }
+
+  public showEditAdgroupModal(adgroup): void {
+    this.editAdgroup = { ...adgroup as IAdgroup };
+
+    this.addAdgroupModal = true;
+  }
+
   public onAddAdgroup(result: any): void {
     if (result) {
-      this.keywordMatchingOptionsFacade.addAdgroup(result.name, result.campaignId);
+      if (this.editAdgroup) {
+        const editAdgroup: IAdgroup = this.editAdgroup as IAdgroup;
+
+        this.keywordMatchingOptionsFacade.editAdgroup(editAdgroup.id, result.name, result.campaignId);
+      } else {
+        this.keywordMatchingOptionsFacade.addAdgroup(result.name, result.campaignId);
+      }
     }
 
+    this.editAdgroup = false;
     this.addAdgroupModal = false;
   }
 }
