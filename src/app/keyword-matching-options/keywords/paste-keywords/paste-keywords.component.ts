@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component, ElementRef,
-  EventEmitter,
+  EventEmitter, HostBinding, HostListener, Inject,
   Input, OnChanges,
   OnDestroy,
   Output,
@@ -15,10 +15,11 @@ import { ICampaign } from '../../campaigns/campaign.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { takeUntil } from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
-  selector: 'app-add-keyword',
-  templateUrl: './add-keyword.component.html',
+  selector: 'app-paste-keywords',
+  templateUrl: './paste-keywords.component.html',
   styles: [
     `
       .keyword-entry-container {
@@ -47,7 +48,7 @@ import { takeUntil } from 'rxjs/operators';
   providers: [ResetModalService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddKeywordComponent implements OnDestroy, OnChanges {
+export class PasteKeywordsComponent implements OnDestroy, OnChanges {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   public modalForm: FormGroup;
@@ -55,10 +56,9 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
   @ViewChild('textInput')
   public textInput: ElementRef;
 
-  public keywordModifiers: any = KeywordModifiers;
-
   constructor(
-    private resetModalService: ResetModalService
+    private resetModalService: ResetModalService,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.setupForm();
 
@@ -67,21 +67,13 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
 
   private setupForm(): void {
     this.modalForm = new FormGroup({
-      keyword: new FormControl('', Validators.required),
-      modifier: new FormControl('', Validators.required)
+      keywords: new FormControl('', Validators.required),
+      negative: new FormControl('')
     });
   }
 
   public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
     this.resetModalService.reset(changes, this.textInput);
-
-    if (changes.editModal && changes.editModal.currentValue) {
-      this.modalForm.patchValue({
-        keyword: changes.editModal.currentValue.text
-      }, {
-        emitEvent: false
-      });
-    }
   }
 
   public ngOnDestroy(): void {
@@ -92,9 +84,6 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
   @Input()
   public modalOpen: boolean = false;
 
-  @Input()
-  public editModal: boolean = false;
-
   @Output()
   public modalClosed: EventEmitter<any> = new EventEmitter<any>();
 
@@ -102,50 +91,17 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
     this.modalClosed.emit(false);
   }
 
+  @HostListener('body:keyup.enter')
   public closeWithData(): void {
-    this.modalForm.controls.keyword.updateValueAndValidity();
-    this.modalForm.controls.modifier.updateValueAndValidity();
+    this.modalForm.controls.keywords.updateValueAndValidity();
+    this.modalForm.updateValueAndValidity();
+
+    if (this.document.activeElement.tagName === 'TEXTAREA') {
+      return;
+    }
 
     if (this.modalForm.valid) {
-      this.modalClosed.emit({keyword: this.modalForm.value.keyword, modifier: this.modalForm.value.modifier});
+      this.modalClosed.emit({keywords: this.modalForm.value.keywords, negative: this.modalForm.value.negative});
     }
   }
-
-
-
-  // public newKeywordText: string = '';
-  //
-  // @Input()
-  // public selectedMatchOption: KeywordModifiers;
-  //
-  // @Output()
-  // public selectedMatchOptionChanged: EventEmitter<KeywordModifiers> = new EventEmitter<KeywordModifiers>();
-  //
-  // @Output()
-  // public addKeyword: EventEmitter<string> = new EventEmitter<string>();
-  //
-  // public setAddKeywordText(text: string) {
-  //   this.newKeywordText = text;
-  // }
-  //
-  // public onNewKeywordMatchOptionChanged(modifier: KeywordModifiers): void {
-  //   this.selectedMatchOptionChanged.emit(modifier);
-  // }
-  //
-  // public onAddKeyword(event: KeyboardEvent): void {
-  //   const input: HTMLInputElement = event.target as HTMLInputElement;
-  //   const value: string = input.value.trim();
-  //
-  //   if (value) {
-  //     this.addKeyword.emit(value);
-  //
-  //     this.setAddKeywordText('');
-  //   }
-  // }
-  //
-  // public onAddKeywordButtonClicked(): void {
-  //   this.addKeyword.emit(this.newKeywordText);
-  //
-  //   this.setAddKeywordText('');
-  // }
 }

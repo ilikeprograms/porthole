@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Output } from '@angular/core';
 
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-delete-client-confirm-modal',
   template: `
-    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
       <h3 class="modal-title">{{ 'Confirm delete client' }}</h3>
       <div class="modal-body">
         Are you sure? This will also remove all Campaigns (but not Ad Groups) from this client and cannot be undone.
@@ -35,6 +35,7 @@ private unsubscribe$: Subject<void> = new Subject<void>();
     this.modalClosed.emit(false);
   }
 
+  @HostListener('body:keyup.enter')
   public closeWithData(): void {
     this.modalClosed.emit(true);
   }

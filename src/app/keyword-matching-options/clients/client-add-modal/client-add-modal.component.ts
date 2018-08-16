@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component, ElementRef,
   EventEmitter,
   Input,
@@ -15,14 +16,14 @@ import { ResetModalService } from '../../../core/reset-modal.service';
 @Component({
   selector: 'app-client-add-modal',
   template: `
-    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
       <h3 class="modal-title">{{ editClient ? 'Rename client' : 'Add new client' }}</h3>
       <div class="modal-body">
-        <form [formGroup]="clientForm" clrForm>
+        <form [formGroup]="clientForm" clrForm clrLayout="horizontal">
           <clr-input-container>
             <label for="client">Name</label>
-            <input clrInput type="text" id="client" name="client" formControlName="client" #clientInput (keyup.enter)="closeWithData()" required />
-            
+            <input clrInput type="text" id="client" name="client" formControlName="client" #clientInput (keyup.enter)="closeWithData()" required autofocus />
+
             <clr-control-error>A name must be provided</clr-control-error>
           </clr-input-container>
         </form>
@@ -33,11 +34,10 @@ import { ResetModalService } from '../../../core/reset-modal.service';
       </div>
     </clr-modal>
   `,
-  providers: [ResetModalService]
+  providers: [ResetModalService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientAddModalComponent implements OnDestroy, OnChanges {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
+export class ClientAddModalComponent implements OnChanges {
   public clientForm: FormGroup;
 
   @ViewChild('clientInput')
@@ -67,16 +67,11 @@ export class ClientAddModalComponent implements OnDestroy, OnChanges {
     }
   }
 
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   @Input()
   public modalOpen: boolean = false;
 
   @Input()
-  public editClient: any;
+  public editClient: any = false;
 
   @Output()
   public modalClosed: EventEmitter<any> = new EventEmitter<any>();

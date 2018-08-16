@@ -132,6 +132,8 @@ export class KeywordMatchingOptionsEffects {
       mergeMap((action: PasteKeywordsAction) => {
         let keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
 
+        keywords = keywords.filter((keyword: string) => keyword.trim() !== '');
+
         keywords = keywords.map((keyword: string) => {
           return KeywordParser.textToKeywordTextAndModifier(keyword);
         });
@@ -162,7 +164,9 @@ export class KeywordMatchingOptionsEffects {
     return this.actions$.pipe(
       ofType(PASTE_NEGATIVE_KEYWORDS_ACTION),
       mergeMap((action: PasteKeywordsAction) => {
-        const keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
+        let keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
+
+        keywords = keywords.filter((keyword: string) => keyword.trim() !== '');
 
         const keywordAction = keywords.map((keyword: string) => {
           return new AddKeywordAction({

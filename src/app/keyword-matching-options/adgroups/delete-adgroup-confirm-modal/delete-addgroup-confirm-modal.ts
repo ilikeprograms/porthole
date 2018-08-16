@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, Output } from '@angular/core';
 
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-delete-adgroup-confirm-modal',
   template: `
-    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
       <h3 class="modal-title">{{ 'Delete Ad Group' }}</h3>
       <div class="modal-body">
         Are you sure? This will also remove all Keywords withing this Ad Group and cannot be undone.
@@ -35,6 +35,7 @@ export class DeleteAdgroupConfirmComponent implements OnDestroy {
     this.modalClosed.emit(false);
   }
 
+  @HostListener('body:keyup.enter')
   public closeWithData(): void {
     this.modalClosed.emit(true);
   }

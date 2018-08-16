@@ -80,7 +80,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
   public keywords$: Observable<Array<IKeyword>>;
 
-  public pasteModalOpened: boolean = false;
+  public pasteModal: boolean = false;
 
   public editKeyword: boolean | IKeyword = false;
   public addKeywordModal: boolean = false;
@@ -178,10 +178,20 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     this.keywordMatchingOptionsFacade.copyNegativeKeywords(this.addgroup.id);
   }
 
-  public onPasteKeywords(keywords: string) {
-    this.pasteModalOpened = false;
+  public showPasteKeywordsModal(): void {
+    this.pasteModal = true;
+  }
 
-    this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroup.id, keywords);
+  public onPasteKeywords(result: any) {
+    if (result) {
+      if (result.negative) {
+        this.keywordMatchingOptionsFacade.pasteNegativeKeywords(this.addgroup.id, result.keywords);
+      } else {
+        this.keywordMatchingOptionsFacade.pasteKeywords(this.addgroup.id, result.keywords);
+      }
+    }
+
+    this.pasteModal = false;
   }
 
   public onPasteNegativeKeywords(keywords: string) {

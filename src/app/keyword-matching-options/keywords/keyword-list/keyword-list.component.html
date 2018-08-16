@@ -10,6 +10,7 @@
           <!--to group</button>-->
         <button class="btn btn-outline btn-sm" type="button" (click)="showAddKeywordModal()">Add</button>
         <button type="button" class="btn btn-sm btn-secondary" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete</button>
+        <button type="button" class="btn btn-sm btn-secondary" (click)="showPasteKeywordsModal()">Paste</button>
         <!--<button type="button" class="btn btn-sm btn-secondary" (click)="onEdit()" *ngIf="selected.length == 1"><clr-icon shape="pencil"></clr-icon> Edit</button>-->
       </div>
     </clr-dg-action-bar>
@@ -22,14 +23,11 @@
     <clr-dg-row *clrDgItems="let keyword of keywords$ | async" [clrDgItem]="keyword">
       <clr-dg-action-overflow>
         <button class="action-item" (click)="showEditKeywordModal(keyword)">Edit</button>
-        <!--<button class="action-item" (click)="onDelete(user)">Delete</button>-->
       </clr-dg-action-overflow>
 
       <clr-dg-cell>{{ keyword.text }}</clr-dg-cell>
       <clr-dg-cell>{{ keyword.modifier | keywordModifier }}</clr-dg-cell>
     </clr-dg-row>
-
-    <!--<clr-dg-footer>{{ (keywords$ | async)?.length }} keywords</clr-dg-footer>-->
 
     <clr-dg-footer>
       <clr-dg-pagination #pagination [clrDgPageSize]="10">
@@ -41,6 +39,7 @@
 </div>
 
 <app-add-keyword [modalOpen]="addKeywordModal" [editModal]="editKeyword" (modalClosed)="onAddKeyword($event)"></app-add-keyword>
+<app-paste-keywords [modalOpen]="pasteModal" (modalClosed)="onPasteKeywords($event)"></app-paste-keywords>
 
 <!--<mat-card>-->
   <!--<mat-toolbar>-->
@@ -95,15 +94,3 @@
   <!--(csvExport)="onCsvExport()"-->
 <!--&gt;</app-keyword-footer-actions>-->
 <!--</mat-card>-->
-
-
-<clr-modal [(clrModalOpen)]="pasteModalOpened">
-  <h3 class="modal-title">Paste keywords below</h3>
-  <div class="modal-body">
-    <textarea matInput #paste placeholder="Keywords"></textarea>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="pasteModalOpened = false">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="onPasteKeywords(paste.value)">Ok</button>
-  </div>
-</clr-modal>

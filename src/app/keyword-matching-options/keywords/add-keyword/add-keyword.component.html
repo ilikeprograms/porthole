@@ -12,7 +12,7 @@
 
 
 
-<clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+<clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
   <h3 class="modal-title">{{ editModal ? 'Rename keyword' : 'Add new keyword' }}</h3>
 
   <div class="modal-body">

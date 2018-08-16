@@ -22,14 +22,14 @@ export class ClientListComponent implements OnDestroy {
   public clientToDelete: string;
   public campaignToDelete: string;
   public clientToAddCampaign: string;
-  public editClient: boolean | IClient;
-  public editCampaign: boolean | ICampaign;
+  public editClient: boolean | IClient = false;
+  public editCampaign: boolean | ICampaign = false;
   public clientsWithCampaigns$: Observable<Array<IClientWithCampaigns>>;
 
   constructor(
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {
-    this.clientsWithCampaigns$ = this.keywordMatchingOptionsFacade.clientsWithCampaigns$.pipe(takeUntil(this.unsubscribe$));;
+    this.clientsWithCampaigns$ = this.keywordMatchingOptionsFacade.clientsWithCampaigns$.pipe(takeUntil(this.unsubscribe$));
   }
 
   public ngOnDestroy(): void {
@@ -43,8 +43,6 @@ export class ClientListComponent implements OnDestroy {
   }
 
   public showAddClientModal(): void {
-    this.editClient = false;
-
     this.addClientModal = true;
   }
 
@@ -71,6 +69,7 @@ export class ClientListComponent implements OnDestroy {
       }
     }
 
+    this.editClient = false;
     this.addClientModal = false;
   }
 
@@ -84,8 +83,6 @@ export class ClientListComponent implements OnDestroy {
 
   public showAddCampaignModal(clientId: string): void {
     this.clientToAddCampaign = clientId;
-
-    this.editCampaign = false;
 
     this.addCampaignModel = true;
   }
@@ -107,6 +104,7 @@ export class ClientListComponent implements OnDestroy {
       }
     }
 
+    this.editCampaign = false;
     this.addCampaignModel = false;
   }
 

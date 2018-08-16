@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-campaign-delete-modal',
   template: `
-    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
       <h3 class="modal-title">{{ 'Confirm delete campaign' }}</h3>
       <div class="modal-body">
         <p>Are you sure you want to remove this campaign?</p>
@@ -37,6 +37,9 @@ export class CampaignDeleteModalComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  @ViewChild('removeAdgroups')
+  public removeAdgroups: ElementRef;
+
   @Input()
   public modalOpen: boolean = false;
 
@@ -47,7 +50,10 @@ export class CampaignDeleteModalComponent implements OnDestroy {
     this.modalClosed.emit({ deleteCampaign: false });
   }
 
-  public closeWithData(shouldDeleteAdgroups: boolean): void {
+  @HostListener('body:keyup.enter')
+  public closeWithData(shouldDelete: boolean): void {
+    const shouldDeleteAdgroups = shouldDelete || this.removeAdgroups.nativeElement.checked;
+
     this.modalClosed.emit({ shouldDeleteAdgroups, deleteCampaign: true });
   }
 }

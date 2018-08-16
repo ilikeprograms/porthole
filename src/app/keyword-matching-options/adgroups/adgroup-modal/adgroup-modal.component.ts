@@ -14,7 +14,7 @@ import { IAdgroup } from '../adgroup-interface';
 @Component({
   selector: 'app-adgroup-modal',
   template: `
-    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
       <h3 class="modal-title">{{ editModal ? 'Edit adgroup' : 'Add new adgroup' }}</h3>
       <div class="modal-body">
         <p *ngIf="!editModal">Once an Ad Group is created you can add Keywords to it and manage/change them.</p>
@@ -76,6 +76,7 @@ export class AdgroupModalComponent implements OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+    console.log(changes);
     this.resetModalService.reset(changes, this.adgroupNameInput);
 
     if (changes.editModal && changes.editModal.currentValue) {

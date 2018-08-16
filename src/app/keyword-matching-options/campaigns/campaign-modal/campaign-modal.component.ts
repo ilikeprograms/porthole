@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component, ElementRef,
   EventEmitter,
   Input,
@@ -15,13 +16,13 @@ import { ResetModalService } from '../../../core/reset-modal.service';
 @Component({
   selector: 'app-campaign-modal',
   template: `
-    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalAlternateClose)="close()">
+    <clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
       <h3 class="modal-title">{{ editCampaign ? 'Rename campaign' : 'Add new campaign' }}</h3>
       <div class="modal-body">
         <form [formGroup]="campaignForm" clrForm>
           <clr-input-container>
             <label for="campaign">Name</label>
-            <input #campaignInput clrInput type="text" id="campaign" name="campaign" formControlName="campaign" required autofocus (keyup.enter)="closeWithData()" />
+            <input #campaignInput clrInput type="text" id="campaign" name="campaign" formControlName="campaign" (keyup.enter)="closeWithData()" #campaignInput required autofocus />
             
             <clr-control-error>A name is required</clr-control-error>
           </clr-input-container>
@@ -33,7 +34,8 @@ import { ResetModalService } from '../../../core/reset-modal.service';
       </div>
     </clr-modal>
   `,
-  providers: [ResetModalService]
+  providers: [ResetModalService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CampaignModalComponent implements OnDestroy, OnChanges {
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -76,7 +78,7 @@ export class CampaignModalComponent implements OnDestroy, OnChanges {
   public modalOpen: boolean = false;
 
   @Input()
-  public editCampaign: any;
+  public editCampaign: any = false;
 
   @Output()
   public modalClosed: EventEmitter<any> = new EventEmitter<any>();

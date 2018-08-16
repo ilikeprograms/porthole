@@ -1,0 +1,32 @@
+<clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
+  <h3 class="modal-title">Paste keywords below</h3>
+
+  <div class="modal-body">
+    <form [formGroup]="modalForm" clrForm clrLayout="horizontal">
+      <clr-textarea-container>
+        <textarea clrTextarea id="keywords" name="keywords" formControlName="keywords" placeholder="Keywords" #textInput required autofocus></textarea>
+        <label for="keywords">Name</label>
+        <clr-control-error>Keywords must be provided</clr-control-error>
+      </clr-textarea-container>
+
+      <!--<div class="clr-form-control clr-row">-->
+        <!--<label class="clr-control-label" for="negative">Modifier</label>-->
+        <!--<div class="clr-control-container clr-col-md-10 clr-col-xs-12">-->
+          <!--<div class="checkbox">-->
+            <!--<input clrCheckbox type="checkbox" id="negative" name="negative" formControlName="negative" required>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <clr-checkbox-container>
+        <label for="negative" class="clr-col-md-10 clr-col-xs-12">Hello World</label>
+        <input clrCheckbox type="checkbox" id="negative" name="negative" formControlName="negative" />
+      </clr-checkbox-container>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="close()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="closeWithData()">Ok</button>
+  </div>
+</clr-modal>

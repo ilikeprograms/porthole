@@ -12,7 +12,6 @@ import { KeywordMatchingOptionsFacade } from './ngrx/keyword-matching-options.fa
 import { KeywordFooterActionsComponent } from './keywords/keyword-footer-actions/keyword-footer-actions.component';
 import { AddKeywordComponent } from './keywords/add-keyword/add-keyword.component';
 import { KeywordCardComponent } from './keywords/keyword-card/keyword-card.component';
-import { NoKeywordComponent } from './keywords/no-keyword/no-keyword.component';
 import { DeleteAllConfirmComponent } from './adgroups/delete-all-confirm/delete-all-confirm.component';
 import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.effects';
 import { ClientListComponent } from './clients/client-list/client-list.component';
@@ -36,6 +35,7 @@ import { routing } from './keyword-matching-options.routing';
 import { KeywordExportService } from './keyword-export.service';
 import { ClarityModule, ClrFormsNextModule } from '@clr/angular';
 import { KeywordModifierPipe } from './keywords/keyword-modifier/keyword-modifier.pipe';
+import { PasteKeywordsComponent } from './keywords/paste-keywords/paste-keywords.component';
 
 export const KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN = new InjectionToken<ActionReducerMap<any>>('keywordMatchingOptions');
 
@@ -77,7 +77,6 @@ export function getInitialState() {
     KeywordCardListComponent,
     ClientListComponent,
     AddKeywordComponent,
-    NoKeywordComponent,
     KeywordCardComponent,
     KeywordIconComponent,
     KeywordFooterActionsComponent,
@@ -88,6 +87,7 @@ export function getInitialState() {
     AdgroupModalComponent,
     DeleteAdgroupConfirmComponent,
     DeleteClientConfirmComponent,
+    PasteKeywordsComponent,
 
     KeywordModifierPipe
   ],
