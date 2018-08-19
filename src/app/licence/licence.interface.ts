@@ -1,7 +1,7 @@
 import { LicenceAccessLevelEnum } from './licence-access-level.enum';
 
 export interface ILicence {
-  result: any;
+  result: boolean;
   accessLevel: LicenceAccessLevelEnum;
   createdTime: string;
 }

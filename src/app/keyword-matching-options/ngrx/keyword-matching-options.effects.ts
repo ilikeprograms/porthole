@@ -1,14 +1,10 @@
-
-import { empty, Observable, of } from 'rxjs';
-
-import { mergeMap, withLatestFrom, switchMap, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
+import { empty, Observable, of } from 'rxjs';
+import { mergeMap, withLatestFrom, switchMap, map } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
-
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-
 
 
 import { ClipboardService } from '../../core/clipboard.service';
@@ -24,9 +20,8 @@ import { IParseKeywordTextModifier, KeywordParser } from '../keyword-parser';
 import {
   AddKeywordAction
 } from '../keywords/ngrx/keywords.actions';
-
 import { ChromeStorageService } from '../../core/chrome-storage.service';
-import { DELETE_CAMPAIGN_ACTION, DeleteCampaignsAction } from '../campaigns/ngrx/campaigns.actions';
+import { CampaignsActionTypes, DeleteCampaignsAction } from '../campaigns/ngrx/campaigns.actions';
 import { IAdgroup } from '../adgroups/adgroup-interface';
 import { DeleteAdgroupAction } from '../adgroups/ngrx/adgroup.actions';
 import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
@@ -59,7 +54,7 @@ export class KeywordMatchingOptionsEffects {
   @Effect()
   public deleteCampaign() {
     return this.actions$.pipe(
-      ofType(DELETE_CAMPAIGN_ACTION),
+      ofType(CampaignsActionTypes.DELETE_CAMPAIGN),
       withLatestFrom(this.keywordMatchingOptionsFacade.addgroups$),
       mergeMap((value: [DeleteCampaignsAction, Array<IAdgroup>]): Array<DeleteAdgroupAction | undefined> => {
         if (value[0].payload.shouldDeleteAdgroups) {

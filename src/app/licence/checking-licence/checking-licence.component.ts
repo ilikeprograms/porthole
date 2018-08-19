@@ -2,13 +2,11 @@ import { Router } from '@angular/router';
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { takeUntil } from 'rxjs/operators';
-import { BehaviorSubject ,  Subject ,  Observable } from 'rxjs';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
 
 import { LicenceService } from '../licence.service';
 import { ILicence } from '../licence.interface';
-import { LicenceAccessLevelEnum } from '../licence-access-level.enum';
 import { environment } from '../../../environments/environment';
-
 
 @Component({
   selector: 'app-checking-licence',

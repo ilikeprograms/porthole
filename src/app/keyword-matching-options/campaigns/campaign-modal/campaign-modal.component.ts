@@ -4,13 +4,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   SimpleChange,
   ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { ResetModalService } from '../../../core/reset-modal.service';
 
 @Component({
@@ -22,7 +21,7 @@ import { ResetModalService } from '../../../core/reset-modal.service';
         <form [formGroup]="campaignForm" clrForm>
           <clr-input-container>
             <label for="campaign">Name</label>
-            <input #campaignInput clrInput type="text" id="campaign" name="campaign" formControlName="campaign" (keyup.enter)="closeWithData()" #campaignInput required autofocus />
+            <input clrInput type="text" id="campaign" name="campaign" formControlName="campaign" (keyup.enter)="closeWithData()" #campaignInput required autofocus />
             
             <clr-control-error>A name is required</clr-control-error>
           </clr-input-container>
@@ -37,9 +36,7 @@ import { ResetModalService } from '../../../core/reset-modal.service';
   providers: [ResetModalService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CampaignModalComponent implements OnDestroy, OnChanges {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
+export class CampaignModalComponent implements OnChanges {
   public campaignForm: FormGroup;
 
   @ViewChild('campaignInput')
@@ -67,11 +64,6 @@ export class CampaignModalComponent implements OnDestroy, OnChanges {
         emitEvent: false
       });
     }
-  }
-
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   @Input()

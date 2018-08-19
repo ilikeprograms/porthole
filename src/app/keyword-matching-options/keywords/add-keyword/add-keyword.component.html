@@ -1,17 +1,3 @@
-<!--<section class="keyword-entry-container">-->
-  <!--<mat-card class="keyword-entry-card">-->
-    <!--<input type="text" placeholder="Add keyword..." [ngModel]="newKeywordText" (keyup)="setAddKeywordText($event.target.value)" (keyup.enter)="onAddKeyword($event)" />-->
-
-    <!--<app-keyword-icon [modifier]="selectedMatchOption" (change)="onNewKeywordMatchOptionChanged($event)"></app-keyword-icon>-->
-
-    <!--<button mat-raised-button color="primary" matTooltip="Add keyword" matTooltipPosition="left" [disabled]="newKeywordText.length === 0" (click)="onAddKeywordButtonClicked()">Add <mat-icon>add</mat-icon></button>-->
-  <!--</mat-card>-->
-<!--</section>-->
-
-<!--<p>Enter a keyword and hit the button or press the enter key. Keyword will be added and can be changed later.</p>-->
-
-
-
 <clr-modal [(clrModalOpen)]="modalOpen" (clrModalOpenChange)="close()">
   <h3 class="modal-title">{{ editModal ? 'Rename keyword' : 'Add new keyword' }}</h3>
 
@@ -52,9 +38,6 @@
           </div>
         </div>
       </div>
-
-
-      <!--<app-modifier-select formControlName="modifier" [validationState]="modifierStateChange"></app-modifier-select>-->
     </form>
 
     <p>Enter a keyword and hit the button or press the enter key. Keyword will be added and can be changed later.</p>

@@ -1,6 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-
-import { Subject } from 'rxjs';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-campaign-delete-modal',
@@ -29,14 +27,7 @@ import { Subject } from 'rxjs';
     </clr-modal>
   `,
 })
-export class CampaignDeleteModalComponent implements OnDestroy {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
+export class CampaignDeleteModalComponent {
   @ViewChild('removeAdgroups')
   public removeAdgroups: ElementRef;
 

@@ -1,6 +1,4 @@
-import { Component, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Output } from '@angular/core';
-
-import { Subject } from 'rxjs';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-delete-client-confirm-modal',
@@ -17,14 +15,7 @@ import { Subject } from 'rxjs';
     </clr-modal>
   `,
 })
-export class DeleteClientConfirmComponent implements OnDestroy {
-private unsubscribe$: Subject<void> = new Subject<void>();
-
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
+export class DeleteClientConfirmComponent {
   @Input()
   public modalOpen: boolean = false;
 

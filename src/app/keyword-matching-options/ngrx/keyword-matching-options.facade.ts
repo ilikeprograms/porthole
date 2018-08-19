@@ -21,16 +21,16 @@ import { IAddGroupWithKeywords } from '../addgroup-with-keywords.interface';
 import { selectAllClients } from '../clients/ngrx/clients.selectors';
 import { selectAllCampaigns } from '../campaigns/ngrx/campaigns.selectors';
 import { AddCampaign, DeleteCampaignsAction, EditCampaign } from '../campaigns/ngrx/campaigns.actions';
-import { AddClientAction, DeleteClientAction, EditClientAction } from '../clients/ngrx/clients-actions';
+import { AddClientAction, DeleteClientAction, EditClientAction } from '../clients/ngrx/clients.actions';
 import {
-  AddAdgroupAction, ChangeNewKeywordOptionAction, DeleteAdgroupAction,
+  AddAdgroupAction, DeleteAdgroupAction,
   EditAdgroupAction
 } from '../adgroups/ngrx/adgroup.actions';
 import { selectAdgroupById, selectAllAdgroupIds, selectAllAdgroups } from '../adgroups/ngrx/adgroups.selectors';
 import {
   AddKeywordAction,
   EditKeywordModifierAction,
-  EditKeywordTextAction, RemoveAllKeywordsAction,
+  EditKeywordAction, RemoveAllKeywordsAction,
   RemoveSelectedKeywordsAction
 } from '../keywords/ngrx/keywords.actions';
 import {
@@ -146,8 +146,8 @@ export class KeywordMatchingOptionsFacade {
     }));
   }
 
-  public editKeywordText(id: string, text: string, modifier: KeywordModifiers): void {
-    this.store.dispatch(new EditKeywordTextAction({
+  public editKeyword(id: string, text: string, modifier: KeywordModifiers): void {
+    this.store.dispatch(new EditKeywordAction({
       keyword: {
         id,
         changes: {
@@ -178,16 +178,16 @@ export class KeywordMatchingOptionsFacade {
   }
 
 
-  public changeNewKeywordOption(id: string, matchOption: KeywordModifiers): void {
-    this.store.dispatch(new ChangeNewKeywordOptionAction({
-      adgroup: {
-       id,
-       changes: {
-         matchOption
-       }
-      }
-    }));
-  }
+  // public changeNewKeywordOption(id: string, matchOption: KeywordModifiers): void {
+  //   this.store.dispatch(new ChangeNewKeywordOptionAction({
+  //     adgroup: {
+  //      id,
+  //      changes: {
+  //        matchOption
+  //      }
+  //     }
+  //   }));
+  // }
 
   public copyKeywords(adgroupId: string): void {
     this.store.dispatch(new CopyKeywordsAction({

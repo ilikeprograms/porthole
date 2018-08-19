@@ -3,11 +3,13 @@ import {
   Component, ElementRef,
   EventEmitter,
   Input, OnChanges,
-  OnDestroy, Output, SimpleChange, ViewChild
+  Output, SimpleChange, ViewChild
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { ICampaign } from '../../campaigns/campaign.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { Observable } from 'rxjs';
+
+import { ICampaign } from '../../campaigns/campaign.interface';
 import { ResetModalService } from '../../../core/reset-modal.service';
 import { IAdgroup } from '../adgroup-interface';
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
@@ -52,8 +54,7 @@ import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-option
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ResetModalService]
 })
-export class AdgroupModalComponent implements OnDestroy, OnChanges {
-  private unsubscribe$: Subject<void> = new Subject<void>();
+export class AdgroupModalComponent implements OnChanges {
   public campaigns$: Observable<Array<ICampaign>>;
 
   public adgroupForm: FormGroup;
@@ -90,11 +91,6 @@ export class AdgroupModalComponent implements OnDestroy, OnChanges {
         emitEvent: false
       });
     }
-  }
-
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   @Input()

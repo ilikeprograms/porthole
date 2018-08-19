@@ -1,11 +1,10 @@
-import { map, take } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+
 import { IKeyword } from './keywords/keyword.interface';
 import { KeywordModifiers } from './keywords/keyword-modifier-enum';
-import { Observable } from 'rxjs';
-
-
-
 
 const mimeType: string = 'text/csv;encoding:utf-8';
 const exportFields: Array<string> = [

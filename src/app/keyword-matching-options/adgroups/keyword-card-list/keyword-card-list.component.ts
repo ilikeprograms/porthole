@@ -24,8 +24,6 @@ import { IAdgroup } from '../adgroup-interface';
     <button class="btn btn-link" (click)="showAdgroupModal()">Add AdGroup</button>
 
     <app-adgroup-modal [modalOpen]="addAdgroupModal" [editModal]="editAdgroup" (modalClosed)="onAddAdgroup($event)"></app-adgroup-modal>
-
-
     <app-delete-adgroup-confirm-modal [modalOpen]="deleteAdgroupModal" (modalClosed)="onDeleteAdgroup($event)"></app-delete-adgroup-confirm-modal>
 
 

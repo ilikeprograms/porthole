@@ -1,27 +1,24 @@
 import { ICampaignState } from './campaigns-state.interface';
 import { CampaignsDefaultState } from './campaigns-default.state';
-import {
-  ADD_CAMPAIGN_ACTION, CampaignsActions, DELETE_CAMPAIGN_ACTION,
-  EDIT_CAMPAIGN_ACTION
-} from './campaigns.actions';
+import { CampaignsActionTypes, CampaignsActionsUnion } from './campaigns.actions';
 import { campaignsAdapter } from './campaigns.adapter';
-import { DELETE_CLIENT_ACTION, DeleteClientAction } from '../../clients/ngrx/clients-actions';
+import { ClientActionTypes, DeleteClientAction } from '../../clients/ngrx/clients.actions';
 import { IMPORT_FROM_CHROME_STORAGE, ImportFromChromeStorage } from '../../ngrx/keyword-matching-options.actions';
 
-export function campaignsReducer(state: ICampaignState = CampaignsDefaultState, action: CampaignsActions | DeleteClientAction | ImportFromChromeStorage) {
+export function campaignsReducer(state: ICampaignState = CampaignsDefaultState, action: CampaignsActionsUnion | DeleteClientAction | ImportFromChromeStorage) {
   switch (action.type) {
     case IMPORT_FROM_CHROME_STORAGE:
       return Object.assign({}, state, {
         ids: action.payload.keywordMatchingOptions.campaigns.ids,
         entities: action.payload.keywordMatchingOptions.campaigns.entities,
       });
-    case ADD_CAMPAIGN_ACTION:
+    case CampaignsActionTypes.ADD_CAMPAIGN:
       return campaignsAdapter.addOne(action.payload.campaign, state);
-    case EDIT_CAMPAIGN_ACTION:
+    case CampaignsActionTypes.EDIT_CAMPAIGN:
       return campaignsAdapter.updateOne(action.payload.campaign, state);
-    case DELETE_CAMPAIGN_ACTION:
+    case CampaignsActionTypes.DELETE_CAMPAIGN:
       return campaignsAdapter.removeOne(action.payload.id, state);
-    case DELETE_CLIENT_ACTION:
+    case ClientActionTypes.DELETE_CLIENT:
       const campaignIds = [];
 
       [...state.ids].forEach((campaignId: string) => {

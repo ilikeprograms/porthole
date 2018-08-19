@@ -1,56 +1,23 @@
 import {
   ChangeDetectionStrategy,
   Component, ElementRef,
-  EventEmitter, HostBinding, HostListener, Inject,
+  EventEmitter, HostListener, Inject,
   Input, OnChanges,
-  OnDestroy,
   Output,
   SimpleChange, ViewChild
 } from '@angular/core';
-
-import { KeywordModifiers } from '../../keywords/keyword-modifier-enum';
-import { ResetModalService } from '../../../core/reset-modal.service';
-import { Observable, Subject } from 'rxjs';
-import { ICampaign } from '../../campaigns/campaign.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
-import { takeUntil } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
+
+import { ResetModalService } from '../../../core/reset-modal.service';
 
 @Component({
   selector: 'app-paste-keywords',
   templateUrl: './paste-keywords.component.html',
-  styles: [
-    `
-      .keyword-entry-container {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom:  12px;
-      }
-
-      .keyword-entry-card {
-        width: 100%;
-        display: flex;
-        padding: 10px 10px 10px 20px;
-      }
-
-      .keyword-entry-card input {
-        border: 0;
-        flex-grow: 1;
-        font-size: 20px;
-      }
-
-      app-keyword-icon {
-        margin-top: 4px;
-      }
-    `
-  ],
   providers: [ResetModalService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PasteKeywordsComponent implements OnDestroy, OnChanges {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
+export class PasteKeywordsComponent implements OnChanges {
   public modalForm: FormGroup;
 
   @ViewChild('textInput')
@@ -74,11 +41,6 @@ export class PasteKeywordsComponent implements OnDestroy, OnChanges {
 
   public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
     this.resetModalService.reset(changes, this.textInput);
-  }
-
-  public ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   @Input()

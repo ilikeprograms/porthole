@@ -13,7 +13,6 @@ interface ISelectedModifierFormValues {
 @Component({
   selector: 'app-modifier-filter',
   templateUrl: './modifier-filter.component.html'
-  /* The rest of the filter component's declaration */
 })
 export class ModifierFilterComponent implements ClrDatagridFilterInterface<IKeyword> {
   public filterForm: FormGroup;

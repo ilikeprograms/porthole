@@ -4,15 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { EffectsModule } from '@ngrx/effects';
 import { ActionReducerMap, StoreModule } from '@ngrx/store';
-
+import { ClarityModule, ClrFormsNextModule } from '@clr/angular';
 
 import { KeywordListComponent } from './keywords/keyword-list/keyword-list.component';
-import { KeywordIconComponent } from './keywords/keyword-icon/keyword-icon.component';
 import { KeywordMatchingOptionsFacade } from './ngrx/keyword-matching-options.facade';
-import { KeywordFooterActionsComponent } from './keywords/keyword-footer-actions/keyword-footer-actions.component';
 import { AddKeywordComponent } from './keywords/add-keyword/add-keyword.component';
-import { KeywordCardComponent } from './keywords/keyword-card/keyword-card.component';
-import { DeleteAllConfirmComponent } from './adgroups/delete-all-confirm/delete-all-confirm.component';
 import { KeywordMatchingOptionsEffects } from './ngrx/keyword-matching-options.effects';
 import { ClientListComponent } from './clients/client-list/client-list.component';
 import { KeywordMatchingOptionsTabsComponent } from './keyword-matching-options-tabs/keyword-matching-options-tabs';
@@ -33,7 +29,6 @@ import { keywordsReducer } from './keywords/ngrx/keywords.reducer';
 import { KeywordsDefaultState } from './keywords/ngrx/keywords-default.state';
 import { routing } from './keyword-matching-options.routing';
 import { KeywordExportService } from './keyword-export.service';
-import { ClarityModule, ClrFormsNextModule } from '@clr/angular';
 import { KeywordModifierPipe } from './keywords/keyword-modifier/keyword-modifier.pipe';
 import { PasteKeywordsComponent } from './keywords/paste-keywords/paste-keywords.component';
 import { ModifierFilterComponent } from './keywords/modifier-filter/modifier-filter.component';
@@ -79,10 +74,6 @@ export function getInitialState() {
     KeywordCardListComponent,
     ClientListComponent,
     AddKeywordComponent,
-    KeywordCardComponent,
-    KeywordIconComponent,
-    KeywordFooterActionsComponent,
-    DeleteAllConfirmComponent,
     ClientAddModalComponent,
     CampaignDeleteModalComponent,
     CampaignModalComponent,
@@ -105,15 +96,6 @@ export function getInitialState() {
       provide: KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN,
       useFactory: getReducers
     },
-  ],
-  entryComponents: [
-    DeleteAllConfirmComponent,
-    ClientAddModalComponent,
-    CampaignDeleteModalComponent,
-    CampaignModalComponent,
-    AdgroupModalComponent,
-    DeleteAdgroupConfirmComponent,
-    DeleteClientConfirmComponent
-  ],
+  ]
 })
 export class KeywordMatchingOptionsModule {}

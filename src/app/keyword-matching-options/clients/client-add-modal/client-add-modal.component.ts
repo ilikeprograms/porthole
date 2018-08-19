@@ -1,15 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component, ElementRef,
-  EventEmitter,
+  EventEmitter, HostListener,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   SimpleChange,
   ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ResetModalService } from '../../../core/reset-modal.service';
 
@@ -80,6 +78,7 @@ export class ClientAddModalComponent implements OnChanges {
     this.modalClosed.emit(false);
   }
 
+  @HostListener('body:keyup.enter')
   public closeWithData(): void {
     this.clientForm.controls.client.updateValueAndValidity();
 

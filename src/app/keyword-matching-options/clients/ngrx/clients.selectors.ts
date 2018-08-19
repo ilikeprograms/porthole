@@ -1,5 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IClientsState } from './clients-state.interface';
+import { createSelector } from '@ngrx/store';
 import { clientsAdapter } from './clients.adapter';
 import { IKeywordMatchingOptionsState } from '../../ngrx/keyword-matching-options-state.interface';
 import { IAppState } from '../../../ngrx/app-state.interface';
