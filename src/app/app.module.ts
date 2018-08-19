@@ -4,16 +4,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { META_REDUCERS, MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { ClarityModule } from '@clr/angular';
 
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
-import { EffectsModule } from '@ngrx/effects';
 import { stateToStorageMetareducer } from './core/state-to-storage.metareducer';
 import { ChromeStorageService } from './core/chrome-storage.service';
 import { environment } from '../environments/environment';
 import { LicenceModule } from './licence/licence.module';
-import { ClarityModule } from '@clr/angular';
 import { notificationsReducer } from './notifications/ngrx/notifications.reducer';
 import { NotificationsModule } from './notifications/notifications.module';
 

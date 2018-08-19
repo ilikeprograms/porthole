@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+
 import { Store } from '@ngrx/store';
-import { IClarityAlert } from './clarity-alert.interface';
 import { Observable } from 'rxjs';
+
+import { IClarityAlert } from './clarity-alert.interface';
 import { selectAllNotifications } from './ngrx/notifications.selectors';
 import { IAppState } from '../ngrx/app-state.interface';
 

@@ -1,13 +1,9 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 
 import { NotificationsFacade } from './notifications.facade';
-import { NotificationsEffects } from './ngrx/notifications.effects';
-import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
-  imports: [
-    EffectsModule.forFeature([NotificationsEffects])
-  ],
+  imports: [],
   providers: [
     NotificationsFacade
   ]

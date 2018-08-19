@@ -1,12 +1,12 @@
 import { Action } from '@ngrx/store';
 import { IClarityAlert } from '../clarity-alert.interface';
 
-export const CREATE_TEXT_SNACKBAR_ACTION = '[Snackbar NGRX] Create snackbar';
+export const ADD_NOTIFICATION_ACTION = '[Notifications] Add notification';
 
-export class CreateTextSnackbarAction implements Action {
-  readonly type = CREATE_TEXT_SNACKBAR_ACTION;
+export class AddNotificationAction implements Action {
+  readonly type = ADD_NOTIFICATION_ACTION;
 
   constructor(public alert: IClarityAlert) {}
 }
 
-export type NotificationsActionsUnion = CreateTextSnackbarAction;
+export type NotificationsActionsUnion = AddNotificationAction;

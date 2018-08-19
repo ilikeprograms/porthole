@@ -17,7 +17,7 @@ import {
   PASTE_KEYWORDS_ACTION, PASTE_NEGATIVE_KEYWORDS_ACTION,
   PasteKeywordsAction,
 } from './keyword-matching-options.actions';
-import { CreateTextSnackbarAction } from '../../notifications/ngrx/notifications.actions';
+import { AddNotificationAction } from '../../notifications/ngrx/notifications.actions';
 import { KeywordMatchingOptionsFacade } from './keyword-matching-options.facade';
 import { IKeyword } from '../keywords/keyword.interface';
 import { IParseKeywordTextModifier, KeywordParser } from '../keyword-parser';
@@ -95,7 +95,7 @@ export class KeywordMatchingOptionsEffects {
 
         this.clipboardService.copyToClipboard(formattedKeywords.join(newLineCharacter));
 
-        return of(new CreateTextSnackbarAction({
+        return of(new AddNotificationAction({
           id: uuid(),
           type: 'info',
           text: 'Copied keywords'
@@ -120,7 +120,7 @@ export class KeywordMatchingOptionsEffects {
 
         this.clipboardService.copyToClipboard(formattedKeywords.join(newLineCharacter));
 
-        return of(new CreateTextSnackbarAction({
+        return of(new AddNotificationAction({
           id: uuid(),
           type: 'info',
           text: 'Copied keywords'
@@ -155,7 +155,7 @@ export class KeywordMatchingOptionsEffects {
 
         return [
           ...keywordAction,
-          new CreateTextSnackbarAction({
+          new AddNotificationAction({
             id: uuid(),
             type: 'info',
             text: 'Pasted keywords'
@@ -187,7 +187,7 @@ export class KeywordMatchingOptionsEffects {
 
         return [
           ...keywordAction,
-          new CreateTextSnackbarAction({
+          new AddNotificationAction({
             id: uuid(),
             type: 'info',
             text: 'Pasted keywords'
