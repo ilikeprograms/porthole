@@ -1,4 +1,7 @@
-<div class="card-header"><span>{{ addgroup.name }}</span></div>
+<div class="card-header">
+  <span>{{ addgroup.name }}</span>
+  <p class="p3">{{ (campaign$ | async)?.name }}</p>
+</div>
 
 <div class="card-block">
   <clr-datagrid [(clrDgSelected)]="selected">
@@ -6,19 +9,30 @@
 
     <clr-dg-action-bar>
       <div class="btn-group">
-        <!--<button type="button" class="btn btn-sm btn-secondary" (click)="onAdd()"><clr-icon shape="plus"></clr-icon> Add-->
-          <!--to group</button>-->
-        <button class="btn btn-outline btn-sm" type="button" (click)="showAddKeywordModal()">Add</button>
-        <button type="button" class="btn btn-sm btn-secondary" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete</button>
-        <button type="button" class="btn btn-sm btn-secondary" (click)="showPasteKeywordsModal()">Paste</button>
-        <!--<button type="button" class="btn btn-sm btn-secondary" (click)="onEdit()" *ngIf="selected.length == 1"><clr-icon shape="pencil"></clr-icon> Edit</button>-->
+        <button type="button" class="btn btn-outline btn-sm" (click)="showAddKeywordModal()">Add</button>
+        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete selected</button>
+        <button type="button" class="btn btn-outline btn-danger-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onDeleteAllKeywords()">Delete all</button>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onCopyKeywords()">Copy </button>
+        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onCopyNegativeKeywords()">Copy negative</button>
+        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="showPasteKeywordsModal()">Paste</button>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline btn-sm" (click)="onCsvExport()">Export to CSV </button>
       </div>
     </clr-dg-action-bar>
 
     <clr-dg-column [clrDgField]="'name'" [clrDgSortBy]="nameComparator">Name
       <clr-dg-string-filter [clrDgStringFilter]="nameFilter"></clr-dg-string-filter>
     </clr-dg-column>
-    <clr-dg-column [clrDgField]="'modifier'">Modifier</clr-dg-column>
+    <clr-dg-column [clrDgField]="'modifier'">Modifier
+      <clr-dg-filter [clrDgFilter]="modifierFilter">
+        <app-modifier-filter #modifierFilter></app-modifier-filter>
+      </clr-dg-filter>
+    </clr-dg-column>
 
     <clr-dg-row *clrDgItems="let keyword of keywords$ | async" [clrDgItem]="keyword">
       <clr-dg-action-overflow>

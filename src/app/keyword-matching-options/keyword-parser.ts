@@ -15,7 +15,7 @@ export class KeywordParser {
       case KeywordModifiers.PhraseMatch:
         return `"${keyword.text}"`;
       case KeywordModifiers.BroadMatchModifier:
-        return keyword.text.replace(/^|\s+/g, ` +`);
+        return '+' + keyword.text.replace(/\s+/g, ` +`);
       case KeywordModifiers.ExactMatch:
         return `[${keyword.text}]`;
     }

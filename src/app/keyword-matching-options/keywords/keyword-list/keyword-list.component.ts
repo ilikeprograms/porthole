@@ -1,7 +1,7 @@
 import { takeUntil, map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 import { KeywordModifiers } from '../keyword-modifier-enum';
@@ -22,7 +22,7 @@ class KeywordNameComparator implements ClrDatagridComparatorInterface<IKeyword> 
 }
 
 class KeywordNameFilter implements ClrDatagridStringFilterInterface<IKeyword> {
-  accepts(keyword: IKeyword, search: string):boolean {
+  accepts(keyword: IKeyword, search: string): boolean {
     return keyword.text.indexOf(search) > -1;
   }
 }
@@ -88,7 +88,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   public selected: any = [];
 
   @Input()
-  public addgroup: IKeyword;
+  public addgroup: IAdgroup;
 
   public campaign$: Observable<ICampaign>;
 
@@ -101,18 +101,18 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    // this.campaign$ = combineLatest(this.keywordMatchingOptionsFacade.campaigns$, this.addgroup).pipe(
-    //   takeUntil(this.unsubscribe$),
-    //   map((values: [Array<ICampaign>, IAdgroup]) => {
-    //     if (values[1]) {
-    //       return values[0].filter((campaign: ICampaign) => {
-    //         return campaign.id === values[1].campaignId;
-    //       })[0];
-    //     } else {
-    //       return;
-    //     }
-    //   })
-    // );
+    this.campaign$ = combineLatest([this.keywordMatchingOptionsFacade.campaigns$, of(this.addgroup)]).pipe(
+      takeUntil(this.unsubscribe$),
+      map((values: [Array<ICampaign>, IAdgroup]) => {
+        if (values[1]) {
+          return values[0].filter((campaign: ICampaign) => {
+            return campaign.id === values[1].campaignId;
+          })[0];
+        } else {
+          return;
+        }
+      })
+    );
 
     this.keywords$ = this.keywordMatchingOptionsFacade.getKeywordsForAdgroup(this.addgroup.id).pipe(
       takeUntil(this.unsubscribe$));
@@ -129,6 +129,12 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     });
 
     this.keywordMatchingOptionsFacade.removeSelectedKeywords(keywordIds);
+
+    this.selected = [];
+  }
+
+  public onDeleteAllKeywords(): void {
+    this.keywordMatchingOptionsFacade.removeAllKeywords(this.addgroup.id);
 
     this.selected = [];
   }
@@ -152,7 +158,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
       if (this.editKeyword) {
         const editKeyword: IKeyword = this.editKeyword as IKeyword;
 
-        this.keywordMatchingOptionsFacade.editKeywordText(editKeyword.id, result.keyword);
+        this.keywordMatchingOptionsFacade.editKeywordText(editKeyword.id, result.keyword, result.modifier);
       } else {
         this.keywordMatchingOptionsFacade.addKeyword(this.addgroup.id, result.keyword, result.modifier);
       }
@@ -162,9 +168,9 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     this.addKeywordModal = false;
   }
 
-  public onEditKeywordText({id, text}: { id: string; text: string; }): void {
-    this.keywordMatchingOptionsFacade.editKeywordText(id, text);
-  }
+  // public onEditKeywordText({id, text}: { id: string; text: string; }): void {
+  //   this.keywordMatchingOptionsFacade.editKeywordText(id, text);
+  // }
 
   public onModifierChanged({ id, modifier}: { id: string; modifier: KeywordModifiers }): void {
     this.keywordMatchingOptionsFacade.editKeywordModifier(id, modifier);

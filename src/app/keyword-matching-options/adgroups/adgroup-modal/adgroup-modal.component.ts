@@ -10,6 +10,7 @@ import { ICampaign } from '../../campaigns/campaign.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ResetModalService } from '../../../core/reset-modal.service';
 import { IAdgroup } from '../adgroup-interface';
+import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
 
 @Component({
   selector: 'app-adgroup-modal',
@@ -32,7 +33,7 @@ import { IAdgroup } from '../adgroup-interface';
               <div class="clr-control-container clr-col-md-10 clr-col-xs-12">
                 <div class="clr-select-wrapper">
                   <select id="campaignId" name="campaignId" formControlName="campaignId">
-                    <option value="" disabled readonly>None</option>
+                    <option value="" selected="selected">None</option>
                     <option *ngFor="let campaign of (campaigns$ | async)" [ngValue]="campaign.id">{{ campaign.name }}</option>
                   </select>
                 </div>
@@ -61,8 +62,11 @@ export class AdgroupModalComponent implements OnDestroy, OnChanges {
   public adgroupNameInput: ElementRef;
 
   constructor(
-    private resetModalService: ResetModalService
+    private resetModalService: ResetModalService,
+    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {
+    this.campaigns$ = this.keywordMatchingOptionsFacade.campaigns$;
+
     this.setupForm();
 
     this.resetModalService.setFormGroup(this.adgroupForm);
@@ -76,7 +80,6 @@ export class AdgroupModalComponent implements OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-    console.log(changes);
     this.resetModalService.reset(changes, this.adgroupNameInput);
 
     if (changes.editModal && changes.editModal.currentValue) {

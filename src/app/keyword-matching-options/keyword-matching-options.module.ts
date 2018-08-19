@@ -36,6 +36,8 @@ import { KeywordExportService } from './keyword-export.service';
 import { ClarityModule, ClrFormsNextModule } from '@clr/angular';
 import { KeywordModifierPipe } from './keywords/keyword-modifier/keyword-modifier.pipe';
 import { PasteKeywordsComponent } from './keywords/paste-keywords/paste-keywords.component';
+import { ModifierFilterComponent } from './keywords/modifier-filter/modifier-filter.component';
+import { ModifiersSelectComponent } from './keywords/modifiers-select/modifiers-select.component';
 
 export const KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN = new InjectionToken<ActionReducerMap<any>>('keywordMatchingOptions');
 
@@ -89,6 +91,8 @@ export function getInitialState() {
     DeleteClientConfirmComponent,
     PasteKeywordsComponent,
 
+    ModifiersSelectComponent,
+    ModifierFilterComponent,
     KeywordModifierPipe
   ],
   exports: [

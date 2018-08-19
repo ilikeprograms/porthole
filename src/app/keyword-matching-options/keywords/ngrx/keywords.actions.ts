@@ -6,6 +6,7 @@ export const ADD_KEYWORD_ACTION = '[KeywordMatchingOptions] Add keyword';
 export const EDIT_KEYWORD_TEXT_ACTION = '[KeywordMatchingOptions] Edit keyword text';
 export const EDIT_KEYWORD_MODIFIER_ACTION = '[KeywordMatchingOptions] Edit keyword modifier';
 export const REMOVE_SELECTED_KEYWORDS_ACTION = '[KeywordMatchingOptions] Remove selected keywords';
+export const REMOVE_ALL_KEYWORDS_ACTION = '[KeywordMatchingOptions] Remove all keywords';
 export const CHANGE_NEW_KEYWORD_OPTION_ACTION = '[KeywordMatchingOptions] Change new keyword option';
 
 export class AddKeywordAction implements Action {
@@ -32,7 +33,14 @@ export class RemoveSelectedKeywordsAction implements Action {
   constructor(public ids: Array<string>) {}
 }
 
+export class RemoveAllKeywordsAction implements Action {
+  readonly type = REMOVE_ALL_KEYWORDS_ACTION;
+
+  constructor(public adgroupId: string) {}
+}
+
 export type KeywordsActions = AddKeywordAction |
   EditKeywordTextAction |
   EditKeywordModifierAction |
-  RemoveSelectedKeywordsAction;
+  RemoveSelectedKeywordsAction |
+  RemoveAllKeywordsAction;

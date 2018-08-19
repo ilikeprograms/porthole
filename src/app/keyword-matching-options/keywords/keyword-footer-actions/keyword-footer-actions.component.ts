@@ -58,7 +58,7 @@ export class KeywordFooterActionsComponent {
     //
     // dialogRef.afterClosed().take(1).subscribe(result => {
     //   if (result === true) {
-    //     this.removeAllKeywords.emit();
+        this.removeAllKeywords.emit();
     //   }
     // });
   }

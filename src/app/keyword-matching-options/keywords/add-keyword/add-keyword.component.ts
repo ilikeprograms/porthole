@@ -3,7 +3,7 @@ import {
   Component, ElementRef,
   EventEmitter,
   Input, OnChanges,
-  OnDestroy,
+  OnDestroy, OnInit,
   Output,
   SimpleChange, ViewChild
 } from '@angular/core';
@@ -47,13 +47,15 @@ import { takeUntil } from 'rxjs/operators';
   providers: [ResetModalService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddKeywordComponent implements OnDestroy, OnChanges {
+export class AddKeywordComponent implements OnDestroy, OnInit, OnChanges {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   public modalForm: FormGroup;
 
   @ViewChild('textInput')
   public textInput: ElementRef;
+
+  public modifierStateChange: string = 'VALID';
 
   public keywordModifiers: any = KeywordModifiers;
 
@@ -63,6 +65,12 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
     this.setupForm();
 
     this.resetModalService.setFormGroup(this.modalForm);
+  }
+
+  public ngOnInit(): void {
+    this.modalForm.controls.modifier.statusChanges.subscribe((result) => {
+      this.modifierStateChange = result;
+    });
   }
 
   private setupForm(): void {
@@ -77,7 +85,8 @@ export class AddKeywordComponent implements OnDestroy, OnChanges {
 
     if (changes.editModal && changes.editModal.currentValue) {
       this.modalForm.patchValue({
-        keyword: changes.editModal.currentValue.text
+        keyword: changes.editModal.currentValue.text,
+        modifier: changes.editModal.currentValue.modifier
       }, {
         emitEvent: false
       });

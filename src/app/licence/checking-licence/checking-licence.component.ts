@@ -35,15 +35,15 @@ export class CheckingLicenceComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.licenceService.userLicenceError$.pipe(
       takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        console.error('user licenc error');
-        this.loadingErrorSubject$.next(true);
+      .subscribe((isInvalid: boolean) => {
+        if (isInvalid) {
+          console.error('user licenc error');
+          this.loadingErrorSubject$.next(true);
+        }
 
         this.loadingSubject$.next(false);
 
-
         this.changeDetectorRef.markForCheck();
-
       }, (error: any) => {
         console.error('error from user licence errro: ' + error);
         this.loadingErrorSubject$.next(true);

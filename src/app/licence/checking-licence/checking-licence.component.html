@@ -1,30 +1,28 @@
-<!--<mat-card class="mat-typography">-->
-  <!--<mat-card-content>-->
-    <!--<h1>Checking your licence</h1>-->
+<div class="card">
+  <div class="card-header">
+    Checking your licence
+  </div>
+  <div class="card-block" *ngIf="loading$ | async else loadingComplete">
+    <span class="spinner">
+      Loading...
+    </span>
+  </div>
 
-    <!--<mat-progress-spinner-->
-      <!--*ngIf="loading$ | async else loadingComplete"-->
-      <!--color="primary"-->
-      <!--mode="indeterminate"-->
-    <!--&gt;-->
-    <!--</mat-progress-spinner>-->
+  <ng-template #loadingComplete>
+    <div class="card-block" *ngIf="!(loadingError$ | async) else loadingFailure">
+      <p>Your free trial has expired. We hope you found Porthole useful. If you wish to continue using porthole then please purchase!</p>
+      <p>You can do so from the store page.</p>
+      <p><button type="button" class="btn btn-primary" (click)="onOpenStoreRequest()">Go to store</button>&nbsp;<span class="p7">(opens in a new tab)</span></p>
+      <p>If you dont wish to purchase, but want to provide some feedback then please get in contact by submitting feedback on the store page.</p>
+    </div>
 
-    <!--{{ loading$ | async }}-->
-    <!--{{ loadingError$ | async }}-->
 
-    <!--<ng-template #loadingComplete>-->
-      <!--<div *ngIf="!(loadingError$ | async) else loadingFailure">-->
-        <!--<p>Your free trial has expired. We hope you found Porthole usefull. If you wish to continue using porthole then please purchase!</p>-->
-        <!--<p>You can do so from the store page.</p>-->
-        <!--<p><button mat-button color="primary" (click)="onOpenStoreRequest()">Go to store</button>&nbsp;<span class="mat-caption">(opens in a new tab)</span></p>-->
-        <!--<p>If you dont wish to purchase, but want to provide some feedback then please get in contact by submitting feedback on the store page.</p>-->
-      <!--</div>-->
-
-      <!--<ng-template #loadingFailure>-->
-        <!--<p>There was an error authentication with Google. Try closing the extension and opening it again.</p>-->
-        <!--<p>If the problem persists please get in contact from the store page.</p>-->
-        <!--<p><button mat-button color="primary" (click)="onOpenStoreRequest()">Go to store</button>&nbsp;<span class="mat-caption">(opens in a new tab)</span></p>-->
-      <!--</ng-template>-->
-    <!--</ng-template>-->
-  <!--</mat-card-content>-->
-<!--</mat-card>-->
+    <ng-template #loadingFailure>
+      <div class="card-block">
+        <p>There was an error authentication with Google. Try closing the extension and opening it again.</p>
+        <p>If the problem persists please get in contact from the store page.</p>
+        <p><button type="button" class="btn btn-primary" (click)="onOpenStoreRequest()">Go to store</button>&nbsp;<span class="p7">(opens in a new tab)</span></p>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

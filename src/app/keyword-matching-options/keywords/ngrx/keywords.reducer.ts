@@ -4,7 +4,7 @@ import {
   ADD_KEYWORD_ACTION,
   EDIT_KEYWORD_MODIFIER_ACTION,
   EDIT_KEYWORD_TEXT_ACTION,
-  KeywordsActions,
+  KeywordsActions, REMOVE_ALL_KEYWORDS_ACTION,
   REMOVE_SELECTED_KEYWORDS_ACTION,
 } from './keywords.actions';
 import { keywordsAdapter } from './keywords.adapter';
@@ -31,6 +31,12 @@ export function keywordsReducer(state: IKeywordState = KeywordsDefaultState, act
       return keywordsAdapter.removeMany(adgroupKeywords, state);
     case REMOVE_SELECTED_KEYWORDS_ACTION:
       return keywordsAdapter.removeMany(action.ids, state);
+    case REMOVE_ALL_KEYWORDS_ACTION:
+      const adgroupKeywordsToRemoveAll: Array<string> = [...state.ids as string[]].filter((keywordId: string) => {
+        return state.entities[keywordId].adgroupId === action.adgroupId;
+      });
+
+      return keywordsAdapter.removeMany(adgroupKeywordsToRemoveAll, state);
     default:
       return {
         ...state

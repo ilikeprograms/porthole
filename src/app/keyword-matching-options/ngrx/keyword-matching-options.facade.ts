@@ -30,7 +30,7 @@ import { selectAdgroupById, selectAllAdgroupIds, selectAllAdgroups } from '../ad
 import {
   AddKeywordAction,
   EditKeywordModifierAction,
-  EditKeywordTextAction,
+  EditKeywordTextAction, RemoveAllKeywordsAction,
   RemoveSelectedKeywordsAction
 } from '../keywords/ngrx/keywords.actions';
 import {
@@ -146,12 +146,13 @@ export class KeywordMatchingOptionsFacade {
     }));
   }
 
-  public editKeywordText(id: string, text: string): void {
+  public editKeywordText(id: string, text: string, modifier: KeywordModifiers): void {
     this.store.dispatch(new EditKeywordTextAction({
       keyword: {
         id,
         changes: {
-          text
+          text,
+          modifier
         }
       }
     }));
@@ -171,6 +172,11 @@ export class KeywordMatchingOptionsFacade {
   public removeSelectedKeywords(ids: Array<string>): void {
     this.store.dispatch(new RemoveSelectedKeywordsAction(ids));
   }
+
+  public removeAllKeywords(adgroupId: string): void {
+    this.store.dispatch(new RemoveAllKeywordsAction(adgroupId));
+  }
+
 
   public changeNewKeywordOption(id: string, matchOption: KeywordModifiers): void {
     this.store.dispatch(new ChangeNewKeywordOptionAction({

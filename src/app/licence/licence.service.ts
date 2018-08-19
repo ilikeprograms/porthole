@@ -2,7 +2,7 @@ import { take, retry, catchError, startWith, shareReplay } from 'rxjs/operators'
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { ReplaySubject, Subject, Observable, of, combineLatest } from 'rxjs';
+import { ReplaySubject, Subject, Observable, of, combineLatest, BehaviorSubject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ILicence } from './licence.interface';
@@ -19,20 +19,11 @@ export class LicenceService {
     this.userLicence$ = this.userLicenceSubject$.asObservable();
 
     this.getLicence();
-    // )
-    // this.userLicence$ = Observable.create(() => {
-    //   this.getLicence();
-    // })
-    //   .startWith({})
-    //   .combineLatest(this.userLicenceSubject$, (values, value2) => {
-    //     return value2;
-    //   })
-    //   .shareReplay(1);
   }
 
   public userLicence$: Observable<ILicence>;
   public userLicenceSubject$: ReplaySubject<ILicence> = new ReplaySubject(1);
-  public userLicenceError$: Subject<void> = new Subject<void>();
+  public userLicenceError$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private access_token: any;
 
@@ -55,7 +46,7 @@ export class LicenceService {
   public getLicence(): void {
     console.log(environment.production);
     if (environment.production !== true) {
-      this.userLicenceError$.next();
+      this.userLicenceError$.next(false);
 
       this.userLicenceSubject$.next({
         result: true,
@@ -67,11 +58,11 @@ export class LicenceService {
     }
 
     this.zone.run(() => {
-      chrome.identity.getAuthToken({ interactive: true }, (token) => {
+      chrome.identity.getAuthToken({interactive: true}, (token) => {
         console.log('token', token);
         if (chrome.runtime.lastError) {
           console.log('last error', chrome.runtime.lastError);
-          this.userLicenceError$.next();
+          this.userLicenceError$.next(true);
 
           return;
         }
@@ -107,7 +98,7 @@ export class LicenceService {
       this.userLicenceSubject$.next(response);
     }, () => {
       console.log('get licence failure');
-      this.userLicenceError$.next();
+      this.userLicenceError$.next(true);
     });
   }
 }

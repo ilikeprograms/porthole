@@ -83,8 +83,6 @@ export class KeywordCardListComponent implements OnDestroy {
 
     this.editAdgroup = false;
     this.addAdgroupModal = false;
-
-    console.log(result, this.addAdgroupModal);
   }
 
   public showDeleteAdgroupModal(adgroupId: string): void {

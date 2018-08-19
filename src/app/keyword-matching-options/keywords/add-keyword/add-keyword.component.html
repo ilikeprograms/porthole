@@ -24,7 +24,6 @@
         <clr-control-error>A name must be provided</clr-control-error>
       </clr-input-container>
 
-
       <div class="clr-form-control clr-row">
         <label class="clr-control-label" for="modifier">Modifier</label>
         <div class="clr-control-container clr-col-md-10 clr-col-xs-12" [ngClass]="{'clr-error': modalForm.get('modifier').invalid }">
@@ -53,6 +52,9 @@
           </div>
         </div>
       </div>
+
+
+      <!--<app-modifier-select formControlName="modifier" [validationState]="modifierStateChange"></app-modifier-select>-->
     </form>
 
     <p>Enter a keyword and hit the button or press the enter key. Keyword will be added and can be changed later.</p>

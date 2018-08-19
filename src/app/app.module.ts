@@ -14,6 +14,8 @@ import { ChromeStorageService } from './core/chrome-storage.service';
 import { environment } from '../environments/environment';
 import { LicenceModule } from './licence/licence.module';
 import { ClarityModule } from '@clr/angular';
+import { notificationsReducer } from './notifications/ngrx/notifications.reducer';
+import { NotificationsModule } from './notifications/notifications.module';
 
 export const CHROME_STORAGE_SERVICE = new InjectionToken('CHROME_STORAGE_SERVICE');
 export const STORAGE_KEY = new InjectionToken('STORAGE_KEY');
@@ -39,12 +41,14 @@ export function getMetaReducers(stateToStorageMetareducer): MetaReducer<any>[] {
     CoreModule.forRoot(),
     AppRoutingModule,
     LicenceModule.forRoot(),
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({
+      notifications: notificationsReducer
+    }),
     EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),
-    // SnackbarNgrxModule
+    NotificationsModule
   ],
   providers: [
     {
