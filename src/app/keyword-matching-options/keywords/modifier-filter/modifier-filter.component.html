@@ -1,26 +1,27 @@
 <form [formGroup]="filterForm" clrForm clrLayout="horizontal">
+  <!-- -->
   <clr-checkbox-container>
-    <input type="checkbox" [formControl]="filterForm.controls.selectedModifier.controls[0]" id="broadmatchFilterCheckbox" name="modifiers" [value]="keywordModifiers.BroadMatch" />
+    <input type="checkbox" [formControl]="filterForm['controls'].selectedModifier['controls'][0]" id="broadmatchFilterCheckbox" name="modifiers" [value]="keywordModifiers.BroadMatch" />
     <label for="broadmatchFilterCheckbox" class="clr-col-xs-12">Broad match</label>
   </clr-checkbox-container>
 
   <clr-checkbox-container>
-    <input type="checkbox" [formControl]="filterForm.controls.selectedModifier.controls[1]" id="broadmatchModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.BroadMatchModifier" />
+    <input type="checkbox" [formControl]="filterForm['controls'].selectedModifier['controls'][1]" id="broadmatchModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.BroadMatchModifier" />
     <label for="broadmatchModifierFilterCheckbox" class="clr-col-xs-12">Broad match modifier</label>
   </clr-checkbox-container>
 
   <clr-checkbox-container>
-    <input type="checkbox" [formControl]="filterForm.controls.selectedModifier.controls[2]" id="phraseModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.PhraseMatch" />
+    <input type="checkbox" [formControl]="filterForm['controls'].selectedModifier['controls'][2]" id="phraseModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.PhraseMatch" />
     <label for="phraseModifierFilterCheckbox" class="clr-col-xs-12">Phrase match</label>
   </clr-checkbox-container>
 
   <clr-checkbox-container>
-    <input type="checkbox" [formControl]="filterForm.controls.selectedModifier.controls[3]" id="exactModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.ExactMatch" />
+    <input type="checkbox" [formControl]="filterForm['controls'].selectedModifier['controls'][3]" id="exactModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.ExactMatch" />
     <label for="exactModifierFilterCheckbox" class="clr-col-xs-12">Exact match</label>
   </clr-checkbox-container>
 
   <clr-checkbox-container>
-    <input type="checkbox" [formControl]="filterForm.controls.selectedModifier.controls[4]" id="negativeModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.NegativeMatch" />
+    <input type="checkbox" [formControl]="filterForm['controls'].selectedModifier['controls'][4]" id="negativeModifierFilterCheckbox" name="modifiers" [value]="keywordModifiers.NegativeMatch" />
     <label for="negativeModifierFilterCheckbox" class="clr-col-xs-12">Negative match</label>
   </clr-checkbox-container>
 </form>
