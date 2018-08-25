@@ -30,6 +30,7 @@
           <div class="btn-group">
             <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete selected</button>
             <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="showChangeAdgroupModal()">Move keywords</button>
+            <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="showChangeModifierModal()">Change modifier</button>
           </div>
         </div>
       </app-action-bar-button-stack>
@@ -65,3 +66,4 @@
 <app-add-keyword [modalOpen]="addKeywordModal" [editModal]="editKeyword" (modalClosed)="onAddKeyword($event)"></app-add-keyword>
 <app-paste-keywords [modalOpen]="pasteModal" (modalClosed)="onPasteKeywords($event)"></app-paste-keywords>
 <app-change-adgroup-modal [modalOpen]="changeAdgroupModal" (modalClosed)="onChangeAdgroup($event)"></app-change-adgroup-modal>
+<app-change-modifier-modal [modalOpen]="changeModifierModal" (modalClosed)="onChangeModifier($event)"></app-change-modifier-modal>

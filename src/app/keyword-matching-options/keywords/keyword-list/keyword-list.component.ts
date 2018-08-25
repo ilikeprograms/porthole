@@ -36,6 +36,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   public editKeyword: boolean | IKeyword = false;
   public addKeywordModal: boolean = false;
   public changeAdgroupModal: boolean = false;
+  public changeModifierModal: boolean = false;
 
   public selected: any = [];
 
@@ -147,9 +148,9 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     let name = '';
 
     this.campaign$.pipe(take(1), map((campaign: ICampaign) => {
-      return campaign.name;
+      return campaign ? campaign.name : '';
     })).subscribe((campaignName: string) => {
-      name = campaignName
+      name = campaignName;
     });
 
     let keywordsToExport: Array<IKeyword> = [];
@@ -177,5 +178,22 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     }
 
     this.changeAdgroupModal = false;
+  }
+  public showChangeModifierModal(): void {
+    this.changeModifierModal = true;
+  }
+
+  public onChangeModifier(result: any): void {
+    if (result) {
+      const keywordIds: Array<string> = this.selected.map((keyword: IKeyword) => {
+        return keyword.id;
+      });
+
+      this.keywordMatchingOptionsFacade.changeModifier(result.modifier, keywordIds);
+
+      this.selected = [];
+    }
+
+    this.changeModifierModal = false;
   }
 }

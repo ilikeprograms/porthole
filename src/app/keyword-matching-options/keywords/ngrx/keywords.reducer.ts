@@ -35,6 +35,7 @@ export function keywordsReducer(state: IKeywordState = KeywordsDefaultState, act
 
       return keywordsAdapter.removeMany(adgroupKeywordsToRemoveAll, state);
     case KeywordActionTypes.CHANGE_ADGROUP:
+    case KeywordActionTypes.CHANGE_MODIFIER:
       return keywordsAdapter.updateMany(action.payload.keywords, state);
     default:
       return {
