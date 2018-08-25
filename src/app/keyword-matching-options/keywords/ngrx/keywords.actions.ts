@@ -9,7 +9,8 @@ export enum KeywordActionTypes {
   EDIT_KEYWORD_MODIFIER = '[Keywords] Edit keyword modifier',
   REMOVE_SELECTED_KEYWORDS_ACTION = '[Keywords] Remove selected keywords',
   REMOVE_ALL_KEYWORDS_ACTION = '[Keywords] Remove all keywords',
-  CHANGE_NEW_KEYWORD_OPTION_ACTION = '[Keywords] Change new keyword option'
+  CHANGE_NEW_KEYWORD_OPTION_ACTION = '[Keywords] Change new keyword option',
+  CHANGE_ADGROUP = '[Keywords] Change adgroup'
 }
 
 export class AddKeywordAction implements Action {
@@ -42,8 +43,15 @@ export class RemoveAllKeywordsAction implements Action {
   constructor(public adgroupId: string) {}
 }
 
+export class ChangeAdgroupAction implements Action {
+  readonly type = KeywordActionTypes.CHANGE_ADGROUP;
+
+  constructor(public payload: { keywords: Array<Update<IKeyword>> }) {}
+}
+
 export type KeywordsActionsUnion = AddKeywordAction |
   EditKeywordAction |
   EditKeywordModifierAction |
   RemoveSelectedKeywordsAction |
-  RemoveAllKeywordsAction;
+  RemoveAllKeywordsAction |
+  ChangeAdgroupAction;

@@ -1,6 +1,6 @@
 import { IKeywordState } from './keywords-state.interface';
 import { KeywordsDefaultState } from './keywords-default.state';
-import { KeywordsActionsUnion, KeywordActionTypes } from './keywords.actions';
+import { KeywordActionTypes, KeywordsActionsUnion } from './keywords.actions';
 import { keywordsAdapter } from './keywords.adapter';
 import { AdgroupActionTypes, DeleteAdgroupAction } from '../../adgroups/ngrx/adgroup.actions';
 import {
@@ -34,6 +34,8 @@ export function keywordsReducer(state: IKeywordState = KeywordsDefaultState, act
       });
 
       return keywordsAdapter.removeMany(adgroupKeywordsToRemoveAll, state);
+    case KeywordActionTypes.CHANGE_ADGROUP:
+      return keywordsAdapter.updateMany(action.payload.keywords, state);
     default:
       return {
         ...state

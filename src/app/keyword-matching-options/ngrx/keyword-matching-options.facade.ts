@@ -31,13 +31,14 @@ import {
   AddKeywordAction,
   EditKeywordModifierAction,
   EditKeywordAction, RemoveAllKeywordsAction,
-  RemoveSelectedKeywordsAction
+  RemoveSelectedKeywordsAction, ChangeAdgroupAction
 } from '../keywords/ngrx/keywords.actions';
 import {
   selectAllKeywords, selectedKeywordsByAdGroupId
 } from '../keywords/ngrx/keywords.selectors';
 import { environment } from '../../../environments/environment';
 import { ChromeStorageService } from '../../core/chrome-storage.service';
+import { Update } from '@ngrx/entity';
 
 @Injectable()
 export class KeywordMatchingOptionsFacade {
@@ -304,5 +305,20 @@ export class KeywordMatchingOptionsFacade {
 
   public exportKeywords(campaignName: string, adgroupName: string, keywords: Array<IKeyword>) {
     this.store.dispatch(new ExportKeywordsAction(campaignName, adgroupName, keywords));
+  }
+
+  public changeAdgroup(adgroupId: string, keywordIds: Array<string>): void {
+    const keywordUpdates: Array<Update<IKeyword>> = keywordIds.map((keywordId: string) => {
+      return {
+        id: keywordId,
+        changes: {
+          adgroupId
+        }
+      }
+    });
+
+    this.store.dispatch(new ChangeAdgroupAction({
+      keywords: keywordUpdates
+    }));
   }
 }

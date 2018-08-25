@@ -33,6 +33,8 @@ import { KeywordModifierPipe } from './keywords/keyword-modifier/keyword-modifie
 import { PasteKeywordsComponent } from './keywords/paste-keywords/paste-keywords.component';
 import { ModifierFilterComponent } from './keywords/modifier-filter/modifier-filter.component';
 import { ModifiersSelectComponent } from './keywords/modifiers-select/modifiers-select.component';
+import { ActionBarButtonStackModule } from '../shared-components/action-bar-button-stack/action-bar-button-stack.module';
+import { ChangeAdgroupModalComponent } from './keywords/change-adgroup-modal/change-adgroup-modal';
 
 export const KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN = new InjectionToken<ActionReducerMap<any>>('keywordMatchingOptions');
 
@@ -63,6 +65,7 @@ export function getInitialState() {
     CommonModule,
     ClarityModule,
     ClrFormsNextModule,
+    ActionBarButtonStackModule,
     StoreModule.forFeature('keywordMatchingOptions', KEYWORD_MATCHING_OPTIONS_REDUCERS_TOKEN, {
       initialState: getInitialState
     }),
@@ -81,6 +84,7 @@ export function getInitialState() {
     DeleteAdgroupConfirmComponent,
     DeleteClientConfirmComponent,
     PasteKeywordsComponent,
+    ChangeAdgroupModalComponent,
 
     ModifiersSelectComponent,
     ModifierFilterComponent,

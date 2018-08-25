@@ -8,7 +8,6 @@ import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-option
 import { ICampaign } from '../../campaigns/campaign.interface';
 import { IKeyword } from '../keyword.interface';
 import { IAdgroup } from '../../adgroups/adgroup-interface';
-import { KeywordExportService } from '../../keyword-export.service';
 
 
 class KeywordNameComparator implements ClrDatagridComparatorInterface<IKeyword> {
@@ -36,6 +35,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
 
   public editKeyword: boolean | IKeyword = false;
   public addKeywordModal: boolean = false;
+  public changeAdgroupModal: boolean = false;
 
   public selected: any = [];
 
@@ -48,8 +48,7 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   public nameFilter = new KeywordNameFilter();
 
   constructor(
-    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
-    private keywordExportService: KeywordExportService
+    private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade
   ) {}
 
   public ngOnInit(): void {
@@ -160,5 +159,23 @@ export class KeywordListComponent implements OnInit, OnDestroy {
     });
 
     this.keywordMatchingOptionsFacade.exportKeywords(name, this.addgroup.name, keywordsToExport);
+  }
+
+  public showChangeAdgroupModal(): void {
+    this.changeAdgroupModal = true;
+  }
+
+  public onChangeAdgroup(result: any): void {
+    if (result) {
+      const keywordIds: Array<string> = this.selected.map((keyword: IKeyword) => {
+        return keyword.id;
+      });
+
+      this.keywordMatchingOptionsFacade.changeAdgroup(result.adgroupId, keywordIds);
+
+      this.selected = [];
+    }
+
+    this.changeAdgroupModal = false;
   }
 }

@@ -8,21 +8,31 @@
     <clr-dg-placeholder>No keywords</clr-dg-placeholder>
 
     <clr-dg-action-bar>
-      <div class="btn-group">
-        <button type="button" class="btn btn-outline btn-sm" (click)="showAddKeywordModal()">Add</button>
-        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete selected</button>
-        <button type="button" class="btn btn-outline btn-danger-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onDeleteAllKeywords()">Delete all</button>
-      </div>
+      <app-action-bar-button-stack>
+        <div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline btn-sm" (click)="showAddKeywordModal()">Add</button>
+            <button type="button" class="btn btn-outline btn-danger-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onDeleteAllKeywords()">Delete all</button>
+          </div>
 
-      <div class="btn-group">
-        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onCopyKeywords()">Copy </button>
-        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onCopyNegativeKeywords()">Copy negative</button>
-        <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="showPasteKeywordsModal()">Paste</button>
-      </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onCopyKeywords()">Copy </button>
+            <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="onCopyNegativeKeywords()">Copy negative</button>
+            <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled': (keywords$ | async)?.length === 0}" [attr.aria-disabled]="(keywords$ | async)?.length === 0" [disabled]="(keywords$ | async)?.length === 0" (click)="showPasteKeywordsModal()">Paste</button>
+          </div>
 
-      <div class="btn-group">
-        <button type="button" class="btn btn-outline btn-sm" (click)="onCsvExport()">Export to CSV </button>
-      </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline btn-sm" (click)="onCsvExport()">Export to CSV </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="onDeleteKeywords()"><clr-icon shape="close"></clr-icon> Delete selected</button>
+            <button type="button" class="btn btn-outline btn-sm" [ngClass]="{'disabled':  selected.length === 0}" [attr.aria-disabled]="selected.length === 0" [disabled]="selected.length === 0" (click)="showChangeAdgroupModal()">Move keywords</button>
+          </div>
+        </div>
+      </app-action-bar-button-stack>
     </clr-dg-action-bar>
 
     <clr-dg-column [clrDgField]="'name'" [clrDgSortBy]="nameComparator">Name
@@ -54,3 +64,4 @@
 
 <app-add-keyword [modalOpen]="addKeywordModal" [editModal]="editKeyword" (modalClosed)="onAddKeyword($event)"></app-add-keyword>
 <app-paste-keywords [modalOpen]="pasteModal" (modalClosed)="onPasteKeywords($event)"></app-paste-keywords>
+<app-change-adgroup-modal [modalOpen]="changeAdgroupModal" (modalClosed)="onChangeAdgroup($event)"></app-change-adgroup-modal>
