@@ -1,11 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ClrDatagridComparatorInterface, ClrDatagridStringFilterInterface } from '@clr/angular';
 
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, take } from 'rxjs/operators';
 import { combineLatest, Observable, of, Subject } from 'rxjs';
 
 import { KeywordMatchingOptionsFacade } from '../../ngrx/keyword-matching-options.facade';
-import { KeywordModifiers } from '../keyword-modifier-enum';
 import { ICampaign } from '../../campaigns/campaign.interface';
 import { IKeyword } from '../keyword.interface';
 import { IAdgroup } from '../../adgroups/adgroup-interface';
@@ -146,6 +145,20 @@ export class KeywordListComponent implements OnInit, OnDestroy {
   }
 
   public onCsvExport(): void {
-    this.keywordExportService.exportKeywords(this.keywords$);
+    let name = '';
+
+    this.campaign$.pipe(take(1), map((campaign: ICampaign) => {
+      return campaign.name;
+    })).subscribe((campaignName: string) => {
+      name = campaignName
+    });
+
+    let keywordsToExport: Array<IKeyword> = [];
+
+    this.keywords$.pipe(take(1)).subscribe((keywords: Array<IKeyword>) => {
+      keywordsToExport = keywords;
+    });
+
+    this.keywordMatchingOptionsFacade.exportKeywords(name, this.addgroup.name, keywordsToExport);
   }
 }

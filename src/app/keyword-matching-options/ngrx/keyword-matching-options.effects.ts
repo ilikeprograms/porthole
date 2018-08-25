@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { empty, Observable, of } from 'rxjs';
-import { mergeMap, withLatestFrom, switchMap, map } from 'rxjs/operators';
+import { mergeMap, withLatestFrom, switchMap, map, tap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
@@ -9,8 +9,13 @@ import { Action } from '@ngrx/store';
 
 import { ClipboardService } from '../../core/clipboard.service';
 import {
-  COPY_KEYWORDS_ACTION, COPY_NEGATIVE_KEYWORDS_ACTION, CopyKeywordsAction, IMPORT_FROM_CHROME_STORAGE,
-  PASTE_KEYWORDS_ACTION, PASTE_NEGATIVE_KEYWORDS_ACTION,
+  COPY_KEYWORDS_ACTION,
+  COPY_NEGATIVE_KEYWORDS_ACTION,
+  CopyKeywordsAction,
+  ExportKeywordsAction,
+  IMPORT_FROM_CHROME_STORAGE, KeywordMatchingOptionsActionTypes,
+  PASTE_KEYWORDS_ACTION,
+  PASTE_NEGATIVE_KEYWORDS_ACTION,
   PasteKeywordsAction,
 } from './keyword-matching-options.actions';
 import { AddNotificationAction } from '../../notifications/ngrx/notifications.actions';
@@ -25,6 +30,7 @@ import { CampaignsActionTypes, DeleteCampaignsAction } from '../campaigns/ngrx/c
 import { IAdgroup } from '../adgroups/adgroup-interface';
 import { DeleteAdgroupAction } from '../adgroups/ngrx/adgroup.actions';
 import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
+import { KeywordExportService } from '../keyword-export.service';
 
 const newLineCharacter: string = String.fromCharCode(13, 10);
 
@@ -34,7 +40,8 @@ export class KeywordMatchingOptionsEffects {
     private actions$: Actions<Action>,
     private clipboardService: ClipboardService,
     private keywordMatchingOptionsFacade: KeywordMatchingOptionsFacade,
-    private chromeStorageService: ChromeStorageService
+    private chromeStorageService: ChromeStorageService,
+    private keywordExportService: KeywordExportService
   ) {}
 
   @Effect({
@@ -42,7 +49,7 @@ export class KeywordMatchingOptionsEffects {
   })
   public loadFromChromeStorage() {
     return this.actions$.pipe(
-      ofType(IMPORT_FROM_CHROME_STORAGE),
+      ofType(KeywordMatchingOptionsActionTypes.IMPORT_FROM_CHROME_STORAGE),
       map((action) => {
         this.chromeStorageService.initialised = true;
 
@@ -77,7 +84,7 @@ export class KeywordMatchingOptionsEffects {
   @Effect()
   public copyKeywordsEffect() {
     return this.actions$.pipe(
-      ofType(COPY_KEYWORDS_ACTION),
+      ofType(KeywordMatchingOptionsActionTypes.COPY_KEYWORDS),
       withLatestFrom(this.keywordMatchingOptionsFacade.keywords),
       switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
@@ -102,7 +109,7 @@ export class KeywordMatchingOptionsEffects {
   @Effect()
   public copyNegativeKeywordsEffect() {
     return this.actions$.pipe(
-      ofType(COPY_NEGATIVE_KEYWORDS_ACTION),
+      ofType(KeywordMatchingOptionsActionTypes.COPY_NEGATIVE_KEYWORDS),
       withLatestFrom(this.keywordMatchingOptionsFacade.keywords),
       switchMap((value: [CopyKeywordsAction, Array<IKeyword>]) => {
         const clientKeywords: Array<IKeyword> = value[1].filter((keyword: IKeyword) => {
@@ -127,7 +134,7 @@ export class KeywordMatchingOptionsEffects {
   @Effect()
   public pasteKeywordsEffect() {
     return this.actions$.pipe(
-      ofType(PASTE_KEYWORDS_ACTION),
+      ofType(KeywordMatchingOptionsActionTypes.PASTE_KEYWORDS),
       mergeMap((action: PasteKeywordsAction) => {
         let keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
 
@@ -163,7 +170,7 @@ export class KeywordMatchingOptionsEffects {
   @Effect()
   public pasteNegativeKeywordsEffect() {
     return this.actions$.pipe(
-      ofType(PASTE_NEGATIVE_KEYWORDS_ACTION),
+      ofType(KeywordMatchingOptionsActionTypes.PASTE_NEGATIVE_KEYWORDS),
       mergeMap((action: PasteKeywordsAction) => {
         let keywords: Array<string|IParseKeywordTextModifier> = action.payload.text.split(/\n/m);
 
@@ -188,6 +195,18 @@ export class KeywordMatchingOptionsEffects {
             text: 'Pasted keywords'
           })
         ];
+      })
+    );
+  }
+
+  @Effect({
+    dispatch: false
+  })
+  public exportKeywordsEffect() {
+    return this.actions$.pipe(
+      ofType(KeywordMatchingOptionsActionTypes.EXPORT_KEYWORDS),
+      tap((action: ExportKeywordsAction) => {
+        this.keywordExportService.exportKeywords(action.campaignName, action.adgroupName, action.keywords);
       })
     );
   }

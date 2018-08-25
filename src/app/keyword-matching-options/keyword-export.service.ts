@@ -5,14 +5,18 @@ import { map, take } from 'rxjs/operators';
 
 import { IKeyword } from './keywords/keyword.interface';
 import { KeywordModifiers } from './keywords/keyword-modifier-enum';
+import { KeywordParser } from './keyword-parser';
 
 const mimeType: string = 'text/csv;encoding:utf-8';
 const exportFields: Array<string> = [
-  'keyword',
-  'modifier'
+  'Campaign Name',
+  'Ad Group',
+  'Keyword'
 ];
 
-interface IKeywordFields {
+interface IExportFields {
+  campaignName: string
+  adgroupName: string
   text: string;
   modifier: string;
 }
@@ -20,18 +24,15 @@ interface IKeywordFields {
 @Injectable()
 export class KeywordExportService {
 
-  public exportKeywords(keywords: Observable<Array<IKeyword>>): void {
-    let keywordsToExport: Array<IKeywordFields>;
-
-    keywords.pipe(take(1), map((keywordsToMap: Array<IKeyword>) => {
-      return keywordsToMap.map((keyword: IKeyword) => {
-        return {
-          text: keyword.text,
-          modifier: KeywordModifiers[keyword.modifier]
-        };
-      });
-    })).subscribe((keywordFields: Array<IKeywordFields>) => {
-      keywordsToExport = keywordFields;
+  public exportKeywords(campaignName: string, adgroupName: string, keywords: Array<IKeyword>): void {
+    console.log('exporting');
+    const keywordsToExport = keywords.map((keyword: IKeyword) => {
+      return {
+        campaignName: campaignName,
+        adgroupName: adgroupName,
+        text: keyword.text,
+        modifier: KeywordParser.keywordToText(keyword)
+      };
     });
 
     const csvData: string = this.prepareHeader() + this.convertKeywordFieldsToCsv(keywordsToExport);
@@ -50,12 +51,12 @@ export class KeywordExportService {
   }
 
   private prepareHeader(): string {
-    return `${exportFields[0]},${exportFields[1]}\n`;
+    return `${exportFields[0]},${exportFields[1]},${exportFields[2]}\n`;
   }
 
-  private convertKeywordFieldsToCsv(keywordFields: Array<IKeywordFields>): string {
-    return keywordFields.reduce<string>((previousValue: string, keywordField: IKeywordFields) => {
-      return previousValue + `${keywordField.text},${keywordField.modifier}\n`;
+  private convertKeywordFieldsToCsv(keywordFields: Array<IExportFields>): string {
+    return keywordFields.reduce<string>((previousValue: string, keywordField: IExportFields) => {
+      return previousValue + `${keywordField.campaignName},${keywordField.adgroupName},${keywordField.modifier}\n`;
     }, '');
   }
 

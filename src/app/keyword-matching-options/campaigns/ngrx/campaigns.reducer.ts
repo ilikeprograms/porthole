@@ -1,13 +1,16 @@
 import { ICampaignState } from './campaigns-state.interface';
 import { CampaignsDefaultState } from './campaigns-default.state';
-import { CampaignsActionTypes, CampaignsActionsUnion } from './campaigns.actions';
+import { CampaignsActionsUnion, CampaignsActionTypes } from './campaigns.actions';
 import { campaignsAdapter } from './campaigns.adapter';
 import { ClientActionTypes, DeleteClientAction } from '../../clients/ngrx/clients.actions';
-import { IMPORT_FROM_CHROME_STORAGE, ImportFromChromeStorage } from '../../ngrx/keyword-matching-options.actions';
+import {
+  ImportFromChromeStorage,
+  KeywordMatchingOptionsActionTypes
+} from '../../ngrx/keyword-matching-options.actions';
 
 export function campaignsReducer(state: ICampaignState = CampaignsDefaultState, action: CampaignsActionsUnion | DeleteClientAction | ImportFromChromeStorage) {
   switch (action.type) {
-    case IMPORT_FROM_CHROME_STORAGE:
+    case KeywordMatchingOptionsActionTypes.IMPORT_FROM_CHROME_STORAGE:
       return Object.assign({}, state, {
         ids: action.payload.keywordMatchingOptions.campaigns.ids,
         entities: action.payload.keywordMatchingOptions.campaigns.entities,

@@ -3,11 +3,14 @@ import { AdgroupDefaultState } from './adgroup-default.state';
 
 import { AdgroupActionsUnion, AdgroupActionTypes } from './adgroup.actions';
 import { adgroupAdapter } from './adgroups.adapter';
-import { IMPORT_FROM_CHROME_STORAGE, ImportFromChromeStorage } from '../../ngrx/keyword-matching-options.actions';
+import {
+  ImportFromChromeStorage,
+  KeywordMatchingOptionsActionTypes
+} from '../../ngrx/keyword-matching-options.actions';
 
 export function adgroupReducer(state: IAdgroupState = AdgroupDefaultState, action: AdgroupActionsUnion | ImportFromChromeStorage) {
   switch (action.type) {
-    case IMPORT_FROM_CHROME_STORAGE:
+    case KeywordMatchingOptionsActionTypes.IMPORT_FROM_CHROME_STORAGE:
       return Object.assign({}, state, {
         ids: action.payload.keywordMatchingOptions.adgroups.ids,
         entities: action.payload.keywordMatchingOptions.adgroups.entities,

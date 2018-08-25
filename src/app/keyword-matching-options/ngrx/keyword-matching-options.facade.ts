@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { IAppState } from '../../ngrx/app-state.interface';
 import { IKeyword } from '../keywords/keyword.interface';
 import {
-  CopyKeywordsAction, CopyNegativeKeywordsAction, ImportFromChromeStorage,
+  CopyKeywordsAction, CopyNegativeKeywordsAction, ExportKeywordsAction, ImportFromChromeStorage,
   PasteKeywordsAction, PasteNegativeKeywordsAction
 } from './keyword-matching-options.actions';
 import { KeywordModifiers } from '../keywords/keyword-modifier-enum';
@@ -300,5 +300,9 @@ export class KeywordMatchingOptionsFacade {
     this.store.dispatch(new DeleteAdgroupAction({
       id
     }));
+  }
+
+  public exportKeywords(campaignName: string, adgroupName: string, keywords: Array<IKeyword>) {
+    this.store.dispatch(new ExportKeywordsAction(campaignName, adgroupName, keywords));
   }
 }

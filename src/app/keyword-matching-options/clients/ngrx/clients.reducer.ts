@@ -2,11 +2,14 @@ import { ClientsDefaultState } from './clients-default.state';
 import { ClientActionsUnion, ClientActionTypes } from './clients.actions';
 import { IClientsState } from './clients-state.interface';
 import { clientsAdapter } from './clients.adapter';
-import { IMPORT_FROM_CHROME_STORAGE, ImportFromChromeStorage } from '../../ngrx/keyword-matching-options.actions';
+import {
+  ImportFromChromeStorage,
+  KeywordMatchingOptionsActionTypes
+} from '../../ngrx/keyword-matching-options.actions';
 
 export function clientsReducer(state: IClientsState = ClientsDefaultState, action: ClientActionsUnion | ImportFromChromeStorage) {
   switch (action.type) {
-    case IMPORT_FROM_CHROME_STORAGE:
+    case KeywordMatchingOptionsActionTypes.IMPORT_FROM_CHROME_STORAGE:
       return Object.assign({}, state, {
         ids: action.payload.keywordMatchingOptions.clients.ids,
         entities: action.payload.keywordMatchingOptions.clients.entities,
